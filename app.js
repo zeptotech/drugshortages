@@ -71,7 +71,7 @@ const COLUMNS = {
     label: 'Days in shortage', cls: 'num', key: r => String(daysSince(r.actualStart || r.anticipatedStart) ?? ''),
     html: r => { const n = daysSince(r.actualStart || r.anticipatedStart); return n === null ? '' : formatNumber(n); },
   },
-  anticipatedStart: { label: 'Expected start', cls: 'date', key: r => r.anticipatedStart || '' },
+  anticipatedStart: { label: 'Expected start', cls: 'date', key: r => expectedStart(r) || '' },
   estEnd: { label: 'Est. end', cls: 'date', key: r => r.estEnd || '', html: r => r.estEnd ? esc(r.estEnd) : '<span class="muted">Unknown</span>' },
   discDate: { label: 'Disc. date', cls: 'date', key: r => r.actualDiscDate || r.discDate || '' },
   outcome: { label: 'Outcome', key: r => statusLabel(r.status), html: r => statusBadge(r.status) },
@@ -127,6 +127,12 @@ function daysSince(isoDay) {
   const start = new Date(y, m - 1, d);
   const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   return Math.max(0, Math.round((todayMidnight - start) / 864e5));
+}
+
+// Anticipated shortages often carry their start date in actual_start_date only; the official
+// site shows it as the expected start, so we do the same.
+function expectedStart(r) {
+  return r.anticipatedStart || (r.status === 'anticipated_shortage' ? r.actualStart : null) || null;
 }
 
 function isoDate(d) {
@@ -533,8 +539,8 @@ function openDetail(id) {
     ['ATC', r.atc && `${r.atc}${r.atcDesc ? ' — ' + r.atcDesc : ''}`],
     ['Reason', r.reason],
     ...(isShortage ? [
-      ['Expected start', r.anticipatedStart],
-      ['Actual start', r.actualStart],
+      ['Expected start', expectedStart(r)],
+      ['Actual start', r.status === 'anticipated_shortage' && !r.anticipatedStart ? null : r.actualStart],
       ['Estimated end', r.estEnd || 'Unknown'],
       ['Actual end', r.actualEnd],
     ] : [
