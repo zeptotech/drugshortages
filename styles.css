@@ -7,6 +7,7 @@
   --accent: #1f5fae;
   --accent-soft: #e6eef9;
   --row-alt: #f0f2f4;
+  --row-hover: #e2eaf5;
 
   --s-actual: #b42318;     --s-actual-bg: #fdecea;
   --s-antic: #9a5b00;      --s-antic-bg: #fdf3e1;
@@ -27,6 +28,7 @@
     --accent: #7fb0ff;
     --accent-soft: #1f2e45;
     --row-alt: #232b36;
+    --row-hover: #2b3748;
     --s-actual: #ff8f84;     --s-actual-bg: #3a1d1b;
     --s-antic: #f3bd5c;      --s-antic-bg: #3a2d14;
     --s-resolved: #6fd394;   --s-resolved-bg: #173123;
@@ -44,6 +46,7 @@
   --accent: #7fb0ff;
   --accent-soft: #1f2e45;
   --row-alt: #232b36;
+  --row-hover: #2b3748;
   --s-actual: #ff8f84;     --s-actual-bg: #3a1d1b;
   --s-antic: #f3bd5c;      --s-antic-bg: #3a2d14;
   --s-resolved: #6fd394;   --s-resolved-bg: #173123;
@@ -143,6 +146,7 @@ th[aria-sort="ascending"] button::after { content: " ▲"; }
 th[aria-sort="descending"] button::after { content: " ▼"; }
 tbody tr { cursor: pointer; }
 tbody tr:nth-child(odd) { background: var(--row-alt); }
+tbody tr:hover { background: var(--row-hover); }
 tbody tr:last-child td { border-bottom: 0; }
 td.nowrap, td.date { white-space: nowrap; }
 td.date { font-variant-numeric: tabular-nums; }
@@ -188,6 +192,7 @@ td.c-activity { white-space: nowrap; }
 .day h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin: 0; padding: 10px 14px 4px; }
 .day ul { list-style: none; margin: 0; padding: 0 0 6px; }
 .day li { padding: 6px 14px; cursor: pointer; }
+.day li:hover { background: var(--row-hover); }
 .day .chg { color: var(--muted); font-size: 13px; }
 .day .chg b { color: var(--text); font-weight: 600; }
 .kind { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-right: 6px; }
