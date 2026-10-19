@@ -76,11 +76,11 @@ const COLUMNS = {
 };
 
 const TAB_COLUMNS = {
-  actual: ['drug', 'din', 'strength', 'company', 'actualStart', 'estEnd', 'activity', 'updated'],
-  anticipated: ['drug', 'din', 'strength', 'company', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
-  resolved: ['drug', 'din', 'strength', 'company', 'outcome', 'changedOn', 'updated'],
-  upcoming: ['drug', 'din', 'strength', 'company', 'discDate', 'activity', 'updated'],
-  discontinued: ['drug', 'din', 'strength', 'company', 'outcome', 'discDate', 'changedOn'],
+  actual: ['drug', 'din', 'strength', 'actualStart', 'estEnd', 'activity', 'updated'],
+  anticipated: ['drug', 'din', 'strength', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
+  resolved: ['drug', 'din', 'strength', 'outcome', 'changedOn', 'updated'],
+  upcoming: ['drug', 'din', 'strength', 'discDate', 'activity', 'updated'],
+  discontinued: ['drug', 'din', 'strength', 'outcome', 'discDate', 'changedOn'],
 };
 
 const DEFAULT_SORT = {
