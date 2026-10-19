@@ -67,14 +67,15 @@ const COLUMNS = {
   discDate: { label: 'Disc. date', cls: 'date', key: r => r.actualDiscDate || r.discDate || '' },
   outcome: { label: 'Outcome', key: r => statusLabel(r.status), html: r => statusBadge(r.status) },
   changedOn: { label: 'Changed', cls: 'date', key: r => r.changedOn || '' },
+  activity: { label: 'New / Updated', cls: 'c-activity', key: activityKey, html: activityTag },
   updated: { label: 'Updated', cls: 'date', key: r => (r.updated || '').slice(0, 10) },
 };
 
 const TAB_COLUMNS = {
-  actual: ['drug', 'din', 'strength', 'company', 'actualStart', 'estEnd', 'updated'],
-  anticipated: ['drug', 'din', 'strength', 'company', 'anticipatedStart', 'estEnd', 'updated'],
+  actual: ['drug', 'din', 'strength', 'company', 'actualStart', 'estEnd', 'activity', 'updated'],
+  anticipated: ['drug', 'din', 'strength', 'company', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
   resolved: ['drug', 'din', 'strength', 'company', 'outcome', 'changedOn', 'updated'],
-  upcoming: ['drug', 'din', 'strength', 'company', 'discDate', 'updated'],
+  upcoming: ['drug', 'din', 'strength', 'company', 'discDate', 'activity', 'updated'],
   discontinued: ['drug', 'din', 'strength', 'company', 'outcome', 'discDate', 'changedOn'],
 };
 
@@ -137,9 +138,16 @@ function tags(r) {
     r.tier3 && '<span class="tag tier3" title="Tier 3: highest potential impact">Tier 3</span>',
     r._overdue && '<span class="tag overdue" title="Expected date passed more than 2 days ago with no actual date">Overdue</span>',
     r.late && '<span class="tag late" title="Reported more than 5 days after the start date">Late</span>',
-    r._new && '<span class="tag new">New</span>',
-    r._updatedRecently && '<span class="tag upd">Updated</span>',
   ].filter(Boolean).join('');
+}
+
+function activityKey(r) {
+  return r._new ? 'New' : r._updatedRecently ? 'Updated' : '';
+}
+
+function activityTag(r) {
+  const key = activityKey(r);
+  return key ? `<span class="tag ${key === 'New' ? 'new' : 'upd'}">${key}</span>` : '';
 }
 
 function drugCell(r) {
@@ -482,7 +490,7 @@ function openDetail(id) {
   const dialog = $('detail');
   dialog.innerHTML = `
     <div class="d-head">
-      <h2 id="detail-title">${esc(r.brand)}${tags(r)}</h2>
+      <h2 id="detail-title">${esc(r.brand)}${tags(r)}${activityTag(r)}</h2>
       <div class="sub">${esc([r.strength, r.form, r.company].filter(Boolean).join(' · '))}</div>
       <button class="close" type="button" data-close aria-label="Close">✕</button>
     </div>

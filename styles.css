@@ -128,7 +128,8 @@ td.date { font-variant-numeric: tabular-nums; }
 .tag.late { background: var(--s-disc-bg); color: var(--s-disc); }
 .tag.new { background: var(--accent); color: var(--panel); }
 .tag.upd { background: var(--accent-soft); color: var(--accent); }
-.footer .tag { margin-left: 0; }
+.footer .tag, .c-activity .tag { margin-left: 0; }
+td.c-activity { white-space: nowrap; }
 
 .status { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
 .st-actual { color: var(--s-actual); background: var(--s-actual-bg); }
@@ -184,6 +185,7 @@ dialog .close { position: absolute; top: 12px; right: 12px; }
   td { border: 0; padding: 3px 12px; }
   td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
   td.c-drug::before { content: none; }
+  td:empty { display: none; }
   .d-body dl { grid-template-columns: 1fr; gap: 0; }
   .d-body dd { margin-bottom: 8px; }
 }
