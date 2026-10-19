@@ -7,6 +7,7 @@
   --accent: #1f5fae;
   --accent-soft: #e6eef9;
   --row-hover: #f1f5fb;
+  --row-alt: #f8f9fb;
 
   --s-actual: #b42318;     --s-actual-bg: #fdecea;
   --s-antic: #9a5b00;      --s-antic-bg: #fdf3e1;
@@ -27,6 +28,7 @@
     --accent: #7fb0ff;
     --accent-soft: #1f2e45;
     --row-hover: #212a36;
+    --row-alt: #1d242e;
     --s-actual: #ff8f84;     --s-actual-bg: #3a1d1b;
     --s-antic: #f3bd5c;      --s-antic-bg: #3a2d14;
     --s-resolved: #6fd394;   --s-resolved-bg: #173123;
@@ -44,6 +46,7 @@
   --accent: #7fb0ff;
   --accent-soft: #1f2e45;
   --row-hover: #212a36;
+  --row-alt: #1d242e;
   --s-actual: #ff8f84;     --s-actual-bg: #3a1d1b;
   --s-antic: #f3bd5c;      --s-antic-bg: #3a2d14;
   --s-resolved: #6fd394;   --s-resolved-bg: #173123;
@@ -138,6 +141,7 @@ th button:hover { color: var(--text); }
 th[aria-sort="ascending"] button::after { content: " ▲"; }
 th[aria-sort="descending"] button::after { content: " ▼"; }
 tbody tr { cursor: pointer; }
+tbody tr:nth-child(even) { background: var(--row-alt); }
 tbody tr:hover { background: var(--row-hover); }
 tbody tr:last-child td { border-bottom: 0; }
 td.nowrap, td.date { white-space: nowrap; }
@@ -213,7 +217,7 @@ dialog .close { position: absolute; top: 12px; right: 12px; }
   .table-wrap { background: none; border: 0; }
   table, tbody, tr, td { display: block; }
   thead { display: none; }
-  tbody tr { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; padding: 6px 0; }
+  tbody tr, tbody tr:nth-child(even) { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; padding: 6px 0; }
   td { border: 0; padding: 3px 12px; }
   td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
   td.c-drug::before { content: none; }
