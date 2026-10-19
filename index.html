@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Drug Shortages · Pharmacist View</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-row">
+      <div class="title">
+        <h1>Drug Shortages</h1>
+        <span id="updated" class="updated"></span>
+      </div>
+      <input id="q" type="search" placeholder="Search brand, ingredient, DIN, company, ATC…  ( / )"
+             autocomplete="off" spellcheck="false" aria-label="Search">
+    </div>
+    <nav class="wrap views" id="views" aria-label="Sections"></nav>
+  </header>
+
+  <main class="wrap">
+    <div id="tabs" class="tabs" role="tablist"></div>
+
+    <div id="toolbar" class="toolbar">
+      <label><input type="checkbox" id="f-tier3"> Tier 3 only</label>
+      <label><input type="checkbox" id="f-overdue"> Overdue only</label>
+      <select id="f-atc" aria-label="Drug class (ATC)">
+        <option value="">All drug classes (ATC)</option>
+      </select>
+      <span class="spacer"></span>
+      <span id="count" class="muted"></span>
+    </div>
+
+    <div id="content" aria-live="polite"><p class="muted">Loading…</p></div>
+    <div id="pager" class="pager"></div>
+  </main>
+
+  <footer class="wrap footer">
+    Data: <a href="https://healthproductshortages.ca" target="_blank" rel="noopener">Health Product Shortages Canada</a>,
+    refreshed daily. Not affiliated with Health Canada. Always confirm with the official report.
+    <br>
+    <span class="tag tier3">Tier 3</span> highest-impact shortage ·
+    <span class="tag overdue">Overdue</span> expected date passed &gt;2 days with no actual date ·
+    <span class="tag late">Late</span> reported &gt;5 days after start ·
+    <span class="tag new">New</span> / <span class="tag upd">Updated</span> in the last 7 days
+  </footer>
+
+  <dialog id="detail" aria-labelledby="detail-title"></dialog>
+</body>
+</html>
