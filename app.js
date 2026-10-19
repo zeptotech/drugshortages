@@ -1,19 +1,38 @@
+// app.js — everything the page does in the browser.
+//
+// How the page works, start to finish:
+//   1. index.html loads this file. The code at the very bottom (init) runs first.
+//   2. It downloads the JSON files in data/ (made each night by the GitHub Action).
+//   3. It reads the address bar (?view=...&tab=...&q=...) to know what to show.
+//   4. render() builds the HTML for the current view and puts it on the page.
+//   5. When you click or type, the page updates `state`, rewrites the address bar,
+//      and calls render() again. The data itself is never downloaded again.
+//
+// The file is split into sections (Configuration, State, Helpers, Data, ...) marked by
+// the long dashed comment lines, roughly in the order things happen.
+
+// Turns on JavaScript's "strict mode", which reports more mistakes as errors.
 'use strict';
 
 // ---------------------------------------------------------------------------
 // Configuration
 // ---------------------------------------------------------------------------
+// Fixed settings. `const` means the name can't be reassigned later.
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 100;        // rows per page in the tables
 const NEW_DAYS = 7;           // NEW / UPDATED tags
 const CHANGE_DAYS_SHOWN = 7;  // days of updates shown in "What's new" (including today)
 const STALE_HOURS = 36;       // warn when the daily update seems to have stopped
 
+// Links to a report on the official site. `id => `...`` is an "arrow function": it takes an id
+// and returns the URL. The backticks make a "template literal", where ${id} is filled in.
 const OFFICIAL_URL = {
   shortage: id => `https://healthproductshortages.ca/shortage/${id}`,
   discontinuance: id => `https://healthproductshortages.ca/discontinuance/${id}`,
 };
 
+// Each status code from the data -> [text shown to people, short name used for the CSS colour].
+// e.g. a report with status 'active_confirmed' shows "Actual shortage" with the class "st-actual".
 const STATUS = {
   active_confirmed: ['Actual shortage', 'actual'],
   anticipated_shortage: ['Anticipated shortage', 'antic'],
@@ -25,6 +44,8 @@ const STATUS = {
   removed: ['Removed from source', 'disc'],
 };
 
+// ATC is the international drug classification. Its first letter is the broad group;
+// these names fill the "All drug classes (ATC)" dropdown.
 const ATC_GROUPS = {
   A: 'Alimentary tract & metabolism', B: 'Blood & blood forming organs', C: 'Cardiovascular system',
   D: 'Dermatologicals', G: 'Genito-urinary system & sex hormones', H: 'Systemic hormonal preparations',
@@ -33,6 +54,11 @@ const ATC_GROUPS = {
   R: 'Respiratory system', S: 'Sensory organs', V: 'Various',
 };
 
+// The three top-level sections (the links under the title) and the tabs inside each.
+//   current:  statuses counted as "still going on" (used for the number next to the section name).
+//   statuses: which reports belong in a tab.
+//   recent:   a tab for everything that is NOT current (resolved, discontinued, ...).
+//   tone:     colour of the tab (matched in styles.css).
 const VIEWS = {
   shortages: {
     label: 'Shortages',
@@ -51,22 +77,28 @@ const VIEWS = {
       { id: 'discontinued', label: 'Discontinued', tone: 'disc', recent: true },
     ],
   },
+  // "What's new" has no tabs; it is drawn by renderChanges() instead of the table code.
   changes: { label: "What's new" },
 };
 
 // Table columns. `key` is used for sorting; `html` (optional) for display.
+// Each `r` below is one report (one row). `r.brand || ''` means "the brand, or an empty
+// string if there is none", so sorting never has to deal with missing values.
+//   label: column heading.  cls: CSS class for the cells (e.g. 'date' for narrow date columns).
 const COLUMNS = {
   drug: { label: 'Drug', cls: 'c-drug', key: r => r.brand || '', html: drugCell },
   din: { label: 'DIN', cls: 'nowrap', key: r => r.din || '', html: dinCell },
   strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '' },
   company: { label: 'Company', key: r => r.company || '' },
   // Falls back to the expected start when the company never entered an actual start date.
+  // `a ? b : c` means "if a then b, otherwise c"; here it is chained to handle three cases.
   actualStart: {
     label: 'Started', cls: 'date', key: r => r.actualStart || r.anticipatedStart || '',
     html: r => r.actualStart ? esc(r.actualStart)
       : r.anticipatedStart ? `${esc(r.anticipatedStart)}<div class="sub" title="No actual start date reported">expected</div>` : '',
   },
   // Days since the shortage started (actual start, else expected start); sorts numerically.
+  // `x ?? ''` is like `x || ''` but only replaces null/undefined, so a count of 0 is kept.
   days: {
     label: 'Days in shortage', cls: 'num', key: r => String(daysSince(r.actualStart || r.anticipatedStart) ?? ''),
     html: r => { const n = daysSince(r.actualStart || r.anticipatedStart); return n === null ? '' : formatNumber(n); },
@@ -77,9 +109,11 @@ const COLUMNS = {
   outcome: { label: 'Outcome', key: r => statusLabel(r.status), html: r => statusBadge(r.status) },
   changedOn: { label: 'Changed', cls: 'date', key: r => r.changedOn || '' },
   activity: { label: 'New / Updated', cls: 'c-activity', key: activityKey, html: activityTag },
+  // Dates in the data look like "2026-10-19T14:03:00"; .slice(0, 10) keeps just "2026-10-19".
   updated: { label: 'Updated', cls: 'date', key: r => (r.updated || '').slice(0, 10) },
 };
 
+// Which columns each tab shows, left to right (names refer to COLUMNS above).
 const TAB_COLUMNS = {
   actual: ['drug', 'din', 'strength', 'actualStart', 'days', 'estEnd', 'activity', 'updated'],
   anticipated: ['drug', 'din', 'strength', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
@@ -88,6 +122,8 @@ const TAB_COLUMNS = {
   discontinued: ['drug', 'din', 'strength', 'outcome', 'discDate', 'changedOn'],
 };
 
+// How each tab is sorted before anyone clicks a column heading: [column, direction].
+// 'desc' = newest/largest first, 'asc' = oldest/smallest first.
 const DEFAULT_SORT = {
   actual: ['updated', 'desc'],
   anticipated: ['updated', 'desc'],
@@ -96,6 +132,7 @@ const DEFAULT_SORT = {
   discontinued: ['changedOn', 'desc'],
 };
 
+// Readable names for fields when "What's new" shows what changed (e.g. "Est. end: A → B").
 const FIELD_LABELS = {
   status: 'Status', estEnd: 'Est. end', actualStart: 'Actual start', anticipatedStart: 'Expected start',
   actualEnd: 'Actual end', reason: 'Reason', tier3: 'Tier 3', discDate: 'Disc. date',
@@ -106,22 +143,39 @@ const FIELD_LABELS = {
 // ---------------------------------------------------------------------------
 // State
 // ---------------------------------------------------------------------------
+// `data` holds what was downloaded; `state` holds what the visitor is currently looking at.
+// These objects are `const`, but their contents can still change (const only stops the name
+// from pointing at a different object).
 
+// data.byId: a Map (lookup table) from report id -> report, used to open the detail popup quickly.
+// data.changeIndex / changeDays: the daily change logs used by "What's new".
 const data = { shortages: [], discontinuations: [], byId: new Map(), meta: {}, changeIndex: null, changeDays: new Map() };
+// Everything here is mirrored in the address bar, so a link reopens exactly the same view.
+//   view/tab: which section and tab.  q: search text.  tier3/atc: the filters.
+//   sort/dir: a column the visitor clicked to sort ('' = use DEFAULT_SORT).  page: table page.
+//   day/kind: the filter chips on "What's new".
 const state = { view: 'shortages', tab: '', q: '', tier3: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '' };
+// Shortcut: $('count') finds the element in index.html with id="count".
 const $ = id => document.getElementById(id);
+// Compares text the way people expect: ignores upper/lower case and puts "Item 2" before "Item 10".
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+// Small functions used by the rest of the file.
 
+// "Escapes" text before it goes into HTML. Without this, a drug name containing < or &
+// could break the page (or inject code). Every value from the data passes through esc().
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// Number of whole days from a date like "2026-10-01" until today (never negative).
+// Returns null when there is no date. 864e5 is 86,400,000: the milliseconds in a day.
 function daysSince(isoDay) {
   if (!isoDay) return null;
+  // Split "2026-10-01" into [2026, 10, 1]. JavaScript months count from 0, hence `m - 1`.
   const [y, m, d] = isoDay.split('-').map(Number);
   const today = new Date();
   const start = new Date(y, m - 1, d);
@@ -135,28 +189,38 @@ function expectedStart(r) {
   return r.anticipatedStart || (r.status === 'anticipated_shortage' ? r.actualStart : null) || null;
 }
 
+// Turns a Date into "YYYY-MM-DD" in the visitor's time zone. Dates in that form can be compared
+// as plain text: "2026-10-19" > "2026-10-12" works because the biggest unit comes first.
 function isoDate(d) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+// The date n days ago, as "YYYY-MM-DD".
 function daysAgo(n) {
   const d = new Date();
   d.setDate(d.getDate() - n);
   return isoDate(d);
 }
 
+// Status code -> readable text, e.g. 'active_confirmed' -> 'Actual shortage'.
+// `STATUS[s]?.[0]`: the `?.` stops safely (giving undefined) if the code isn't in STATUS;
+// then we fall back to tidying up the raw code ('some_code' -> 'Some code').
 function statusLabel(s) {
   return STATUS[s]?.[0] || (s ? s.replace(/_/g, ' ').replace(/^./, c => c.toUpperCase()) : '—');
 }
 
+// The coloured status pill, as HTML.
 function statusBadge(s) {
   return `<span class="status st-${STATUS[s]?.[1] || 'disc'}">${esc(statusLabel(s))}</span>`;
 }
 
+// 1234 -> "1,234".
 function formatNumber(n) {
   return n.toLocaleString('en-CA');
 }
 
+// The small "Tier 3" / "Late" labels after a drug name. Each line gives either the HTML or
+// `false`; .filter(Boolean) drops the falses, and .join('') glues the rest together.
 function tags(r) {
   return [
     r.tier3 && '<span class="tag tier3" title="Tier 3: highest potential impact">Tier 3</span>',
@@ -164,15 +228,18 @@ function tags(r) {
   ].filter(Boolean).join('');
 }
 
+// 'New', 'Updated' or '' for the "New / Updated" column (flags are set in prepare() below).
 function activityKey(r) {
   return r._new ? 'New' : r._updatedRecently ? 'Updated' : '';
 }
 
+// The same as activityKey, but as a coloured label.
 function activityTag(r) {
   const key = activityKey(r);
   return key ? `<span class="tag ${key === 'New' ? 'new' : 'upd'}">${key}</span>` : '';
 }
 
+// The "Drug" cell: brand name and tags, then ingredients · form · route, then the company.
 function drugCell(r) {
   const sub = [r.ingredients, r.form, r.route].filter(Boolean).join(' · ');
   return `<div class="brand">${esc(r.brand)}${tags(r)}</div>`
@@ -180,15 +247,19 @@ function drugCell(r) {
     + (r.company ? `<div class="sub company">${esc(r.company)}</div>` : '');
 }
 
+// The "DIN" cell: the number plus a copy button. The button stores the DIN in `data-copy`,
+// which the click handler in bindEvents() reads.
 function dinCell(r) {
   if (!r.din) return '';
   return `<span class="din">${esc(r.din)}</span><button class="copy" type="button" data-copy="${esc(r.din)}" title="Copy DIN" aria-label="Copy DIN ${esc(r.din)}">⧉</button>`;
 }
 
+// The search box text split into lowercase words: "Tylenol  500" -> ['tylenol', '500'].
 function searchTokens() {
   return state.q.toLowerCase().split(/\s+/).filter(Boolean);
 }
 
+// True when every search word appears somewhere in the report's text (in any order).
 function matchesTokens(haystack, tokens) {
   return tokens.every(t => haystack.includes(t));
 }
@@ -196,8 +267,13 @@ function matchesTokens(haystack, tokens) {
 // ---------------------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------------------
+// Downloading the JSON files. `async` functions can `await` slow things (like downloads)
+// without freezing the page; the code simply continues once the result arrives.
 
+// Downloads one JSON file and turns it into JavaScript objects.
+// optional = true: return null if the file is missing instead of failing.
 async function getJSON(path, optional = false) {
+  // cache: 'no-cache' makes the browser check for a newer copy instead of reusing yesterday's.
   const res = await fetch(path, { cache: 'no-cache' });
   if (!res.ok) {
     if (optional) return null;
@@ -206,6 +282,8 @@ async function getJSON(path, optional = false) {
   return res.json();
 }
 
+// Runs once per report after download to add a few helper fields. Fields starting with `_`
+// are ours (not from the official data).
 function prepare(r) {
   const newCutoff = daysAgo(NEW_DAYS);
   const created = (r.created || '').slice(0, 10);
@@ -213,11 +291,15 @@ function prepare(r) {
 
   r._new = created >= newCutoff;
   r._updatedRecently = !r._new && updated >= newCutoff;
+  // _hay ("haystack"): all searchable text in one lowercase string, built once so that
+  // searching while typing is fast.
   r._hay = [r.brand, r.commonName, r.ingredients, r.din, r.company, r.atc, r.atcDesc, r.strength, r.form]
     .filter(Boolean).join(' ').toLowerCase();
   return r;
 }
 
+// Downloads all main data files. Promise.all starts the four downloads at the same time and
+// waits for all of them; `const [a, b, ...] =` unpacks the four results into named variables.
 async function load() {
   const [meta, shortages, discontinuations, changeIndex] = await Promise.all([
     getJSON('data/meta.json'),
@@ -226,12 +308,16 @@ async function load() {
     getJSON('data/changes/index.json', true),
   ]);
   data.meta = meta;
+  // .map(prepare) runs prepare() on every report and gives back the list.
   data.shortages = shortages.reports.map(prepare);
   data.discontinuations = discontinuations.reports.map(prepare);
   data.changeIndex = changeIndex || [];
+  // `[...a, ...b]` joins two lists into one.
   for (const r of [...data.shortages, ...data.discontinuations]) data.byId.set(r.id, r);
 }
 
+// Downloads the daily change logs for "What's new" (data/changes/YYYY-MM-DD.json). Only done
+// when that view is opened, and only for days not downloaded already.
 async function loadChangeDays() {
   const days = data.changeIndex.slice(0, CHANGE_DAYS_SHOWN).filter(d => !data.changeDays.has(d.date));
   await Promise.all(days.map(async d => {
@@ -242,7 +328,10 @@ async function loadChangeDays() {
 // ---------------------------------------------------------------------------
 // URL state
 // ---------------------------------------------------------------------------
+// The address bar holds the current view, e.g. ?view=discontinuations&q=insulin. That way
+// links can be shared or bookmarked, and the browser's Back button works.
 
+// Address bar -> `state`. Anything missing or invalid falls back to a safe default.
 function readURL() {
   const p = new URLSearchParams(location.search);
   state.view = VIEWS[p.get('view')] ? p.get('view') : 'shortages';
@@ -253,13 +342,18 @@ function readURL() {
   state.sort = p.get('sort') || '';
   state.dir = p.get('dir') === 'asc' ? 'asc' : p.get('dir') === 'desc' ? 'desc' : '';
   state.page = Math.max(1, parseInt(p.get('page'), 10) || 1);
+  // /^\d{4}-\d{2}-\d{2}$/ is a "regular expression" (text pattern) meaning "exactly YYYY-MM-DD".
   state.day = /^\d{4}-\d{2}-\d{2}$/.test(p.get('day') || '') ? p.get('day') : '';
   state.kind = CHANGE_KINDS.some(k => k.id === p.get('kind')) ? p.get('kind') : '';
+  // If the tab doesn't exist in this section, use the section's first tab.
   const tabs = VIEWS[state.view].tabs;
   if (tabs && !tabs.some(t => t.id === state.tab)) state.tab = tabs[0].id;
   if (state.sort && !COLUMNS[state.sort]) state.sort = '';
 }
 
+// `state` -> address bar. Default values are left out to keep links short.
+// push = true adds a new Back-button step (e.g. switching tabs); false replaces the current one
+// (e.g. typing in search, so Back doesn't go through every letter).
 function writeURL(push = false) {
   const p = new URLSearchParams();
   if (state.view !== 'shortages') p.set('view', state.view);
@@ -273,6 +367,7 @@ function writeURL(push = false) {
   if (state.view === 'changes' && state.day) p.set('day', state.day);
   if (state.view === 'changes' && state.kind) p.set('kind', state.kind);
   const qs = p.toString();
+  // history.pushState / replaceState change the address bar without reloading the page.
   history[push ? 'pushState' : 'replaceState'](null, '', qs ? `?${qs}` : location.pathname);
 }
 
@@ -280,6 +375,8 @@ function writeURL(push = false) {
 // Filtering & sorting
 // ---------------------------------------------------------------------------
 
+// Keeps only the reports that pass the search box, the "Tier 3 only" box and the ATC dropdown.
+// Each line reads "this filter is off, OR the report passes it".
 function filtered(records) {
   const tokens = searchTokens();
   return records.filter(r =>
@@ -288,18 +385,23 @@ function filtered(records) {
     (!state.atc || (r.atc || '').startsWith(state.atc)));
 }
 
+// Does report r belong in this tab? "Recent" tabs take everything that isn't current;
+// other tabs take the statuses they list.
 function inTab(view, tab, r) {
   return tab.recent ? !view.current.includes(r.status) : tab.statuses.includes(r.status);
 }
 
+// The sort in use: the column the visitor clicked, or else the tab's default.
 function currentSort() {
   if (state.sort) return [state.sort, state.dir || 'asc'];
   return DEFAULT_SORT[state.tab];
 }
 
+// Returns a sorted copy of the rows (.slice() copies, so the original list isn't reordered).
+// The compare function returns a negative number if a goes first, positive if b goes first.
 function sortRows(rows, [colId, dir]) {
   const key = COLUMNS[colId].key;
-  const m = dir === 'asc' ? 1 : -1;
+  const m = dir === 'asc' ? 1 : -1;   // multiplying by -1 reverses the order
   return rows.slice().sort((a, b) => {
     const x = key(a), y = key(b);
     if (!x && !y) return 0;
@@ -309,6 +411,8 @@ function sortRows(rows, [colId, dir]) {
   });
 }
 
+// All rows for the current tab: filtered, limited to the tab, and sorted.
+// `data[state.view]` picks data.shortages or data.discontinuations by name.
 function visibleRows() {
   const view = VIEWS[state.view];
   const tab = view.tabs.find(t => t.id === state.tab);
@@ -318,10 +422,14 @@ function visibleRows() {
 // ---------------------------------------------------------------------------
 // Rendering
 // ---------------------------------------------------------------------------
+// These functions build HTML as text and put it into the page with `.innerHTML = ...`.
+// render() redraws everything from `state` and `data`, so after any change the page only
+// needs one call to render() to be up to date.
 
 function render() {
   renderUpdated();
   renderViews();
+  // "What's new" has no tabs, filters or pages, so those are hidden there.
   const isChanges = state.view === 'changes';
   $('tabs').hidden = isChanges;
   $('toolbar').hidden = isChanges;
@@ -331,33 +439,42 @@ function render() {
   renderTable();
 }
 
+// The "Updated ..." text under the title. It is shown in the visitor's own time zone.
+// If the last update is more than STALE_HOURS old, it warns that the data may be out of date.
 function renderUpdated() {
   const ts = data.meta.lastChecked;
   if (!ts) return;
   const d = new Date(ts);
   const el = $('updated');
   el.textContent = `Updated ${d.toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })}`;
+  // Date.now() - d.getTime() is the age in milliseconds; 36e5 (3,600,000) ms is one hour.
   const stale = (Date.now() - d.getTime()) / 36e5 > STALE_HOURS;
   el.classList.toggle('stale', stale);
   el.title = stale ? 'The daily update has not run recently; data may be out of date.' : '';
   if (stale) el.textContent += ' — may be out of date';
 }
 
+// The section links (Shortages / Discontinuations / What's new) with their counts.
+// Normally the count is how many are current; while searching it's how many match.
 function renderViews() {
-  const searching = !!state.q;
+  const searching = !!state.q;   // `!!` turns any value into true/false
+  // Object.entries gives [name, value] pairs, e.g. ['shortages', { label: ..., tabs: ... }].
   $('views').innerHTML = Object.entries(VIEWS).map(([id, v]) => {
     let n = '';
     if (id !== 'changes') {
       const rows = searching ? filtered(data[id]) : data[id].filter(r => v.current.includes(r.status));
       n = `<span class="n">${formatNumber(rows.length)}${searching ? ' match' + (rows.length === 1 ? '' : 'es') : ''}</span>`;
     }
+    // aria-current tells screen readers (and the CSS) which section is selected.
     return `<a href="?view=${id}" data-view="${id}"${id === state.view ? ' aria-current="page"' : ''}>${esc(v.label)}${n}</a>`;
   }).join('');
 }
 
+// The big tab buttons with counts (e.g. "512 Actual shortage").
 function renderTabs() {
   const view = VIEWS[state.view];
   const rows = filtered(data[state.view]);
+  // How many days the "recent" tabs cover, as set by the nightly script (30 if unknown).
   const days = data.meta.recentDays?.[state.view === 'shortages' ? 'shortage' : 'discontinuance'] || 30;
   $('tabs').innerHTML = view.tabs.map(t => {
     const n = rows.filter(r => inTab(view, t, r)).length;
@@ -367,8 +484,10 @@ function renderTabs() {
   }).join('');
 }
 
+// The table of reports for the current tab, plus the "1–100 of 512" count and Prev/Next buttons.
 function renderTable() {
   const rows = visibleRows();
+  // Work out which slice of rows is on this page.
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
   state.page = Math.min(state.page, pages);
   const start = (state.page - 1) * PAGE_SIZE;
@@ -380,6 +499,7 @@ function renderTable() {
     ? `${formatNumber(start + 1)}–${formatNumber(start + pageRows.length)} of ${formatNumber(rows.length)}`
     : '';
 
+  // Nothing to show: explain why instead of drawing an empty table.
   if (!rows.length) {
     const recentTab = VIEWS[state.view].tabs.find(t => t.id === state.tab).recent;
     $('content').innerHTML = `<div class="empty">${
@@ -391,11 +511,16 @@ function renderTable() {
     return;
   }
 
+  // Header row: each heading is a button (data-sort) so clicking it sorts by that column.
+  // aria-sort marks the sorted column for screen readers and for the arrow drawn by the CSS.
   const head = cols.map(c => {
     const aria = c === sortCol ? ` aria-sort="${sortDir === 'asc' ? 'ascending' : 'descending'}"` : '';
     return `<th scope="col"${aria}><button type="button" data-sort="${c}">${esc(COLUMNS[c].label)}</button></th>`;
   }).join('');
 
+  // One <tr> per report. data-id lets a click find which report to open; tabindex="0" lets
+  // keyboard users Tab to the row. Each cell uses the column's `html` function if it has
+  // one, otherwise its `key` text. data-label is shown as a caption on narrow (phone) screens.
   const body = pageRows.map(r => `<tr data-id="${r.id}" tabindex="0" aria-haspopup="dialog">${cols.map(c => {
     const col = COLUMNS[c];
     const content = col.html ? col.html(r) : esc(col.key(r));
@@ -404,6 +529,8 @@ function renderTable() {
 
   $('content').innerHTML = `<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 
+  // Prev / Next buttons, only when there is more than one page. data-page holds the page
+  // number each button goes to.
   $('pager').innerHTML = pages > 1
     ? `<button type="button" data-page="${state.page - 1}"${state.page === 1 ? ' disabled' : ''}>‹ Prev</button>
        <span class="muted">Page ${state.page} of ${pages}</span>
@@ -411,6 +538,7 @@ function renderTable() {
     : '';
 }
 
+// A field's value as text for "What's new" (empty -> 'none', true/false -> 'Yes'/'No', ...).
 function formatValue(field, value) {
   if (value === null || value === undefined || value === '') return field === 'estEnd' ? 'Unknown' : 'none';
   if (typeof value === 'boolean') return value ? 'Yes' : 'No';
@@ -418,12 +546,14 @@ function formatValue(field, value) {
   return String(value);
 }
 
+// The groups on "What's new", in display order (also the "Show:" chips).
 const CHANGE_KINDS = [
   { id: 'new', label: 'New' },
   { id: 'updated', label: 'Updated' },
   { id: 'closed', label: 'Resolved / discontinued' },
 ];
 
+// Is this report still active (a current shortage or an upcoming discontinuation)?
 function isCurrent(r) {
   return VIEWS.shortages.current.includes(r.status) || VIEWS.discontinuations.current.includes(r.status);
 }
@@ -432,13 +562,16 @@ function isCurrent(r) {
 // Only available for changes made since tracking started; entries without them just say "Updated".
 function changeDetails() {
   const byId = new Map();
+  // Small helper defined inside this function: adds one line to a report's list.
   const add = (id, date, html) => {
     if (!byId.has(id)) byId.set(id, []);
     byId.get(id).push({ date, html });
   };
+  // One change as HTML, e.g. "Est. end: 2026-11-01 → 2026-12-15".
   const fieldHtml = c => c.field === 'status'
     ? `${statusBadge(c.from)} → ${statusBadge(c.to)}`
     : `<b>${esc(FIELD_LABELS[c.field] || c.field)}:</b> ${esc(formatValue(c.field, c.from))} → ${esc(formatValue(c.field, c.to))}`;
+  // Go through each day's log and collect its changes by report.
   for (const [date, day] of data.changeDays) {
     if (!day) continue;
     for (const e of day.updated || []) for (const c of e.changes || []) add(e.id, date, fieldHtml(c));
@@ -447,6 +580,7 @@ function changeDetails() {
   return byId;
 }
 
+// One report's line in "What's new": type, brand, details, current status and any changes.
 function whatsNewLine(r, details) {
   const typeLabel = r.type === 'shortage' ? 'Shortage' : 'Discontinuation';
   const meta = [r.strength, r.din && `DIN ${r.din}`, r.company].filter(Boolean).join(' · ');
@@ -458,28 +592,38 @@ function whatsNewLine(r, details) {
 // What's new lists reports by their own updated date (like the official homepage), so it works
 // without any tracking history. Field-level details from the change log are added when known.
 // A day bar and a kind bar at the top filter the list.
+// changeKind: which group a report goes in. Created that day = 'new'; otherwise 'updated'
+// if still active, or 'closed' if resolved/discontinued.
 function changeKind(r, day) {
   if ((r.created || '').slice(0, 10) === day) return 'new';
   return isCurrent(r) ? 'updated' : 'closed';
 }
 
+// "2026-10-19" -> "Mon, Oct 19" (or "Mon, Oct 19, 2026" with withYear). The T12:00:00 (noon)
+// keeps the date from slipping to the day before in time zones west of UTC.
 function shortDay(day, withYear = false) {
   return new Date(`${day}T12:00:00`).toLocaleDateString('en-CA',
+    // `...(cond ? {...} : {})` adds the year option only when withYear is true.
     { weekday: 'short', month: 'short', day: 'numeric', ...(withYear ? { year: 'numeric' } : {}) });
 }
 
+// One filter chip button. `attr` is 'data-day' or 'data-kind'; the click handler reads it.
+// aria-pressed shows whether it's selected.
 function chip(attr, value, label, count, selected) {
   return `<button type="button" class="chip" ${attr}="${value}" aria-pressed="${selected}">${esc(label)}<span class="n">${formatNumber(count)}</span></button>`;
 }
 
+// The "What's new" view: reports updated in the past week, grouped by day and then by kind.
 async function renderChanges() {
   $('content').innerHTML = '<p class="muted">Loading…</p>';
   await loadChangeDays();
+  // While the change logs were downloading, the visitor may have clicked away; if so, stop.
   if (state.view !== 'changes') return;
 
   const details = changeDetails();
   const tokens = searchTokens();
   const since = daysAgo(CHANGE_DAYS_SHOWN - 1);
+  // Collect every report updated in the past week (and matching the search, if any).
   const entries = [];
   for (const r of [...data.shortages, ...data.discontinuations]) {
     const day = (r.updated || '').slice(0, 10);
@@ -488,6 +632,7 @@ async function renderChanges() {
   }
 
   // Each bar's counts respect the other bar's selection.
+  // `new Set(...)` removes duplicate days; sort().reverse() puts the newest day first.
   const days = [...new Set(entries.map(e => e.day))].sort().reverse();
   const inKind = e => !state.kind || e.kind === state.kind;
   const inDay = e => !state.day || e.day === state.day;
@@ -498,6 +643,8 @@ async function renderChanges() {
   const bars = `<div class="chips" role="group" aria-label="Day">${dayBar.join('')}</div>
     <div class="chips" role="group" aria-label="Kind of change"><span class="muted">Show:</span>${kindBar.join('')}</div>`;
 
+  // Build one <section> per day, each with a heading and a list per kind (New, Updated, ...),
+  // sorted by brand name.
   const shown = entries.filter(e => inDay(e) && inKind(e));
   const html = days.filter(d => !state.day || d === state.day).map(day => {
     const dayEntries = shown.filter(e => e.day === day);
@@ -505,6 +652,7 @@ async function renderChanges() {
     const parts = CHANGE_KINDS.map(k => {
       const list = dayEntries.filter(e => e.kind === k.id).map(e => e.r)
         .sort((a, b) => collator.compare(a.brand || '', b.brand || ''));
+      // Only show change details logged on or after this day, so older edits aren't repeated.
       return list.length
         ? `<h3>${k.label} (${list.length})</h3><ul>${list.map(r =>
             whatsNewLine(r, (details.get(r.id) || []).filter(d => d.date >= day))).join('')}</ul>`
@@ -513,6 +661,7 @@ async function renderChanges() {
     return `<section class="day"><h2>${esc(shortDay(day, true))}<span class="muted">${formatNumber(dayEntries.length)} reports</span></h2>${parts}</section>`;
   }).join('');
 
+  // Message for when nothing matches.
   const empty = `<div class="empty">No reports ${tokens.length ? `matching “${esc(state.q)}” ` : ''}${
     state.day || state.kind ? 'for this selection' : `updated in the past ${CHANGE_DAYS_SHOWN} days`}.</div>`;
   $('content').innerHTML = bars + (html || empty);
@@ -521,11 +670,14 @@ async function renderChanges() {
 // ---------------------------------------------------------------------------
 // Detail dialog
 // ---------------------------------------------------------------------------
+// The popup with every field of a report, opened by clicking a row.
 
 function openDetail(id) {
   const r = data.byId.get(id);
   if (!r) return;
   const isShortage = r.type === 'shortage';
+  // Each row is [label, value]; the third item `true` means the value is already HTML.
+  // `...(isShortage ? [...] : [...])` inserts the shortage fields or the discontinuation fields.
   const rows = [
     ['Status', statusBadge(r.status), true],
     ['DIN', r.din],
@@ -540,6 +692,7 @@ function openDetail(id) {
     ['Reason', r.reason],
     ...(isShortage ? [
       ['Expected start', expectedStart(r)],
+      // Already shown as the expected start (see expectedStart), so don't repeat it here.
       ['Actual start', r.status === 'anticipated_shortage' && !r.anticipatedStart ? null : r.actualStart],
       ['Estimated end', r.estEnd || 'Unknown'],
       ['Actual end', r.actualEnd],
@@ -555,8 +708,10 @@ function openDetail(id) {
     ['Report created', (r.created || '').slice(0, 10)],
     ['Report updated', (r.updated || '').slice(0, 10)],
     ['Status change detected', r.changedOn],
+  // Drop rows with no value. `([, v])` skips the label and takes just the value.
   ].filter(([, v]) => v);
 
+  // <dl>, <dt> and <dd> are HTML's list of label/value pairs.
   const dialog = $('detail');
   dialog.innerHTML = `
     <div class="d-head">
@@ -569,13 +724,17 @@ function openDetail(id) {
       <a class="official" href="${OFFICIAL_URL[r.type]?.(r.id) || 'https://healthproductshortages.ca'}" target="_blank" rel="noopener">
         View official report #${r.id} ↗</a>
     </div>`;
+  // showModal() opens the <dialog> on top of the page; Esc closes it automatically.
   dialog.showModal();
 }
 
 // ---------------------------------------------------------------------------
 // Events
 // ---------------------------------------------------------------------------
+// Reacting to clicks and typing. addEventListener('click', fn) means "run fn on each click".
 
+// Makes the search box, checkbox and dropdown show what's in `state`
+// (e.g. after the Back button changes the state).
 function syncControls() {
   $('q').value = state.q;
   $('q-clear').hidden = !state.q;
@@ -583,6 +742,9 @@ function syncControls() {
   $('f-atc').value = state.atc;
 }
 
+// The one way the page changes: merge `changes` into `state`, update the address bar, redraw.
+// e.g. update({ tab: 'resolved' }). Most changes go back to page 1, unless resetPage is false.
+// `{ push = false, resetPage = true } = {}` gives default values when options aren't passed.
 function update(changes, { push = false, resetPage = true } = {}) {
   Object.assign(state, changes);
   if (resetPage) state.page = 1;
@@ -590,6 +752,7 @@ function update(changes, { push = false, resetPage = true } = {}) {
   render();
 }
 
+// Fills the ATC dropdown, listing only groups that some report actually uses.
 function populateAtc() {
   const present = new Set([...data.shortages, ...data.discontinuations].map(r => (r.atc || '')[0]).filter(Boolean));
   $('f-atc').insertAdjacentHTML('beforeend', Object.entries(ATC_GROUPS)
@@ -597,6 +760,9 @@ function populateAtc() {
     .map(([code, name]) => `<option value="${code}">${code} — ${esc(name)}</option>`).join(''));
 }
 
+// Light/dark theme button. The choice is stored as data-theme="light"/"dark" on the <html>
+// element (the CSS reads it) and saved in localStorage so it's remembered next visit.
+// 'auto' means no data-theme, so the page follows the device's setting.
 const THEMES = {
   auto: { icon: '◐', name: 'Auto', label: 'Auto (follows device)' },
   light: { icon: '☀', name: 'Light', label: 'Light' },
@@ -607,6 +773,7 @@ function currentTheme() {
   return document.documentElement.dataset.theme || 'auto';
 }
 
+// Shows the current theme's icon and name on the button.
 function renderThemeButton() {
   const theme = THEMES[currentTheme()];
   const btn = $('theme');
@@ -615,11 +782,14 @@ function renderThemeButton() {
   btn.setAttribute('aria-label', btn.title);
 }
 
+// Each click moves to the next theme: auto -> light -> dark -> auto.
+// `% order.length` wraps around from the last one back to the first.
 function cycleTheme() {
   const order = Object.keys(THEMES);
   const next = order[(order.indexOf(currentTheme()) + 1) % order.length];
   if (next === 'auto') delete document.documentElement.dataset.theme;
   else document.documentElement.dataset.theme = next;
+  // try/catch: if saving fails (e.g. private browsing), carry on instead of breaking the page.
   try {
     if (next === 'auto') localStorage.removeItem('theme');
     else localStorage.setItem('theme', next);
@@ -627,12 +797,19 @@ function cycleTheme() {
   renderThemeButton();
 }
 
+// Connects all the click/typing handlers. Runs once when the page loads.
+//
+// Since the tables and buttons are redrawn all the time, most handlers are attached to a
+// container that stays put (like #content) rather than to each button. When something
+// inside is clicked, e.target is what was clicked, and e.target.closest('button[data-sort]')
+// finds the nearest such button around it (or null). This is called "event delegation".
 function bindEvents() {
   let timer;
   renderThemeButton();
   $('theme').addEventListener('click', cycleTheme);
+  // Clicking the site title resets everything and goes back to the first tab.
   $('home').addEventListener('click', e => {
-    e.preventDefault();
+    e.preventDefault();   // stop the link from reloading the page; we redraw instead
     update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '', day: '', kind: '' }, { push: true });
     syncControls();
     window.scrollTo({ top: 0 });
@@ -643,6 +820,9 @@ function bindEvents() {
     $('q-clear').hidden = true;
     if (state.q) update({ q: '' });
   };
+  // Search while typing. setTimeout waits 150 ms after the last key before searching, and
+  // clearTimeout cancels the wait if another key comes first, so fast typing doesn't redraw
+  // the page on every letter.
   $('q').addEventListener('input', e => {
     $('q-clear').hidden = !e.target.value;
     clearTimeout(timer);
@@ -655,11 +835,12 @@ function bindEvents() {
   $('f-tier3').addEventListener('change', e => update({ tier3: e.target.checked }));
   $('f-atc').addEventListener('change', e => update({ atc: e.target.value }));
 
+  // Section links: switch section, start on its first tab and default sort.
   $('views').addEventListener('click', e => {
     const a = e.target.closest('a[data-view]');
     if (!a) return;
     e.preventDefault();
-    const view = a.dataset.view;
+    const view = a.dataset.view;   // dataset.view reads the data-view="..." attribute
     update({ view, tab: VIEWS[view].tabs?.[0].id || '', sort: '', dir: '', day: '', kind: '' }, { push: true });
   });
 
@@ -668,6 +849,7 @@ function bindEvents() {
     if (b) update({ tab: b.dataset.tab, sort: '', dir: '' }, { push: true });
   });
 
+  // Prev / Next. `+b.dataset.page` turns the text "2" into the number 2.
   $('pager').addEventListener('click', e => {
     const b = e.target.closest('button[data-page]');
     if (!b || b.disabled) return;
@@ -675,7 +857,10 @@ function bindEvents() {
     window.scrollTo({ top: 0 });
   });
 
+  // Every click inside the main area. Checks what was clicked, most specific first, and
+  // `return`s once handled so that e.g. clicking the copy button doesn't also open the row.
   $('content').addEventListener('click', e => {
+    // DIN copy button: copy, show a ✓ for 1.2 seconds, then put the icon back.
     const copy = e.target.closest('button[data-copy]');
     if (copy) {
       navigator.clipboard?.writeText(copy.dataset.copy).then(() => {
@@ -684,12 +869,15 @@ function bindEvents() {
       });
       return;
     }
+    // A "What's new" day or kind chip.
     const chip = e.target.closest('button[data-day], button[data-kind]');
     if (chip) {
       if ('day' in chip.dataset) update({ day: chip.dataset.day }, { push: true });
       else update({ kind: chip.dataset.kind }, { push: true });
       return;
     }
+    // A column heading: clicking the sorted column again flips the direction;
+    // a different column starts ascending.
     const sort = e.target.closest('button[data-sort]');
     if (sort) {
       const [col, dir] = currentSort();
@@ -697,6 +885,7 @@ function bindEvents() {
       update({ sort: sort.dataset.sort, dir: next });
       return;
     }
+    // Anything else inside a row opens that report's details.
     const row = e.target.closest('[data-id]');
     if (row) openDetail(+row.dataset.id);
   });
@@ -709,6 +898,8 @@ function bindEvents() {
     }
   });
 
+  // Close the popup on the ✕ button, or on a click on the dark area around it
+  // (that click lands on the <dialog> element itself).
   const dialog = $('detail');
   let opener = null;
   dialog.addEventListener('click', e => {
@@ -718,6 +909,7 @@ function bindEvents() {
   $('content').addEventListener('focusin', e => { if (e.target.matches('[data-id]')) opener = e.target; });
   dialog.addEventListener('close', () => { if (opener?.isConnected) opener.focus({ preventScroll: true }); });
 
+  // Pressing "/" anywhere jumps to the search box.
   document.addEventListener('keydown', e => {
     if (e.key === '/' && document.activeElement !== $('q') && !dialog.open) {
       e.preventDefault();
@@ -725,12 +917,16 @@ function bindEvents() {
     }
   });
 
+  // The browser's Back/Forward buttons: re-read the address bar and redraw.
   window.addEventListener('popstate', () => { readURL(); syncControls(); render(); });
 }
 
 // ---------------------------------------------------------------------------
 // Start
 // ---------------------------------------------------------------------------
+// The starting point. `(async function init() { ... })();` defines a function and runs it
+// straight away. The steps are in order: read the address bar, hook up the buttons,
+// download the data, fill the dropdown, then draw the page.
 
 (async function init() {
   readURL();
@@ -738,6 +934,7 @@ function bindEvents() {
   try {
     await load();
   } catch (err) {
+    // A download failed: show a message instead of a blank page.
     $('content').innerHTML = `<div class="empty">Could not load data (${esc(err.message)}). Try refreshing the page.</div>`;
     return;
   }

@@ -1,12 +1,22 @@
+# GitHub Actions workflow: a list of steps GitHub runs on its own computers.
+# It has two jobs:
+#   update - runs the Python script to download the latest reports, then commits data/ changes.
+#   deploy - publishes the site (all the files in the repo) to GitHub Pages.
+
 name: Update data and deploy
 
+# When the workflow runs.
 on:
   schedule:
+    # Cron format: minute hour day-of-month month day-of-week, always in UTC.
+    # GitHub may start scheduled runs late (sometimes by hours) when it is busy.
     - cron: "0 5 * * *"    # 05:00 UTC = 1 AM EDT in summer, midnight EST in winter
   workflow_dispatch:        # "Run workflow" button in the Actions tab
   push:
     branches: [main]        # redeploy when site code changes
 
+# Only one run at a time; a new run waits for the current one instead of cancelling it,
+# so two runs never try to commit data at once.
 concurrency:
   group: update-data
   cancel-in-progress: false
@@ -17,21 +27,27 @@ jobs:
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Allows this job to push the data commit back to the repo.
     permissions:
       contents: write
     steps:
+      # Download a copy of the repo onto the runner.
       - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
+      # The login for the official API comes from the repo's secrets
+      # (Settings > Secrets and variables > Actions), so it is never stored in the code.
       - name: Fetch reports and compare with previous data
         env:
           HPS_EMAIL: ${{ secrets.HPS_EMAIL }}
           HPS_PASSWORD: ${{ secrets.HPS_PASSWORD }}
         run: python3 scripts/fetch_and_diff.py
 
+      # Commit and push data/ only if something changed (git diff --cached --quiet
+      # succeeds when there is nothing new, and the step stops there).
       - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
@@ -49,6 +65,7 @@ jobs:
     # Runs after a successful update, or on its own for code pushes (update skipped).
     if: ${{ !cancelled() && (needs.update.result == 'success' || needs.update.result == 'skipped') }}
     runs-on: ubuntu-latest
+    # Permissions GitHub Pages needs to publish the site.
     permissions:
       pages: write
       id-token: write
@@ -60,9 +77,11 @@ jobs:
         with:
           ref: main   # pick up the data commit made by the update job
 
+      # Package the whole repo folder (path: .) as the website...
       - uses: actions/upload-pages-artifact@v5
         with:
           path: .
 
+      # ...and publish it.
       - id: deployment
         uses: actions/deploy-pages@v5

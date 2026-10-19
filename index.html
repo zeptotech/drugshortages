@@ -1,8 +1,15 @@
 <!doctype html>
+<!--
+  index.html — the page's skeleton. Most elements here start empty (e.g. id="tabs",
+  id="content"); app.js fills them in once the data has loaded, looking them up by their id.
+  styles.css controls how everything looks.
+-->
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- Makes the page fit phone screens instead of showing a zoomed-out desktop page. -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Asks search engines not to list this page. -->
   <meta name="robots" content="noindex, nofollow">
   <title>Health Product Shortages Canada Viewer</title>
   <script>
@@ -13,9 +20,11 @@
     } catch (e) {}
   </script>
   <link rel="stylesheet" href="styles.css">
+  <!-- `defer`: download app.js now, but only run it once the HTML below has been read. -->
   <script src="app.js" defer></script>
 </head>
 <body>
+  <!-- Top bar: title, "Updated ..." time, search box, theme button, section links. -->
   <header class="top">
     <div class="wrap top-row">
       <div class="title">
@@ -26,19 +35,24 @@
         <div class="search">
           <input id="q" type="search" placeholder="Search brand, ingredient, DIN, company, ATC…  ( / )"
                  autocomplete="off" spellcheck="false" aria-label="Search">
+          <!-- `hidden` until there is text to clear. -->
           <button id="q-clear" type="button" aria-label="Clear search" title="Clear search" hidden>✕</button>
         </div>
         <button id="theme" type="button" class="theme-btn"></button>
       </div>
     </div>
+    <!-- Shortages / Discontinuations / What's new links (filled by renderViews in app.js). -->
     <nav class="wrap views" id="views" aria-label="Sections"></nav>
   </header>
 
   <main class="wrap">
+    <!-- Tab buttons with counts (renderTabs). -->
     <div id="tabs" class="tabs" role="tablist"></div>
 
+    <!-- Filters, and the "1–100 of 512" count on the right. -->
     <div id="toolbar" class="toolbar">
       <label><input type="checkbox" id="f-tier3"> Tier 3 only</label>
+      <!-- The other options are added by populateAtc in app.js. -->
       <select id="f-atc" aria-label="Drug class (ATC)">
         <option value="">All drug classes (ATC)</option>
       </select>
@@ -46,7 +60,10 @@
       <span id="count" class="muted"></span>
     </div>
 
+    <!-- The table or the "What's new" list goes here. aria-live tells screen readers
+         to announce when it changes. -->
     <div id="content" aria-live="polite"><p class="muted">Loading…</p></div>
+    <!-- Prev / Next page buttons. -->
     <div id="pager" class="pager"></div>
   </main>
 
@@ -59,6 +76,7 @@
     <span class="tag new">New</span> / <span class="tag upd">Updated</span> in the last 7 days
   </footer>
 
+  <!-- The popup with a report's details; filled and opened by openDetail in app.js. -->
   <dialog id="detail" aria-labelledby="detail-title"></dialog>
 </body>
 </html>

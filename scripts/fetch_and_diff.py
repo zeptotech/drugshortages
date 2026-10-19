@@ -18,6 +18,12 @@ All API calls happen before anything is written, so a failed run leaves the
 existing data untouched.
 """
 
+# Overview of a run (main() at the bottom is where it starts):
+#   1. Log in to the official API and get a token (a temporary pass sent with each request).
+#   2. build(): download every current report, and compare with yesterday's files in data/
+#      to find what is new, what was updated and what changed status.
+#   3. save(): write the new JSON files. The GitHub Action then commits them.
+
 import argparse
 import json
 import os
@@ -84,12 +90,15 @@ KNOWN_KEYS = {
 }
 
 
+# Our own error type, raised when the API fails. main() catches it, prints it and stops
+# before anything is written.
 class ApiError(Exception):
     pass
 
 
 # --- HTTP -------------------------------------------------------------------
 
+# Pull a readable error message out of an API response.
 def error_text(body):
     if isinstance(body, dict) and isinstance(body.get("error"), dict):
         return body["error"].get("en") or str(body["error"])
@@ -106,6 +115,9 @@ def request(method, path, token=None, params=None, form=None):
     if token:
         headers["auth-token"] = token
 
+    # Try up to MAX_RETRIES times. 429 means "too many requests" and 5xx means the server
+    # had a problem; both are worth waiting and trying again. Other errors (like 404 not
+    # found) are returned so the caller can decide what to do.
     for attempt in range(1, MAX_RETRIES + 1):
         req = urllib.request.Request(url, data=data, headers=headers, method=method)
         try:
@@ -129,6 +141,7 @@ def request(method, path, token=None, params=None, form=None):
     raise ApiError(f"Giving up on {path} after {MAX_RETRIES} attempts")
 
 
+# The server can say how many seconds to wait in a "Retry-After" header.
 def retry_after(headers):
     try:
         return max(1, int(headers.get("Retry-After", "")))
@@ -151,6 +164,9 @@ def login(email, password):
 
 def fetch_status(token, status):
     """All reports with the given status, paged by id ascending as the API requires."""
+    # The API returns at most PAGE_SIZE reports per call, so keep asking for the next page
+    # (offset = how many to skip) until "remaining" says there are none left.
+    # Reports are kept in a dict by id, so one that shows up twice is only counted once.
     reports, offset = {}, 0
     while True:
         code, _, body = request("GET", "search", token, params={
@@ -195,6 +211,8 @@ def fetch_recent(token, status, cutoff):
         if not rows or body.get("remaining", 0) <= 0 or (oldest and oldest < cutoff):
             break
         time.sleep(REQUEST_DELAY)
+    # A `for ... else` runs the else part only if the loop finished without `break`,
+    # i.e. we hit the page limit before reaching the cutoff date.
     else:
         log(f"  Note: stopped {status} after {MAX_RECENT_PAGES} pages")
     return list(reports.values())
@@ -225,6 +243,7 @@ def clean_route(value):
     return ", ".join(dict.fromkeys(p for p in parts if p))
 
 
+# The English reason text, or None. `(x or {})` avoids an error when the field is missing.
 def reason(rec, key):
     return (rec.get(key) or {}).get("en_reason")
 
@@ -276,6 +295,7 @@ def slim(rec):
     return out
 
 
+# Prints any field from the API that isn't in KNOWN_KEYS, to spot new data worth using.
 def note_unknown_keys(rec, seen):
     for key, value in rec.items():
         if key in KNOWN_KEYS or key in seen or key.startswith("fr_") or key.endswith("_fr"):
@@ -284,10 +304,12 @@ def note_unknown_keys(rec, seen):
         log(f"  New API field (not used yet): {key} = {json.dumps(value)[:80]}")
 
 
+# The few fields needed to list a report in the change log.
 def summary(r):
     return {k: r.get(k) for k in ("id", "type", "status", "brand", "din", "strength", "company", "tier3")}
 
 
+# Which TRACKED_FIELDS differ between yesterday's and today's copy of a report.
 def field_changes(old, new):
     return [
         {"field": f, "from": old.get(f), "to": new.get(f)}
@@ -298,12 +320,15 @@ def field_changes(old, new):
 
 # --- Main diff --------------------------------------------------------------
 
+# Yesterday's reports from a JSON file, as a dict by id (empty on the very first run).
 def load_reports(path):
     if not path.exists():
         return {}
     return {r["id"]: r for r in json.loads(path.read_text())["reports"]}
 
 
+# Safety check: if a status suddenly has less than half as many reports as yesterday,
+# the API probably gave an incomplete answer, so stop rather than publish it.
 def check_count(status, new_count, old_reports, force):
     old_count = sum(1 for r in old_reports.values() if r["status"] == status)
     if not force and old_count >= 50 and new_count < old_count * MIN_COUNT_RATIO:
@@ -322,6 +347,7 @@ def build(token, prev, today, force, last_checked=None):
     changes = {"date": today.isoformat(), "new": [], "updated": [], "statusChanged": []}
     output, counts, seen_keys = {}, {}, set()
 
+    # The same steps run twice: once for shortages, once for discontinuances.
     for kind, statuses in CURRENT.items():
         old = prev[kind]
         current = {}
@@ -335,6 +361,8 @@ def build(token, prev, today, force, last_checked=None):
             log(f"  {len(raw)} reports")
             time.sleep(REQUEST_DELAY)
 
+        # Compare with yesterday: not there before = new; different updated date or
+        # status = updated (if any tracked field actually changed).
         for rid, r in current.items():
             o = old.get(rid)
             if o is None:
@@ -391,6 +419,7 @@ def build(token, prev, today, force, last_checked=None):
                     and o.get("changedOn", "") >= cutoff):
                 recent[rid] = o
 
+        # Everything for this kind, most recently updated first, plus counts per status.
         reports = sorted([*current.values(), *recent.values()],
                          key=lambda r: r.get("updated") or "", reverse=True)
         output[kind] = reports
@@ -414,6 +443,8 @@ def dumps_line_per_item(data):
     return "{" + ",\n".join(parts) + "}\n"
 
 
+# Writes to a temporary file first, then swaps it in, so a crash halfway never leaves
+# a half-written file behind.
 def write_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -430,6 +461,8 @@ def merge_same_day(existing, changes):
     return changes
 
 
+# Writes all output files. The change log is skipped on the first run, since everything
+# would look "new".
 def save(data_dir, output, changes, counts, first_run, now):
     today = changes["date"]
     has_changes = any(changes[k] for k in ("new", "updated", "statusChanged"))
@@ -468,6 +501,8 @@ def log(msg):
     print(msg, flush=True)
 
 
+# Where the script starts. Reads the options and the login from environment variables
+# (set from GitHub secrets in the workflow), then runs build() and save().
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     parser.add_argument("--data-dir", default="data", type=Path)
@@ -506,5 +541,6 @@ def main():
         log("No changes since last run.")
 
 
+# Only run main() when this file is run directly (not when it is imported).
 if __name__ == "__main__":
     main()
