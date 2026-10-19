@@ -2,7 +2,7 @@ name: Update data and deploy
 
 on:
   schedule:
-    - cron: "0 11 * * *"   # 11:00 UTC = 7 AM Eastern (6 AM in winter)
+    - cron: "0 5 * * *"    # 05:00 UTC = 1 AM EDT in summer, midnight EST in winter
   workflow_dispatch:        # "Run workflow" button in the Actions tab
   push:
     branches: [main]        # redeploy when site code changes
