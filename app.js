@@ -82,7 +82,7 @@ const DEFAULT_SORT = {
   actual: ['updated', 'desc'],
   anticipated: ['anticipatedStart', 'asc'],
   resolved: ['changedOn', 'desc'],
-  upcoming: ['discDate', 'asc'],
+  upcoming: ['updated', 'desc'],
   discontinued: ['changedOn', 'desc'],
 };
 
