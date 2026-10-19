@@ -85,7 +85,7 @@ const TAB_COLUMNS = {
 
 const DEFAULT_SORT = {
   actual: ['updated', 'desc'],
-  anticipated: ['anticipatedStart', 'asc'],
+  anticipated: ['updated', 'desc'],
   resolved: ['changedOn', 'desc'],
   upcoming: ['updated', 'desc'],
   discontinued: ['changedOn', 'desc'],
