@@ -6,9 +6,9 @@ refreshed daily.
 
 **Live site:** https://zeptotech.github.io/drugshortages/
 
-This is an independent tool for pharmacists. It is not affiliated with Health
+This is an independent tool for healthcare professionals. It is not affiliated with Health
 Canada. Always confirm details with the official report, which is linked from
-each entry.
+each entry. Use at your own discretion.
 
 ## Features
 
