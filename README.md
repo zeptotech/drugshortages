@@ -13,7 +13,9 @@ each entry. Use at your own discretion.
 ## Features
 
 - **Shortages**: tabs for *Actual shortage*, *Anticipated shortage* and
-  *Resolved / avoided* (last 30 days), each with a count.
+  *Resolved / avoided* (last 30 days), each with a count. The *Actual shortage*
+  tab shows how many days each shortage has lasted. When a company never entered
+  an actual start date, the expected start is used and marked "expected".
 - **Discontinuations**: tabs for *To be discontinued* and *Discontinued*
   (last 30 days).
 - **What's new**: reports updated in the past 7 days, grouped by day into new,
@@ -28,11 +30,16 @@ each entry. Use at your own discretion.
 - **Late** tag on reports filed more than 5 days after the anticipated or actual
   start date (the API's `late_submission` flag).
 - **New / Updated** column for reports created or updated in the last 7 days.
-- **Detail view**: click a row to see every field, including mitigation,
-  company comments and Health Canada comments, plus a link to the official report.
+- **Detail view**: click a row (or Tab to it and press Enter) to see every
+  field, including mitigation, company comments and Health Canada comments, plus
+  a link to the official report.
 - **Shareable links**: the view, tab, search and filters are kept in the URL.
-- Sortable columns, copy-to-clipboard DINs, phone layout, and automatic
-  light/dark theme.
+- Sortable columns, copy-to-clipboard DINs, `/` to jump to search, and a phone
+  layout.
+- **Theme** button: Auto (follows your device), Light or Dark. The choice is
+  remembered.
+- **Last updated** time under the title, in your own time zone. It warns if the
+  daily update hasn't run in over 36 hours.
 
 ## How it works
 
@@ -40,7 +47,7 @@ There is no server. A scheduled GitHub Actions job is the backend, and the site
 is static files served by GitHub Pages.
 
 ```
-Daily, 7 AM Eastern (GitHub Actions)              Anytime (browser)
+Daily, ~midnight Eastern (GitHub Actions)         Anytime (browser)
 ┌───────────────────────────────────────┐   ┌───────────────────────────┐
 │ scripts/fetch_and_diff.py             │   │ index.html + app.js       │
 │  1. log in to the API (repo secrets)  │   │  loads data/*.json        │
@@ -98,6 +105,10 @@ The workflow (`.github/workflows/update-data.yml`):
   changed, and deploys.
 - **On a push to `main`:** only redeploys the site.
 
+The schedule is `0 5 * * *`: 05:00 UTC, which is midnight EST in winter and
+1 AM EDT in summer (GitHub cron always uses UTC). GitHub can start scheduled
+runs late when it is busy, sometimes by hours, so the actual time varies.
+
 ## Local development
 
 Fetch data, using only the Python 3.9+ standard library (nothing to install):
@@ -115,6 +126,9 @@ python3 -m http.server 8000
 ```
 
 The bot commits data daily, so run `git pull` before starting work.
+
+The code is commented for readers new to it. `app.js` starts with an overview of
+how the page works.
 
 ## Project layout
 
