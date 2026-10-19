@@ -494,6 +494,7 @@ function openDetail(id) {
 
 function syncControls() {
   $('q').value = state.q;
+  $('q-clear').hidden = !state.q;
   $('f-tier3').checked = state.tier3;
   $('f-atc').value = state.atc;
 }
@@ -520,10 +521,21 @@ function bindEvents() {
     syncControls();
     window.scrollTo({ top: 0 });
   });
+  const clearSearch = () => {
+    clearTimeout(timer);
+    $('q').value = '';
+    $('q-clear').hidden = true;
+    if (state.q) update({ q: '' });
+  };
   $('q').addEventListener('input', e => {
+    $('q-clear').hidden = !e.target.value;
     clearTimeout(timer);
     timer = setTimeout(() => update({ q: e.target.value.trim() }), 150);
   });
+  $('q').addEventListener('keydown', e => {
+    if (e.key === 'Escape' && e.target.value) { e.preventDefault(); clearSearch(); }
+  });
+  $('q-clear').addEventListener('click', () => { clearSearch(); $('q').focus(); });
   $('f-tier3').addEventListener('change', e => update({ tier3: e.target.checked }));
   $('f-atc').addEventListener('change', e => update({ atc: e.target.value }));
 
