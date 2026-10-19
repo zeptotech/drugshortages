@@ -155,7 +155,9 @@ function activityTag(r) {
 
 function drugCell(r) {
   const sub = [r.ingredients, r.form, r.route].filter(Boolean).join(' · ');
-  return `<div class="brand">${esc(r.brand)}${tags(r)}</div>${sub ? `<div class="sub">${esc(sub)}</div>` : ''}`;
+  return `<div class="brand">${esc(r.brand)}${tags(r)}</div>`
+    + (sub ? `<div class="sub">${esc(sub)}</div>` : '')
+    + (r.company ? `<div class="sub company">${esc(r.company)}</div>` : '');
 }
 
 function dinCell(r) {

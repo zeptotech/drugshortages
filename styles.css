@@ -148,6 +148,7 @@ td.nowrap, td.date { white-space: nowrap; }
 td.date { font-variant-numeric: tabular-nums; }
 .brand { font-weight: 600; }
 .sub { color: var(--muted); font-size: 12.5px; }
+.sub.company { font-style: italic; }
 
 .din { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
 .copy {
