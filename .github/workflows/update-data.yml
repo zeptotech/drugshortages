@@ -11,6 +11,7 @@ on:
     # Cron format: minute hour day-of-month month day-of-week, always in UTC.
     # GitHub may start scheduled runs late (sometimes by hours) when it is busy.
     - cron: "0 5 * * *"    # 05:00 UTC = 1 AM EDT in summer, midnight EST in winter
+    - cron: "0 17 * * *"   # 17:00 UTC = 1 PM EDT in summer, noon EST in winter
   workflow_dispatch:        # "Run workflow" button in the Actions tab
   push:
     branches: [main]        # redeploy when site code changes

@@ -2,7 +2,7 @@
 
 A simpler way to browse Canadian drug shortage and discontinuation reports from
 [Health Product Shortages Canada](https://healthproductshortages.ca). The data is
-refreshed daily.
+refreshed twice a day.
 
 **Live site:** https://zeptotech.github.io/drugshortages/
 
@@ -39,7 +39,7 @@ each entry. Use at your own discretion.
 - **Theme** button: Auto (follows your device), Light or Dark. The choice is
   remembered.
 - **Last updated** time under the title, in your own time zone. It warns if the
-  daily update hasn't run in over 36 hours.
+  update hasn't run in over 36 hours.
 
 ## How it works
 
@@ -47,7 +47,7 @@ There is no server. A scheduled GitHub Actions job is the backend, and the site
 is static files served by GitHub Pages.
 
 ```
-Daily, ~midnight Eastern (GitHub Actions)         Anytime (browser)
+Midnight + noon Eastern (GitHub Actions)          Anytime (browser)
 ┌───────────────────────────────────────┐   ┌───────────────────────────┐
 │ scripts/fetch_and_diff.py             │   │ index.html + app.js       │
 │  1. log in to the API (repo secrets)  │   │  loads data/*.json        │
@@ -97,7 +97,7 @@ which reports changed.
    and add `HPS_EMAIL` and `HPS_PASSWORD`.
 3. **Pages:** go to **Settings → Pages → Source** and choose **GitHub Actions**.
 4. **Run it:** go to **Actions → Update data and deploy → Run workflow**, or
-   wait for the daily schedule.
+   wait for the next scheduled run.
 
 The workflow (`.github/workflows/update-data.yml`):
 
@@ -105,9 +105,14 @@ The workflow (`.github/workflows/update-data.yml`):
   changed, and deploys.
 - **On a push to `main`:** only redeploys the site.
 
-The schedule is `0 5 * * *`: 05:00 UTC, which is midnight EST in winter and
-1 AM EDT in summer (GitHub cron always uses UTC). GitHub can start scheduled
-runs late when it is busy, sometimes by hours, so the actual time varies.
+The job runs twice a day, 12 hours apart (GitHub cron always uses UTC):
+
+- `0 5 * * *`: 05:00 UTC, which is midnight EST in winter and 1 AM EDT in summer.
+- `0 17 * * *`: 17:00 UTC, which is noon EST in winter and 1 PM EDT in summer.
+
+A second run on the same day adds to that day's change log rather than
+replacing it, so "What's new" still shows one list per day. GitHub can start
+scheduled runs late when it is busy, sometimes by hours, so the actual time varies.
 
 ## Local development
 
