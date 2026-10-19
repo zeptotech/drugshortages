@@ -1,0 +1,34 @@
+{"date":"2026-10-19",
+"new":[
+{"id":296021,"type":"shortage","status":"anticipated_shortage","brand":"PIPERACILLIN AND TAZOBACTAM FOR INJECTION","din":"02521539","strength":"36G\r\n4.5G","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":296044,"type":"shortage","status":"anticipated_shortage","brand":"FINACEA","din":"02270811","strength":"15%","company":"LEO PHARMA INC","tier3":false}
+],
+"updated":[
+{"id":282338,"type":"shortage","status":"active_confirmed","brand":"SANDOZ IRBESARTAN HCT","din":"02337428","strength":"12.5MG\r\n150MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":286143,"type":"shortage","status":"active_confirmed","brand":"SANDOZ AFATINIB","din":"02512777","strength":"20MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-06","to":"2026-12-04"}]},
+{"id":287770,"type":"shortage","status":"active_confirmed","brand":"AMOXICILLIN SODIUM AND POTASSIUM CLAVULANATE FOR INJECTION","din":"02495937","strength":"200MG\r\n2000MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":287773,"type":"shortage","status":"active_confirmed","brand":"SANDOZ APREMILAST","din":"02529092","strength":"30MG\r\n20MG\r\n10MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":288193,"type":"shortage","status":"active_confirmed","brand":"SANDOZ IRBESARTAN HCT","din":"02337428","strength":"12.5MG\r\n150MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":289613,"type":"shortage","status":"active_confirmed","brand":"METADOL","din":"02247694","strength":"1MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-15","to":"2026-10-23"}]},
+{"id":291002,"type":"shortage","status":"active_confirmed","brand":"SANDOZ OLANZAPINE ODT","din":"02327775","strength":"5MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":292865,"type":"shortage","status":"active_confirmed","brand":"SANDOZ DICLOFENAC RAPIDE","din":"02261774","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-16","to":"2026-10-23"}]},
+{"id":293305,"type":"shortage","status":"active_confirmed","brand":"SANDOZ AFATINIB","din":"02512785","strength":"30MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-06","to":"2026-12-04"}]},
+{"id":293308,"type":"shortage","status":"active_confirmed","brand":"SANDOZ AFATINIB","din":"02512793","strength":"40MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-06","to":"2026-12-04"}]},
+{"id":293465,"type":"shortage","status":"active_confirmed","brand":"SILENOR","din":"02398257","strength":"3MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-15","to":"2026-11-15"}]},
+{"id":293470,"type":"shortage","status":"active_confirmed","brand":"SILENOR","din":"02398265","strength":"6MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-15","to":"2026-11-15"}]},
+{"id":295140,"type":"shortage","status":"active_confirmed","brand":"SANDOZ OLANZAPINE ODT","din":"02327805","strength":"20MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":295143,"type":"shortage","status":"active_confirmed","brand":"SANDOZ OLOPATADINE 0.2%","din":"02420171","strength":"0.2%","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-19"}]},
+{"id":295669,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 25","din":"02245676","strength":"25MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-11-20","to":"2026-10-30"}]},
+{"id":295674,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-11-20","to":"2026-10-30"}]},
+{"id":295677,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 75","din":"02244001","strength":"75MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-12-11","to":"2026-12-18"}]}
+],
+"statusChanged":[
+{"id":295724,"type":"shortage","status":"resolved","brand":"GLN-ATOVAQUONE","din":"02528495","strength":"750MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":290814,"type":"shortage","status":"resolved","brand":"METADOL","din":"02247699","strength":"5MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":293239,"type":"shortage","status":"resolved","brand":"METADOL","din":"02247700","strength":"10MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":294878,"type":"shortage","status":"resolved","brand":"METADOL","din":"02247698","strength":"1MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":285134,"type":"shortage","status":"resolved","brand":"GLN-TOPIRAMATE","din":"02287781","strength":"200MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":286665,"type":"shortage","status":"resolved","brand":"GLN-BILASTINE","din":"02544369","strength":"20MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":278123,"type":"shortage","status":"resolved","brand":"MAEVE","din":"02458683","strength":"0.35MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":294270,"type":"shortage","status":"resolved","brand":"ANTICOAGULANT SODIUM CITRATE SOLUTION, USP","din":"02529637","strength":"4G","company":"FRESENIUS KABI CANADA LTD","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
