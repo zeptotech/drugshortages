@@ -372,7 +372,7 @@ function renderTable() {
     return `<th scope="col"${aria}><button type="button" data-sort="${c}">${esc(COLUMNS[c].label)}</button></th>`;
   }).join('');
 
-  const body = pageRows.map(r => `<tr data-id="${r.id}">${cols.map(c => {
+  const body = pageRows.map(r => `<tr data-id="${r.id}" tabindex="0" aria-haspopup="dialog">${cols.map(c => {
     const col = COLUMNS[c];
     const content = col.html ? col.html(r) : esc(col.key(r));
     return `<td class="${col.cls || ''}" data-label="${esc(col.label)}">${content}</td>`;
@@ -421,7 +421,7 @@ function whatsNewLine(r, details) {
   const typeLabel = r.type === 'shortage' ? 'Shortage' : 'Discontinuation';
   const meta = [r.strength, r.din && `DIN ${r.din}`, r.company].filter(Boolean).join(' · ');
   const extra = details.map(d => `<div>${d.html}</div>`).join('');
-  return `<li data-id="${r.id}"><span class="kind">${typeLabel}</span><span class="brand">${esc(r.brand)}</span>${tags(r)}
+  return `<li data-id="${r.id}" tabindex="0" aria-haspopup="dialog"><span class="kind">${typeLabel}</span><span class="brand">${esc(r.brand)}</span>${tags(r)}
     <span class="sub"> ${esc(meta)}</span><div class="chg">${statusBadge(r.status)}${extra}</div></li>`;
 }
 
@@ -640,10 +640,22 @@ function bindEvents() {
     if (row) openDetail(+row.dataset.id);
   });
 
+  // Keyboard: Tab moves between rows, Enter or Space opens the focused row.
+  $('content').addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-id]')) {
+      e.preventDefault();
+      openDetail(+e.target.dataset.id);
+    }
+  });
+
   const dialog = $('detail');
+  let opener = null;
   dialog.addEventListener('click', e => {
     if (e.target === dialog || e.target.closest('[data-close]')) dialog.close();
   });
+  // Return focus to the row that opened the dialog, so keyboard users keep their place.
+  $('content').addEventListener('focusin', e => { if (e.target.matches('[data-id]')) opener = e.target; });
+  dialog.addEventListener('close', () => { if (opener?.isConnected) opener.focus({ preventScroll: true }); });
 
   document.addEventListener('keydown', e => {
     if (e.key === '/' && document.activeElement !== $('q') && !dialog.open) {
