@@ -514,6 +514,12 @@ function populateAtc() {
 
 function bindEvents() {
   let timer;
+  $('home').addEventListener('click', e => {
+    e.preventDefault();
+    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '' }, { push: true });
+    syncControls();
+    window.scrollTo({ top: 0 });
+  });
   $('q').addEventListener('input', e => {
     clearTimeout(timer);
     timer = setTimeout(() => update({ q: e.target.value.trim() }), 150);

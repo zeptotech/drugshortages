@@ -53,6 +53,8 @@ button, select, input { font: inherit; color: inherit; }
 .top-row { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap; padding-block: 12px 8px; }
 .title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 h1 { font-size: 20px; margin: 0; }
+h1 a { color: inherit; text-decoration: none; }
+h1 a:hover { color: var(--accent); }
 .updated { color: var(--muted); font-size: 13px; }
 .updated.stale { color: var(--s-actual); font-weight: 600; }
 #q {

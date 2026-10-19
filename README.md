@@ -1,4 +1,4 @@
-# Drug Shortages: Pharmacist View
+# Health Product Shortages Canada Viewer
 
 A simpler way to browse Canadian drug shortage and discontinuation reports from
 [Health Product Shortages Canada](https://healthproductshortages.ca). The data is
