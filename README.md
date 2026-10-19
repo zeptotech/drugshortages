@@ -20,12 +20,11 @@ each entry.
   fields changed) and status changes.
 - **Search** by brand, ingredient, DIN, company or ATC code. Tab counts update
   as you type, so you can see where the matches are.
-- **Filters**: Tier 3 only, Overdue only, drug class (ATC group).
-- **Tags**:
-  - **Tier 3**: shortage with the highest potential impact.
-  - **Overdue**: expected date passed more than 2 days ago with no actual date.
-  - **Late**: reported more than 5 days after the start date.
-  - **New** / **Updated**: in the last 7 days.
+- **Filters**: Tier 3 only, drug class (ATC group).
+- **Tier 3** tag on the shortages with the highest potential impact.
+- **Late** tag on reports filed more than 5 days after the anticipated or actual
+  start date (the API's `late_submission` flag).
+- **New / Updated** column for reports created or updated in the last 7 days.
 - **Detail view**: click a row to see every field, including mitigation,
   company comments and Health Canada comments, plus a link to the official report.
 - **Shareable links**: the view, tab, search and filters are kept in the URL.
@@ -79,20 +78,6 @@ of the previous run's (use `--force` to override a real drop).
 
 Each report is written on its own line, so the daily data commits show exactly
 which reports changed.
-
-### Definitions
-
-These follow the official site's summary report:
-
-- **Late**: the report was created more than 5 days after the anticipated or
-  actual start date. This comes from the API.
-- **Overdue**: the anticipated or estimated date passed more than 2 calendar
-  days ago and no actual date has been entered. The site works this out in the
-  browser each day.
-  - Anticipated shortage: the expected or actual start date has passed.
-  - Actual shortage: the estimated end date has passed and there is no actual end date.
-  - To be discontinued: the expected discontinuation date has passed and there
-    is no actual discontinuation date.
 
 ## Setup
 

@@ -6,7 +6,6 @@
 
 const PAGE_SIZE = 100;
 const NEW_DAYS = 7;           // NEW / UPDATED tags
-const OVERDUE_GRACE_DAYS = 2; // official definition: elapsed by more than two calendar days
 const CHANGE_DAYS_SHOWN = 14; // days loaded in "What's new"
 const STALE_HOURS = 36;       // warn when the daily update seems to have stopped
 
@@ -99,7 +98,7 @@ const FIELD_LABELS = {
 // ---------------------------------------------------------------------------
 
 const data = { shortages: [], discontinuations: [], byId: new Map(), meta: {}, changeIndex: null, changeDays: new Map() };
-const state = { view: 'shortages', tab: '', q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', page: 1 };
+const state = { view: 'shortages', tab: '', q: '', tier3: false, atc: '', sort: '', dir: '', page: 1 };
 const $ = id => document.getElementById(id);
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 
@@ -136,7 +135,6 @@ function formatNumber(n) {
 function tags(r) {
   return [
     r.tier3 && '<span class="tag tier3" title="Tier 3: highest potential impact">Tier 3</span>',
-    r._overdue && '<span class="tag overdue" title="Expected date passed more than 2 days ago with no actual date">Overdue</span>',
     r.late && '<span class="tag late" title="Reported more than 5 days after the start date">Late</span>',
   ].filter(Boolean).join('');
 }
@@ -183,18 +181,9 @@ async function getJSON(path, optional = false) {
 
 function prepare(r) {
   const newCutoff = daysAgo(NEW_DAYS);
-  const overdueCutoff = daysAgo(OVERDUE_GRACE_DAYS);
   const created = (r.created || '').slice(0, 10);
   const updated = (r.updated || '').slice(0, 10);
 
-  let overdue = false;
-  // Anticipated shortages: overdue once any start date has passed (the report should have become
-  // an actual shortage). Matches the official site-wide overdue total on 2026-10-18.
-  if (r.status === 'anticipated_shortage') overdue = [r.anticipatedStart, r.actualStart].some(d => d && d < overdueCutoff);
-  else if (r.status === 'active_confirmed') overdue = !!r.estEnd && !r.actualEnd && r.estEnd < overdueCutoff;
-  else if (r.status === 'to_be_discontinued') overdue = !!r.discDate && !r.actualDiscDate && r.discDate < overdueCutoff;
-
-  r._overdue = overdue;
   r._new = created >= newCutoff;
   r._updatedRecently = !r._new && updated >= newCutoff;
   r._hay = [r.brand, r.commonName, r.ingredients, r.din, r.company, r.atc, r.atcDesc, r.strength, r.form]
@@ -233,7 +222,6 @@ function readURL() {
   state.tab = p.get('tab') || '';
   state.q = p.get('q') || '';
   state.tier3 = p.get('tier3') === '1';
-  state.overdue = p.get('overdue') === '1';
   state.atc = p.get('atc') || '';
   state.sort = p.get('sort') || '';
   state.dir = p.get('dir') === 'asc' ? 'asc' : p.get('dir') === 'desc' ? 'desc' : '';
@@ -250,7 +238,6 @@ function writeURL(push = false) {
   if (tabs && state.tab !== tabs[0].id) p.set('tab', state.tab);
   if (state.q) p.set('q', state.q);
   if (state.tier3) p.set('tier3', '1');
-  if (state.overdue) p.set('overdue', '1');
   if (state.atc) p.set('atc', state.atc);
   if (state.sort) { p.set('sort', state.sort); p.set('dir', state.dir); }
   if (state.page > 1) p.set('page', state.page);
@@ -267,7 +254,6 @@ function filtered(records) {
   return records.filter(r =>
     (!tokens.length || matchesTokens(r._hay, tokens)) &&
     (!state.tier3 || r.tier3) &&
-    (!state.overdue || r._overdue) &&
     (!state.atc || (r.atc || '').startsWith(state.atc)));
 }
 
@@ -366,7 +352,7 @@ function renderTable() {
   if (!rows.length) {
     const recentTab = VIEWS[state.view].tabs.find(t => t.id === state.tab).recent;
     $('content').innerHTML = `<div class="empty">${
-      state.q || state.tier3 || state.overdue || state.atc
+      state.q || state.tier3 || state.atc
         ? 'No reports match these filters.'
         : recentTab ? 'No status changes recorded yet. They appear here as the daily update detects them.' : 'No reports.'
     }</div>`;
@@ -509,7 +495,6 @@ function openDetail(id) {
 function syncControls() {
   $('q').value = state.q;
   $('f-tier3').checked = state.tier3;
-  $('f-overdue').checked = state.overdue;
   $('f-atc').value = state.atc;
 }
 
@@ -534,7 +519,6 @@ function bindEvents() {
     timer = setTimeout(() => update({ q: e.target.value.trim() }), 150);
   });
   $('f-tier3').addEventListener('change', e => update({ tier3: e.target.checked }));
-  $('f-overdue').addEventListener('change', e => update({ overdue: e.target.checked }));
   $('f-atc').addEventListener('change', e => update({ atc: e.target.value }));
 
   $('views').addEventListener('click', e => {

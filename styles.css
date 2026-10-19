@@ -124,7 +124,6 @@ td.date { font-variant-numeric: tabular-nums; }
   margin-left: 4px; vertical-align: 1px; white-space: nowrap; letter-spacing: .02em;
 }
 .tag.tier3 { background: var(--s-actual); color: #fff; }
-.tag.overdue { background: var(--s-antic-bg); color: var(--s-antic); border: 1px solid currentColor; }
 .tag.late { background: var(--s-disc-bg); color: var(--s-disc); }
 .tag.new { background: var(--accent); color: var(--panel); }
 .tag.upd { background: var(--accent-soft); color: var(--accent); }
