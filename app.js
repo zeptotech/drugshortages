@@ -60,7 +60,12 @@ const COLUMNS = {
   din: { label: 'DIN', cls: 'nowrap', key: r => r.din || '', html: dinCell },
   strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '' },
   company: { label: 'Company', key: r => r.company || '' },
-  actualStart: { label: 'Started', cls: 'date', key: r => r.actualStart || '' },
+  // Falls back to the expected start when the company never entered an actual start date.
+  actualStart: {
+    label: 'Started', cls: 'date', key: r => r.actualStart || r.anticipatedStart || '',
+    html: r => r.actualStart ? esc(r.actualStart)
+      : r.anticipatedStart ? `${esc(r.anticipatedStart)}<div class="sub" title="No actual start date reported">expected</div>` : '',
+  },
   anticipatedStart: { label: 'Expected start', cls: 'date', key: r => r.anticipatedStart || '' },
   estEnd: { label: 'Est. end', cls: 'date', key: r => r.estEnd || '', html: r => r.estEnd ? esc(r.estEnd) : '<span class="muted">Unknown</span>' },
   discDate: { label: 'Disc. date', cls: 'date', key: r => r.actualDiscDate || r.discDate || '' },
