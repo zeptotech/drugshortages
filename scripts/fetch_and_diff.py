@@ -55,6 +55,9 @@ RECENT = {
 }
 # How long a report stays listed after it leaves the current statuses.
 RECENT_DAYS = {"shortage": 30, "discontinuance": 30}
+# How many days of data/changes/YYYY-MM-DD.json files to keep; older ones are deleted.
+# The site's "What's new" only shows the last 7 (CHANGE_DAYS_SHOWN in app.js).
+CHANGE_LOG_DAYS = 30
 MAX_RECENT_PAGES = 20    # safety cap for the recent-window pull
 OUTPUT_FILE = {"shortage": "shortages.json", "discontinuance": "discontinuations.json"}
 DETAIL_PATH = {"shortage": "shortages", "discontinuance": "discontinuances"}
@@ -461,6 +464,25 @@ def merge_same_day(existing, changes):
     return changes
 
 
+# Deletes day files older than CHANGE_LOG_DAYS and removes their lines from index.json,
+# so the change log stops growing. Runs every day, even when there were no changes.
+def prune_change_log(changes_dir, today):
+    if not changes_dir.exists():
+        return
+    cutoff = (date.fromisoformat(today) - timedelta(days=CHANGE_LOG_DAYS)).isoformat()
+    # Day files are named like 2026-10-19.json, so the name (path.stem) compares as a date.
+    for path in changes_dir.glob("????-??-??.json"):
+        if path.stem < cutoff:
+            path.unlink()
+            log(f"Deleted old change log {path.name}")
+    index_path = changes_dir / "index.json"
+    if index_path.exists():
+        index = json.loads(index_path.read_text())
+        kept = [e for e in index if e["date"] >= cutoff]
+        if len(kept) != len(index):
+            write_json(index_path, kept)
+
+
 # Writes all output files. The change log is skipped on the first run, since everything
 # would look "new".
 def save(data_dir, output, changes, counts, first_run, now):
@@ -484,6 +506,8 @@ def save(data_dir, output, changes, counts, first_run, now):
         index.insert(0, {"date": today, **{k: len(changes[k]) for k in ("new", "updated", "statusChanged")}})
         write_json(index_path, index)
         meta["lastChanged"] = today
+
+    prune_change_log(data_dir / "changes", today)
 
     meta.update({
         "lastChecked": now,

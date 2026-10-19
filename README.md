@@ -83,8 +83,8 @@ of the previous run's (use `--force` to override a real drop).
 | `data/shortages.json` | Current shortages plus those resolved or avoided in the last 30 days |
 | `data/discontinuations.json` | Upcoming discontinuations plus those discontinued or reversed in the last 30 days |
 | `data/meta.json` | Last check time and counts per status |
-| `data/changes/YYYY-MM-DD.json` | New, updated and status-changed reports for that day |
-| `data/changes/index.json` | Days with changes, newest first |
+| `data/changes/YYYY-MM-DD.json` | New, updated and status-changed reports for that day (last 30 days; older files are deleted) |
+| `data/changes/index.json` | Days with changes in the last 30 days, newest first |
 
 Each report is written on its own line, so the daily data commits show exactly
 which reports changed.
