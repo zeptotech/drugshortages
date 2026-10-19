@@ -400,7 +400,7 @@ function changeLine(e, kind) {
     <span class="sub"> ${esc([e.strength, e.din && `DIN ${e.din}`, e.company].filter(Boolean).join(' · '))}</span>`;
   let detail = '';
   if (kind === 'new') detail = statusBadge(e.status);
-  if (kind === 'statusChanged') detail = `${statusBadge(e.from)} → ${statusBadge(e.to)}`;
+  if (kind === 'statusChanged') detail = e.from ? `${statusBadge(e.from)} → ${statusBadge(e.to)}` : `Now ${statusBadge(e.to)}`;
   if (kind === 'updated') {
     detail = (e.changes || []).map(c =>
       `<b>${esc(FIELD_LABELS[c.field] || c.field)}:</b> ${esc(formatValue(c.field, c.from))} → ${esc(formatValue(c.field, c.to))}`

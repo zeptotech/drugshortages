@@ -42,8 +42,14 @@ CURRENT = {
     "shortage": ["active_confirmed", "anticipated_shortage"],
     "discontinuance": ["to_be_discontinued"],  # undocumented, but works
 }
+# Finished statuses pulled for the recent window only (newest first, stop at the cutoff).
+RECENT = {
+    "shortage": ["resolved", "avoided_shortage"],
+    "discontinuance": ["discontinued", "reversed"],
+}
 # How long a report stays listed after it leaves the current statuses.
 RECENT_DAYS = {"shortage": 30, "discontinuance": 30}
+MAX_RECENT_PAGES = 20    # safety cap for the recent-window pull
 OUTPUT_FILE = {"shortage": "shortages.json", "discontinuance": "discontinuations.json"}
 DETAIL_PATH = {"shortage": "shortages", "discontinuance": "discontinuances"}
 
@@ -165,6 +171,35 @@ def fetch_status(token, status):
     return list(reports.values())
 
 
+def fetch_recent(token, status, cutoff):
+    """Reports with the given status updated on or after `cutoff` (YYYY-MM-DD), newest first.
+
+    A bounded query (a few pages) rather than a bulk extraction, so it sorts by
+    updated_date instead of id. Returns None if the API rejects the status value.
+    """
+    reports = {}
+    for page in range(MAX_RECENT_PAGES):
+        code, _, body = request("GET", "search", token, params={
+            "filter_status": status, "orderby": "updated_date", "order": "desc",
+            "limit": PAGE_SIZE, "offset": page * PAGE_SIZE,
+        })
+        if code == 400 and page == 0:
+            return None
+        if code != 200:
+            raise ApiError(f"Search for recent {status} failed (HTTP {code}): {error_text(body)}")
+        rows = body.get("data") or []
+        for rec in rows:
+            if day(rec.get("updated_date")) and day(rec.get("updated_date")) >= cutoff:
+                reports[rec["id"]] = rec
+        oldest = day(rows[-1].get("updated_date")) if rows else None
+        if not rows or body.get("remaining", 0) <= 0 or (oldest and oldest < cutoff):
+            break
+        time.sleep(REQUEST_DELAY)
+    else:
+        log(f"  Note: stopped {status} after {MAX_RECENT_PAGES} pages")
+    return list(reports.values())
+
+
 def fetch_detail(token, kind, report_id):
     """Full report, or None if the API says it is unavailable or gone."""
     code, _, body = request("GET", f"{DETAIL_PATH[kind]}/{report_id}", token)
@@ -278,8 +313,12 @@ def check_count(status, new_count, old_reports, force):
         )
 
 
-def build(token, prev, today, force):
-    """Fetch everything and return (reports_by_kind, changes, counts). Writes nothing."""
+def build(token, prev, today, force, last_checked=None):
+    """Fetch everything and return (reports_by_kind, changes, counts). Writes nothing.
+
+    `last_checked` (YYYY-MM-DD of the previous run) decides which directly pulled
+    status changes are new enough to go in today's change log.
+    """
     changes = {"date": today.isoformat(), "new": [], "updated": [], "statusChanged": []}
     output, counts, seen_keys = {}, {}, set()
 
@@ -321,8 +360,32 @@ def build(token, prev, today, force):
             recent[rid] = r
             changes["statusChanged"].append({**summary(r), "from": old[rid]["status"], "to": r["status"]})
 
-        # Keep earlier status changes for the recent window.
+        # Pull recently finished reports directly, so changes made before tracking
+        # started (or missed between runs) still show up.
         cutoff = (today - timedelta(days=RECENT_DAYS[kind])).isoformat()
+        for status in RECENT[kind]:
+            log(f"Fetching {status} updated since {cutoff}...")
+            raw = fetch_recent(token, status, cutoff)
+            time.sleep(REQUEST_DELAY)
+            if raw is None:
+                log(f"  API does not accept filter_status={status}; skipped")
+                continue
+            log(f"  {len(raw)} reports")
+            for rec in raw:
+                note_unknown_keys(rec, seen_keys)
+                r = slim(rec)
+                rid = r["id"]
+                if rid in current or rid in recent:
+                    continue
+                o = old.get(rid)
+                r["changedOn"] = (o or {}).get("changedOn") or day(r["updated"]) or today.isoformat()
+                recent[rid] = r
+                if o is None and last_checked and day(r["updated"]) >= last_checked:
+                    changes["statusChanged"].append({**summary(r), "from": None, "to": r["status"]})
+                elif o is not None and o["status"] != r["status"]:
+                    changes["statusChanged"].append({**summary(r), "from": o["status"], "to": r["status"]})
+
+        # Keep earlier status changes for the recent window.
         for rid, o in old.items():
             if (o["status"] not in statuses and rid not in current and rid not in recent
                     and o.get("changedOn", "") >= cutoff):
@@ -424,7 +487,9 @@ def main():
     try:
         log("Logging in...")
         token = login(email, password)
-        output, changes, counts = build(token, prev, today, args.force)
+        meta_path = args.data_dir / "meta.json"
+        last_checked = json.loads(meta_path.read_text()).get("lastChecked", "")[:10] if meta_path.exists() else None
+        output, changes, counts = build(token, prev, today, args.force, last_checked or None)
     except ApiError as e:
         sys.exit(f"ERROR: {e}\nExisting data was not changed.")
 
