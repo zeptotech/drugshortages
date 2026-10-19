@@ -66,6 +66,11 @@ const COLUMNS = {
     html: r => r.actualStart ? esc(r.actualStart)
       : r.anticipatedStart ? `${esc(r.anticipatedStart)}<div class="sub" title="No actual start date reported">expected</div>` : '',
   },
+  // Days since the shortage started (actual start, else expected start); sorts numerically.
+  days: {
+    label: 'Days in shortage', cls: 'num', key: r => String(daysSince(r.actualStart || r.anticipatedStart) ?? ''),
+    html: r => { const n = daysSince(r.actualStart || r.anticipatedStart); return n === null ? '' : formatNumber(n); },
+  },
   anticipatedStart: { label: 'Expected start', cls: 'date', key: r => r.anticipatedStart || '' },
   estEnd: { label: 'Est. end', cls: 'date', key: r => r.estEnd || '', html: r => r.estEnd ? esc(r.estEnd) : '<span class="muted">Unknown</span>' },
   discDate: { label: 'Disc. date', cls: 'date', key: r => r.actualDiscDate || r.discDate || '' },
@@ -76,7 +81,7 @@ const COLUMNS = {
 };
 
 const TAB_COLUMNS = {
-  actual: ['drug', 'din', 'strength', 'actualStart', 'estEnd', 'activity', 'updated'],
+  actual: ['drug', 'din', 'strength', 'actualStart', 'days', 'estEnd', 'activity', 'updated'],
   anticipated: ['drug', 'din', 'strength', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
   resolved: ['drug', 'din', 'strength', 'outcome', 'changedOn', 'updated'],
   upcoming: ['drug', 'din', 'strength', 'discDate', 'activity', 'updated'],
@@ -113,6 +118,15 @@ const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' })
 
 function esc(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function daysSince(isoDay) {
+  if (!isoDay) return null;
+  const [y, m, d] = isoDay.split('-').map(Number);
+  const today = new Date();
+  const start = new Date(y, m - 1, d);
+  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  return Math.max(0, Math.round((todayMidnight - start) / 864e5));
 }
 
 function isoDate(d) {
