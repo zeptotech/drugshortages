@@ -4,7 +4,7 @@ A simpler way to browse Canadian drug shortage and discontinuation reports from
 [Health Product Shortages Canada](https://healthproductshortages.ca). The data is
 refreshed daily.
 
-**Live site:** https://zeptotech.github.io/drugshortage/
+**Live site:** https://zeptotech.github.io/drugshortages/
 
 This is an independent tool for pharmacists. It is not affiliated with Health
 Canada. Always confirm details with the official report, which is linked from
