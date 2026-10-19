@@ -16,8 +16,9 @@ each entry.
   *Resolved / avoided* (last 30 days), each with a count.
 - **Discontinuations**: tabs for *To be discontinued* and *Discontinued*
   (last 30 days).
-- **What's new**: reports updated in the last 14 days, grouped by day into new,
-  updated, and resolved/discontinued (like the official homepage). Where the
+- **What's new**: reports updated in the past 7 days, grouped by day into new,
+  updated, and resolved/discontinued (like the official homepage). Bars at the
+  top filter by day and by kind of change. Where the
   daily change log knows exactly what changed (e.g. a new estimated end date),
   that is shown too.
 - **Search** by brand, ingredient, DIN, company or ATC code. Tab counts update

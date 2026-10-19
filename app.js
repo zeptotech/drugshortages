@@ -6,7 +6,7 @@
 
 const PAGE_SIZE = 100;
 const NEW_DAYS = 7;           // NEW / UPDATED tags
-const CHANGE_DAYS_SHOWN = 14; // days of updates shown in "What's new"
+const CHANGE_DAYS_SHOWN = 7;  // days of updates shown in "What's new" (including today)
 const STALE_HOURS = 36;       // warn when the daily update seems to have stopped
 
 const OFFICIAL_URL = {
@@ -108,7 +108,7 @@ const FIELD_LABELS = {
 // ---------------------------------------------------------------------------
 
 const data = { shortages: [], discontinuations: [], byId: new Map(), meta: {}, changeIndex: null, changeDays: new Map() };
-const state = { view: 'shortages', tab: '', q: '', tier3: false, atc: '', sort: '', dir: '', page: 1 };
+const state = { view: 'shortages', tab: '', q: '', tier3: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '' };
 const $ = id => document.getElementById(id);
 const collator = new Intl.Collator('en', { numeric: true, sensitivity: 'base' });
 
@@ -247,6 +247,8 @@ function readURL() {
   state.sort = p.get('sort') || '';
   state.dir = p.get('dir') === 'asc' ? 'asc' : p.get('dir') === 'desc' ? 'desc' : '';
   state.page = Math.max(1, parseInt(p.get('page'), 10) || 1);
+  state.day = /^\d{4}-\d{2}-\d{2}$/.test(p.get('day') || '') ? p.get('day') : '';
+  state.kind = CHANGE_KINDS.some(k => k.id === p.get('kind')) ? p.get('kind') : '';
   const tabs = VIEWS[state.view].tabs;
   if (tabs && !tabs.some(t => t.id === state.tab)) state.tab = tabs[0].id;
   if (state.sort && !COLUMNS[state.sort]) state.sort = '';
@@ -262,6 +264,8 @@ function writeURL(push = false) {
   if (state.atc) p.set('atc', state.atc);
   if (state.sort) { p.set('sort', state.sort); p.set('dir', state.dir); }
   if (state.page > 1) p.set('page', state.page);
+  if (state.view === 'changes' && state.day) p.set('day', state.day);
+  if (state.view === 'changes' && state.kind) p.set('kind', state.kind);
   const qs = p.toString();
   history[push ? 'pushState' : 'replaceState'](null, '', qs ? `?${qs}` : location.pathname);
 }
@@ -408,6 +412,12 @@ function formatValue(field, value) {
   return String(value);
 }
 
+const CHANGE_KINDS = [
+  { id: 'new', label: 'New' },
+  { id: 'updated', label: 'Updated' },
+  { id: 'closed', label: 'Resolved / discontinued' },
+];
+
 function isCurrent(r) {
   return VIEWS.shortages.current.includes(r.status) || VIEWS.discontinuations.current.includes(r.status);
 }
@@ -441,6 +451,21 @@ function whatsNewLine(r, details) {
 
 // What's new lists reports by their own updated date (like the official homepage), so it works
 // without any tracking history. Field-level details from the change log are added when known.
+// A day bar and a kind bar at the top filter the list.
+function changeKind(r, day) {
+  if ((r.created || '').slice(0, 10) === day) return 'new';
+  return isCurrent(r) ? 'updated' : 'closed';
+}
+
+function shortDay(day, withYear = false) {
+  return new Date(`${day}T12:00:00`).toLocaleDateString('en-CA',
+    { weekday: 'short', month: 'short', day: 'numeric', ...(withYear ? { year: 'numeric' } : {}) });
+}
+
+function chip(attr, value, label, count, selected) {
+  return `<button type="button" class="chip" ${attr}="${value}" aria-pressed="${selected}">${esc(label)}<span class="n">${formatNumber(count)}</span></button>`;
+}
+
 async function renderChanges() {
   $('content').innerHTML = '<p class="muted">Loading…</p>';
   await loadChangeDays();
@@ -448,33 +473,43 @@ async function renderChanges() {
 
   const details = changeDetails();
   const tokens = searchTokens();
-  const since = daysAgo(CHANGE_DAYS_SHOWN);
-  const byDay = new Map();
+  const since = daysAgo(CHANGE_DAYS_SHOWN - 1);
+  const entries = [];
   for (const r of [...data.shortages, ...data.discontinuations]) {
     const day = (r.updated || '').slice(0, 10);
     if (!day || day < since || (tokens.length && !matchesTokens(r._hay, tokens))) continue;
-    if (!byDay.has(day)) byDay.set(day, []);
-    byDay.get(day).push(r);
+    entries.push({ r, day, kind: changeKind(r, day) });
   }
 
-  const html = [...byDay.keys()].sort().reverse().map(day => {
-    const rows = byDay.get(day).sort((a, b) => collator.compare(a.brand || '', b.brand || ''));
-    const isNew = r => (r.created || '').slice(0, 10) === day;
-    const groups = [
-      ['New reports', rows.filter(isNew)],
-      ['Updated', rows.filter(r => !isNew(r) && isCurrent(r))],
-      ['Resolved / discontinued', rows.filter(r => !isNew(r) && !isCurrent(r))],
-    ];
-    const parts = groups.map(([title, list]) => list.length
-      ? `<h3>${title} (${list.length})</h3><ul>${list.map(r =>
-          whatsNewLine(r, (details.get(r.id) || []).filter(d => d.date >= day))).join('')}</ul>`
-      : '').join('');
-    const when = new Date(`${day}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-    const counts = groups.map(([title, list]) => `${list.length} ${title.toLowerCase().replace(' reports', '')}`).join(' · ');
-    return `<section class="day"><h2>${esc(when)}<span class="muted">${esc(counts)}</span></h2>${parts}</section>`;
+  // Each bar's counts respect the other bar's selection.
+  const days = [...new Set(entries.map(e => e.day))].sort().reverse();
+  const inKind = e => !state.kind || e.kind === state.kind;
+  const inDay = e => !state.day || e.day === state.day;
+  const dayBar = [chip('data-day', '', 'All week', entries.filter(inKind).length, !state.day)]
+    .concat(days.map(d => chip('data-day', d, shortDay(d), entries.filter(e => e.day === d && inKind(e)).length, state.day === d)));
+  const kindBar = [chip('data-kind', '', 'All', entries.filter(inDay).length, !state.kind)]
+    .concat(CHANGE_KINDS.map(k => chip('data-kind', k.id, k.label, entries.filter(e => e.kind === k.id && inDay(e)).length, state.kind === k.id)));
+  const bars = `<div class="chips" role="group" aria-label="Day">${dayBar.join('')}</div>
+    <div class="chips" role="group" aria-label="Kind of change"><span class="muted">Show:</span>${kindBar.join('')}</div>`;
+
+  const shown = entries.filter(e => inDay(e) && inKind(e));
+  const html = days.filter(d => !state.day || d === state.day).map(day => {
+    const dayEntries = shown.filter(e => e.day === day);
+    if (!dayEntries.length) return '';
+    const parts = CHANGE_KINDS.map(k => {
+      const list = dayEntries.filter(e => e.kind === k.id).map(e => e.r)
+        .sort((a, b) => collator.compare(a.brand || '', b.brand || ''));
+      return list.length
+        ? `<h3>${k.label} (${list.length})</h3><ul>${list.map(r =>
+            whatsNewLine(r, (details.get(r.id) || []).filter(d => d.date >= day))).join('')}</ul>`
+        : '';
+    }).join('');
+    return `<section class="day"><h2>${esc(shortDay(day, true))}<span class="muted">${formatNumber(dayEntries.length)} reports</span></h2>${parts}</section>`;
   }).join('');
 
-  $('content').innerHTML = html || `<div class="empty">No reports ${tokens.length ? `matching “${esc(state.q)}” ` : ''}updated in the last ${CHANGE_DAYS_SHOWN} days.</div>`;
+  const empty = `<div class="empty">No reports ${tokens.length ? `matching “${esc(state.q)}” ` : ''}${
+    state.day || state.kind ? 'for this selection' : `updated in the past ${CHANGE_DAYS_SHOWN} days`}.</div>`;
+  $('content').innerHTML = bars + (html || empty);
 }
 
 // ---------------------------------------------------------------------------
@@ -592,7 +627,7 @@ function bindEvents() {
   $('theme').addEventListener('click', cycleTheme);
   $('home').addEventListener('click', e => {
     e.preventDefault();
-    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '' }, { push: true });
+    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '', day: '', kind: '' }, { push: true });
     syncControls();
     window.scrollTo({ top: 0 });
   });
@@ -619,7 +654,7 @@ function bindEvents() {
     if (!a) return;
     e.preventDefault();
     const view = a.dataset.view;
-    update({ view, tab: VIEWS[view].tabs?.[0].id || '', sort: '', dir: '' }, { push: true });
+    update({ view, tab: VIEWS[view].tabs?.[0].id || '', sort: '', dir: '', day: '', kind: '' }, { push: true });
   });
 
   $('tabs').addEventListener('click', e => {
@@ -641,6 +676,12 @@ function bindEvents() {
         copy.textContent = '✓';
         setTimeout(() => { copy.textContent = '⧉'; }, 1200);
       });
+      return;
+    }
+    const chip = e.target.closest('button[data-day], button[data-kind]');
+    if (chip) {
+      if ('day' in chip.dataset) update({ day: chip.dataset.day }, { push: true });
+      else update({ kind: chip.dataset.kind }, { push: true });
       return;
     }
     const sort = e.target.closest('button[data-sort]');

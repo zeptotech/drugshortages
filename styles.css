@@ -199,6 +199,19 @@ td.c-activity { white-space: nowrap; }
 .day .chg b { color: var(--text); font-weight: 600; }
 .kind { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-right: 6px; }
 
+/* What's new filter bars */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 12px 0 0; }
+.chips:first-child { margin-top: 16px; }
+.chips + .day { margin-top: 14px; }
+.chip {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 12px;
+  cursor: pointer; white-space: nowrap;
+}
+.chip .n { color: var(--muted); font-size: 12px; margin-left: 6px; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.chip[aria-pressed="true"] .n { color: var(--accent); }
+
 /* Detail dialog */
 dialog {
   width: min(760px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0;
