@@ -521,9 +521,9 @@ function populateAtc() {
 }
 
 const THEMES = {
-  auto: { icon: '◐', label: 'Auto (follows device)' },
-  light: { icon: '☀', label: 'Light' },
-  dark: { icon: '☾', label: 'Dark' },
+  auto: { icon: '◐', name: 'Auto', label: 'Auto (follows device)' },
+  light: { icon: '☀', name: 'Light', label: 'Light' },
+  dark: { icon: '☾', name: 'Dark', label: 'Dark' },
 };
 
 function currentTheme() {
@@ -533,7 +533,7 @@ function currentTheme() {
 function renderThemeButton() {
   const theme = THEMES[currentTheme()];
   const btn = $('theme');
-  btn.textContent = theme.icon;
+  btn.innerHTML = `<span class="theme-icon" aria-hidden="true">${theme.icon}</span><span class="theme-name">${theme.name}</span>`;
   btn.title = `Theme: ${theme.label}. Click to change.`;
   btn.setAttribute('aria-label', btn.title);
 }
