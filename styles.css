@@ -182,7 +182,7 @@ td.c-activity { white-space: nowrap; }
 .pager button:disabled { opacity: .4; cursor: default; }
 
 /* What's new */
-.day { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 16px; }
+.day { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 16px 0; }
 .day h2 { font-size: 16px; margin: 0; padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
 .day h2 .muted { font-weight: 400; font-size: 13px; }
 .day h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin: 0; padding: 10px 14px 4px; }

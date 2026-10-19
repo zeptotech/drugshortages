@@ -6,7 +6,7 @@
 
 const PAGE_SIZE = 100;
 const NEW_DAYS = 7;           // NEW / UPDATED tags
-const CHANGE_DAYS_SHOWN = 14; // days loaded in "What's new"
+const CHANGE_DAYS_SHOWN = 14; // days of updates shown in "What's new"
 const STALE_HOURS = 36;       // warn when the daily update seems to have stopped
 
 const OFFICIAL_URL = {
@@ -394,51 +394,73 @@ function formatValue(field, value) {
   return String(value);
 }
 
-function changeLine(e, kind) {
-  const typeLabel = e.type === 'shortage' ? 'Shortage' : 'Discontinuation';
-  const head = `<span class="kind">${typeLabel}</span><span class="brand">${esc(e.brand)}</span>
-    ${e.tier3 ? '<span class="tag tier3">Tier 3</span>' : ''}
-    <span class="sub"> ${esc([e.strength, e.din && `DIN ${e.din}`, e.company].filter(Boolean).join(' · '))}</span>`;
-  let detail = '';
-  if (kind === 'new') detail = statusBadge(e.status);
-  if (kind === 'statusChanged') detail = e.from ? `${statusBadge(e.from)} → ${statusBadge(e.to)}` : `Now ${statusBadge(e.to)}`;
-  if (kind === 'updated') {
-    detail = (e.changes || []).map(c =>
-      `<b>${esc(FIELD_LABELS[c.field] || c.field)}:</b> ${esc(formatValue(c.field, c.from))} → ${esc(formatValue(c.field, c.to))}`
-    ).join('<br>');
-  }
-  return `<li data-id="${e.id}">${head}<div class="chg">${detail}</div></li>`;
+function isCurrent(r) {
+  return VIEWS.shortages.current.includes(r.status) || VIEWS.discontinuations.current.includes(r.status);
 }
 
-async function renderChanges() {
-  if (!data.changeIndex.length) {
-    const since = data.meta.seeded ? ` (tracking started ${esc(data.meta.seeded)})` : '';
-    $('content').innerHTML = `<div class="empty">No changes recorded yet${since}. The first entries appear after the next daily update.</div>`;
-    return;
+// Field-level details from the daily change log, by report id: [{ date, html }].
+// Only available for changes made since tracking started; entries without them just say "Updated".
+function changeDetails() {
+  const byId = new Map();
+  const add = (id, date, html) => {
+    if (!byId.has(id)) byId.set(id, []);
+    byId.get(id).push({ date, html });
+  };
+  const fieldHtml = c => c.field === 'status'
+    ? `${statusBadge(c.from)} → ${statusBadge(c.to)}`
+    : `<b>${esc(FIELD_LABELS[c.field] || c.field)}:</b> ${esc(formatValue(c.field, c.from))} → ${esc(formatValue(c.field, c.to))}`;
+  for (const [date, day] of data.changeDays) {
+    if (!day) continue;
+    for (const e of day.updated || []) for (const c of e.changes || []) add(e.id, date, fieldHtml(c));
+    for (const e of day.statusChanged || []) if (e.from) add(e.id, date, `${statusBadge(e.from)} → ${statusBadge(e.to)}`);
   }
+  return byId;
+}
+
+function whatsNewLine(r, details) {
+  const typeLabel = r.type === 'shortage' ? 'Shortage' : 'Discontinuation';
+  const meta = [r.strength, r.din && `DIN ${r.din}`, r.company].filter(Boolean).join(' · ');
+  const extra = details.map(d => `<div>${d.html}</div>`).join('');
+  return `<li data-id="${r.id}"><span class="kind">${typeLabel}</span><span class="brand">${esc(r.brand)}</span>${tags(r)}
+    <span class="sub"> ${esc(meta)}</span><div class="chg">${statusBadge(r.status)}${extra}</div></li>`;
+}
+
+// What's new lists reports by their own updated date (like the official homepage), so it works
+// without any tracking history. Field-level details from the change log are added when known.
+async function renderChanges() {
   $('content').innerHTML = '<p class="muted">Loading…</p>';
   await loadChangeDays();
   if (state.view !== 'changes') return;
 
+  const details = changeDetails();
   const tokens = searchTokens();
-  const keep = e => !tokens.length ||
-    matchesTokens([e.brand, e.din, e.company, e.strength].filter(Boolean).join(' ').toLowerCase(), tokens);
-  const sections = [['new', 'New reports'], ['updated', 'Updated'], ['statusChanged', 'Status changes']];
+  const since = daysAgo(CHANGE_DAYS_SHOWN);
+  const byDay = new Map();
+  for (const r of [...data.shortages, ...data.discontinuations]) {
+    const day = (r.updated || '').slice(0, 10);
+    if (!day || day < since || (tokens.length && !matchesTokens(r._hay, tokens))) continue;
+    if (!byDay.has(day)) byDay.set(day, []);
+    byDay.get(day).push(r);
+  }
 
-  const html = data.changeIndex.slice(0, CHANGE_DAYS_SHOWN).map(d => {
-    const day = data.changeDays.get(d.date);
-    if (!day) return '';
-    const parts = sections.map(([key, title]) => {
-      const entries = (day[key] || []).filter(keep);
-      return entries.length ? `<h3>${title} (${entries.length})</h3><ul>${entries.map(e => changeLine(e, key)).join('')}</ul>` : '';
-    }).join('');
-    if (!parts) return '';
-    const when = new Date(`${d.date}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-    return `<section class="day"><h2>${esc(when)}
-      <span class="muted">${d.new} new · ${d.updated} updated · ${d.statusChanged} status changes</span></h2>${parts}</section>`;
+  const html = [...byDay.keys()].sort().reverse().map(day => {
+    const rows = byDay.get(day).sort((a, b) => collator.compare(a.brand || '', b.brand || ''));
+    const isNew = r => (r.created || '').slice(0, 10) === day;
+    const groups = [
+      ['New reports', rows.filter(isNew)],
+      ['Updated', rows.filter(r => !isNew(r) && isCurrent(r))],
+      ['Resolved / discontinued', rows.filter(r => !isNew(r) && !isCurrent(r))],
+    ];
+    const parts = groups.map(([title, list]) => list.length
+      ? `<h3>${title} (${list.length})</h3><ul>${list.map(r =>
+          whatsNewLine(r, (details.get(r.id) || []).filter(d => d.date >= day))).join('')}</ul>`
+      : '').join('');
+    const when = new Date(`${day}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+    const counts = groups.map(([title, list]) => `${list.length} ${title.toLowerCase().replace(' reports', '')}`).join(' · ');
+    return `<section class="day"><h2>${esc(when)}<span class="muted">${esc(counts)}</span></h2>${parts}</section>`;
   }).join('');
 
-  $('content').innerHTML = html || `<div class="empty">No changes match “${esc(state.q)}” in the last ${CHANGE_DAYS_SHOWN} update days.</div>`;
+  $('content').innerHTML = html || `<div class="empty">No reports ${tokens.length ? `matching “${esc(state.q)}” ` : ''}updated in the last ${CHANGE_DAYS_SHOWN} days.</div>`;
 }
 
 // ---------------------------------------------------------------------------
