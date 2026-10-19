@@ -61,7 +61,6 @@ const COLUMNS = {
   din: { label: 'DIN', cls: 'nowrap', key: r => r.din || '', html: dinCell },
   strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '' },
   company: { label: 'Company', key: r => r.company || '' },
-  reason: { label: 'Reason', cls: 'reason', key: r => r.reason || '' },
   actualStart: { label: 'Started', cls: 'date', key: r => r.actualStart || '' },
   anticipatedStart: { label: 'Expected start', cls: 'date', key: r => r.anticipatedStart || '' },
   estEnd: { label: 'Est. end', cls: 'date', key: r => r.estEnd || '', html: r => r.estEnd ? esc(r.estEnd) : '<span class="muted">Unknown</span>' },
@@ -72,10 +71,10 @@ const COLUMNS = {
 };
 
 const TAB_COLUMNS = {
-  actual: ['drug', 'din', 'strength', 'company', 'reason', 'actualStart', 'estEnd', 'updated'],
-  anticipated: ['drug', 'din', 'strength', 'company', 'reason', 'anticipatedStart', 'estEnd', 'updated'],
+  actual: ['drug', 'din', 'strength', 'company', 'actualStart', 'estEnd', 'updated'],
+  anticipated: ['drug', 'din', 'strength', 'company', 'anticipatedStart', 'estEnd', 'updated'],
   resolved: ['drug', 'din', 'strength', 'company', 'outcome', 'changedOn', 'updated'],
-  upcoming: ['drug', 'din', 'strength', 'company', 'reason', 'discDate', 'updated'],
+  upcoming: ['drug', 'din', 'strength', 'company', 'discDate', 'updated'],
   discontinued: ['drug', 'din', 'strength', 'company', 'outcome', 'discDate', 'changedOn'],
 };
 
