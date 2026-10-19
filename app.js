@@ -518,8 +518,40 @@ function populateAtc() {
     .map(([code, name]) => `<option value="${code}">${code} — ${esc(name)}</option>`).join(''));
 }
 
+const THEMES = {
+  auto: { icon: '◐', label: 'Auto (follows device)' },
+  light: { icon: '☀', label: 'Light' },
+  dark: { icon: '☾', label: 'Dark' },
+};
+
+function currentTheme() {
+  return document.documentElement.dataset.theme || 'auto';
+}
+
+function renderThemeButton() {
+  const theme = THEMES[currentTheme()];
+  const btn = $('theme');
+  btn.textContent = theme.icon;
+  btn.title = `Theme: ${theme.label}. Click to change.`;
+  btn.setAttribute('aria-label', btn.title);
+}
+
+function cycleTheme() {
+  const order = Object.keys(THEMES);
+  const next = order[(order.indexOf(currentTheme()) + 1) % order.length];
+  if (next === 'auto') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = next;
+  try {
+    if (next === 'auto') localStorage.removeItem('theme');
+    else localStorage.setItem('theme', next);
+  } catch (e) { /* storage unavailable: theme lasts for this visit only */ }
+  renderThemeButton();
+}
+
 function bindEvents() {
   let timer;
+  renderThemeButton();
+  $('theme').addEventListener('click', cycleTheme);
   $('home').addEventListener('click', e => {
     e.preventDefault();
     update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '' }, { push: true });

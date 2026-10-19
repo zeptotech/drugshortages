@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Health Product Shortages Canada Viewer</title>
+  <script>
+    // Apply a saved theme before the page draws, to avoid a flash of the wrong theme.
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
@@ -15,10 +22,13 @@
         <h1><a href="./" id="home">Health Product Shortages Canada Viewer</a></h1>
         <span id="updated" class="updated"></span>
       </div>
-      <div class="search">
-        <input id="q" type="search" placeholder="Search brand, ingredient, DIN, company, ATC…  ( / )"
-               autocomplete="off" spellcheck="false" aria-label="Search">
-        <button id="q-clear" type="button" aria-label="Clear search" title="Clear search" hidden>✕</button>
+      <div class="top-actions">
+        <div class="search">
+          <input id="q" type="search" placeholder="Search brand, ingredient, DIN, company, ATC…  ( / )"
+                 autocomplete="off" spellcheck="false" aria-label="Search">
+          <button id="q-clear" type="button" aria-label="Clear search" title="Clear search" hidden>✕</button>
+        </div>
+        <button id="theme" type="button" class="theme-btn"></button>
       </div>
     </div>
     <nav class="wrap views" id="views" aria-label="Sections"></nav>
