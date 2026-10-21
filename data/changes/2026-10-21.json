@@ -1,0 +1,24 @@
+{"date":"2026-10-21",
+"new":[
+{"id":296184,"type":"shortage","status":"active_confirmed","brand":"DIASTAT","din":"02238162","strength":"5MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false},
+{"id":296179,"type":"shortage","status":"anticipated_shortage","brand":"IMITREX","din":"02230418","strength":"5MG","company":"GLAXOSMITHKLINE INC","tier3":false}
+],
+"updated":[
+{"id":284545,"type":"shortage","status":"active_confirmed","brand":"AMINOPHYLLINE INJ 25MG/ML","din":"00582662","strength":"25MG","company":"OMEGA LABORATORIES LIMITED","tier3":true,"changes":[{"field":"estEnd","from":"2026-10-19","to":"2026-10-29"}]},
+{"id":284604,"type":"shortage","status":"active_confirmed","brand":"STERILE LIGHT MINERAL OIL 100%","din":"02203375","strength":"100%","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-30","to":"2026-12-07"}]},
+{"id":289724,"type":"shortage","status":"active_confirmed","brand":"TRANEXAMIC ACID INJECTION","din":"02392763","strength":"100MG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-30","to":"2026-11-30"}]},
+{"id":292963,"type":"shortage","status":"active_confirmed","brand":"FML","din":"00247855","strength":"0.1%","company":"ABBVIE CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-23","to":"2026-11-11"}]},
+{"id":293016,"type":"shortage","status":"active_confirmed","brand":"DEPO-MEDROL","din":"00030759","strength":"40MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-10-30","to":null},{"field":"actualStart","from":null,"to":"2026-10-12"},{"field":"anticipatedStart","from":"2026-10-12","to":null},{"field":"actualEnd","from":null,"to":"2026-10-21"}]},
+{"id":295528,"type":"shortage","status":"anticipated_shortage","brand":"DIFLUCAN","din":"02024152","strength":"50MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"actualStart","from":null,"to":"2026-10-21"},{"field":"anticipatedStart","from":"2026-10-30","to":null}]}
+],
+"statusChanged":[
+{"id":272123,"type":"discontinuance","status":"discontinued","brand":"VIRAZOLE","din":"02170140","strength":"6G","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":286243,"type":"discontinuance","status":"discontinued","brand":"TIAZAC","din":"02231155","strength":"360MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":286240,"type":"discontinuance","status":"discontinued","brand":"TIAZAC","din":"02231154","strength":"300MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":286237,"type":"discontinuance","status":"discontinued","brand":"TIAZAC","din":"02231152","strength":"240MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":286234,"type":"discontinuance","status":"discontinued","brand":"TIAZAC","din":"02231151","strength":"180MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":286231,"type":"discontinuance","status":"discontinued","brand":"TIAZAC","din":"02231150","strength":"120MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":283097,"type":"discontinuance","status":"discontinued","brand":"TRYPTAN","din":"02239327","strength":"750MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":283051,"type":"discontinuance","status":"discontinued","brand":"TRYPTAN","din":"00654531","strength":"1G","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":276371,"type":"discontinuance","status":"discontinued","brand":"BENZAMYCIN","din":"02225271","strength":"3%\r\n5%","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
