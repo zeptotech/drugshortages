@@ -1,8 +1,27 @@
 {"date":"2026-10-22",
 "new":[
-{"id":296208,"type":"shortage","status":"anticipated_shortage","brand":"MEDROL","din":"00030988","strength":"4MG","company":"PFIZER CANADA ULC","tier3":false}
+{"id":296208,"type":"shortage","status":"anticipated_shortage","brand":"MEDROL","din":"00030988","strength":"4MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":296216,"type":"shortage","status":"anticipated_shortage","brand":"TEMODAL","din":"02312794","strength":"140MG","company":"MERCK CANADA INC","tier3":false},
+{"id":296219,"type":"shortage","status":"anticipated_shortage","brand":"TEMODAL","din":"02241095","strength":"100MG","company":"MERCK CANADA INC","tier3":false},
+{"id":296246,"type":"shortage","status":"anticipated_shortage","brand":"SUMATRIPTAN","din":"02286548","strength":"100MG","company":"SANIS HEALTH INC","tier3":false}
 ],
 "updated":[
-{"id":294532,"type":"discontinuance","status":"to_be_discontinued","brand":"CHLORAPREP","din":"02484374","strength":"70%\r\n2%","company":"BECTON DICKINSON CANADA INC.","tier3":false,"changes":[{"field":"actualDiscDate","from":null,"to":"2026-10-21"}]}
+{"id":294532,"type":"discontinuance","status":"to_be_discontinued","brand":"CHLORAPREP","din":"02484374","strength":"70%\r\n2%","company":"BECTON DICKINSON CANADA INC.","tier3":false,"changes":[{"field":"actualDiscDate","from":null,"to":"2026-10-21"}]},
+{"id":250148,"type":"shortage","status":"active_confirmed","brand":"TERBINAFINE","din":"02385279","strength":"250MG","company":"SIVEM PHARMACEUTICALS ULC","tier3":false,"changes":[{"field":"estEnd","from":null,"to":"2026-12-15"}]},
+{"id":250151,"type":"shortage","status":"active_confirmed","brand":"TERBINAFINE","din":"02385279","strength":"250MG","company":"SIVEM PHARMACEUTICALS ULC","tier3":false,"changes":[{"field":"estEnd","from":null,"to":"2026-12-15"}]},
+{"id":273071,"type":"shortage","status":"active_confirmed","brand":"BICILLIN L-A","din":"02291924","strength":"1200000UNIT","company":"PFIZER CANADA ULC","tier3":true,"changes":[{"field":"estEnd","from":"2027-02-26","to":"2027-05-31"}]},
+{"id":289556,"type":"shortage","status":"active_confirmed","brand":"DUOTRAV PQ","din":"02278251","strength":"0.004%\r\n0.5%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-26"}]},
+{"id":289613,"type":"shortage","status":"active_confirmed","brand":"METADOL","din":"02247694","strength":"1MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-23","to":"2026-10-31"}]},
+{"id":293879,"type":"shortage","status":"active_confirmed","brand":"PARIET, ENTERIC-COATED TABLET 20MG","din":"02243797","strength":"20MG","company":"JANSSEN INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-24","to":"2026-10-30"}]},
+{"id":295062,"type":"shortage","status":"active_confirmed","brand":"COVERSYL","din":"02123282","strength":"4MG","company":"SERVIER CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-10-16","to":"2026-10-23"}]},
+{"id":295196,"type":"shortage","status":"active_confirmed","brand":"DILTIAZEM CD","din":"02400456","strength":"240MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-11-06","to":"2026-11-13"}]},
+{"id":295423,"type":"shortage","status":"active_confirmed","brand":"PARIET, ENTERIC-COATED TABLET 10MG","din":"02243796","strength":"10MG","company":"JANSSEN INC","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2026-10-22"}]},
+{"id":266487,"type":"shortage","status":"anticipated_shortage","brand":"ESCITALOPRAM","din":"02430126","strength":"20MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"status","from":"active_confirmed","to":"anticipated_shortage"},{"field":"estEnd","from":null,"to":"2027-01-08"},{"field":"actualStart","from":"2025-09-09","to":null},{"field":"anticipatedStart","from":"2025-09-12","to":"2026-11-13"},{"field":"comments","from":"ALTERNATE PACK SIZE AVAILABLE / D'AUTRES FORMATS D'EMBALLAGE DISPONIBLES","to":null}]},
+{"id":295193,"type":"shortage","status":"anticipated_shortage","brand":"CITALOPRAM","din":"02353660","strength":"20MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-18","to":"2027-02-12"}]},
+{"id":289464,"type":"discontinuance","status":"to_be_discontinued","brand":"SALOFALK","din":"02112809","strength":"4G","company":"ABBVIE CORPORATION","tier3":false,"changes":[{"field":"discDate","from":"2026-10-23","to":"2026-10-28"}]}
 ],
-"statusChanged":[]}
+"statusChanged":[
+{"id":291978,"type":"shortage","status":"resolved","brand":"CAPECITABINE","din":"02514982","strength":"150MG","company":"SANIS HEALTH INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":293820,"type":"shortage","status":"resolved","brand":"SANDOZ ARIPIPRAZOLE","din":"02473674","strength":"10MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":295187,"type":"shortage","status":"resolved","brand":"ARIPIPRAZOLE","din":"02506750","strength":"20MG","company":"SANIS HEALTH INC","tier3":false,"from":"anticipated_shortage","to":"resolved"}
+]}
