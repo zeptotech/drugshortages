@@ -1,0 +1,8 @@
+{"date":"2026-10-22",
+"new":[
+{"id":296208,"type":"shortage","status":"anticipated_shortage","brand":"MEDROL","din":"00030988","strength":"4MG","company":"PFIZER CANADA ULC","tier3":false}
+],
+"updated":[
+{"id":294532,"type":"discontinuance","status":"to_be_discontinued","brand":"CHLORAPREP","din":"02484374","strength":"70%\r\n2%","company":"BECTON DICKINSON CANADA INC.","tier3":false,"changes":[{"field":"actualDiscDate","from":null,"to":"2026-10-21"}]}
+],
+"statusChanged":[]}
