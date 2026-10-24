@@ -1,0 +1,6 @@
+{"date":"2026-10-24",
+"new":[],
+"updated":[
+{"id":294506,"type":"shortage","status":"anticipated_shortage","brand":"TAMIFLU","din":"02381842","strength":"6MG","company":"HOFFMANN-LA ROCHE LIMITED","tier3":false,"changes":[{"field":"actualStart","from":null,"to":"2026-10-23"}]}
+],
+"statusChanged":[]}
