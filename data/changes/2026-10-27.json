@@ -1,0 +1,8 @@
+{"date":"2026-10-27",
+"new":[],
+"updated":[
+{"id":293982,"type":"shortage","status":"active_confirmed","brand":"MIOSTAT OPHTHALMIC LIQ 0.01%","din":"00042544","strength":".01%","company":"ALCON CANADA INC","tier3":true,"changes":[{"field":"estEnd","from":"2027-01-04","to":"2026-12-01"}]}
+],
+"statusChanged":[
+{"id":292122,"type":"shortage","status":"resolved","brand":"IXIARO","din":"02333279","strength":"6MCG","company":"VALNEVA AUSTRIA GMBH","tier3":false,"from":"anticipated_shortage","to":"resolved"}
+]}
