@@ -569,7 +569,10 @@ function renderTable() {
     return `<td class="${col.cls || ''}" data-label="${esc(col.label)}">${content}</td>`;
   }).join('')}</tr>`).join('');
 
-  $('content').innerHTML = `<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  // The phone-only "Sort by" dropdown, then the table.
+  const sortChoices = cols.map(c => [c, COLUMNS[c].label, COLUMNS[c].cls === 'date' ? 'date' : COLUMNS[c].cls === 'num' ? 'num' : 'text']);
+  $('content').innerHTML = sortSelect(sortChoices, [sortCol, sortDir])
+    + `<div class="table-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
 
   // Prev / Next buttons, only when there is more than one page. data-page holds the page
   // number each button goes to.
@@ -578,6 +581,24 @@ function renderTable() {
        <span class="muted">Page ${state.page} of ${pages}</span>
        <button type="button" data-page="${state.page + 1}"${state.page === pages ? ' disabled' : ''}>Next ›</button>`
     : '';
+}
+
+// The "Sort by" dropdown shown on phones, where the column headings are hidden (rows become
+// cards). Every column appears twice, once per direction, worded to suit the column:
+// text "A → Z", dates "latest first", numbers "highest first". Each option's value is
+// "column:direction", e.g. "updated:desc"; the change handler in bindEvents() reads it.
+//   choices: [[columnId, label, 'text' | 'date' | 'num'], ...]   current: [columnId, direction]
+const SORT_WORDS = {
+  text: [['asc', 'A → Z'], ['desc', 'Z → A']],
+  date: [['desc', 'latest first'], ['asc', 'earliest first']],
+  num: [['desc', 'highest first'], ['asc', 'lowest first']],
+};
+function sortSelect(choices, [curCol, curDir]) {
+  const options = choices.flatMap(([id, label, type]) => SORT_WORDS[type].map(([dir, words]) => {
+    const selected = id === curCol && dir === curDir ? ' selected' : '';
+    return `<option value="${id}:${dir}"${selected}>${esc(label)} (${words})</option>`;
+  })).join('');
+  return `<label class="mobile-sort">Sort by <select data-sort-select>${options}</select></label>`;
 }
 
 // A field's value as text for "What's new" (empty -> 'none', true/false -> 'Yes'/'No', ...).
@@ -805,8 +826,9 @@ function renderCompanies() {
     <p class="muted intro">${formatNumber(rows.length)} ${tokens.length ? `of ${formatNumber(all.length)} ` : ''}companies with open reports.
     <span class="tag tier3">Tier 3</span>, <span class="tag overdue">Overdue</span> and <span class="tag late">Late</span> are explained at the bottom of the page.
     Click a company to see its reports.</p>`;
+  const sortChoices = Object.entries(COMPANY_COLUMNS).map(([id, col]) => [id, col.label, col.num ? 'num' : 'text']);
   $('content').innerHTML = intro + (rows.length
-    ? `<div class="table-wrap"><table>${'<thead><tr>' + head + '</tr></thead>'}<tbody>${body}</tbody></table></div>`
+    ? sortSelect(sortChoices, [sortCol, sortDir]) + `<div class="table-wrap"><table>${'<thead><tr>' + head + '</tr></thead>'}<tbody>${body}</tbody></table></div>`
     : `<div class="empty">No companies match “${esc(state.q)}”.</div>`);
 }
 
@@ -1037,6 +1059,13 @@ function bindEvents() {
 
   // Every click inside the main area. Checks what was clicked, most specific first, and
   // `return`s once handled so that e.g. clicking the copy button doesn't also open the row.
+  // The phone "Sort by" dropdown: its value is "column:direction".
+  $('content').addEventListener('change', e => {
+    if (!e.target.matches('[data-sort-select]')) return;
+    const [sort, dir] = e.target.value.split(':');
+    update({ sort, dir });
+  });
+
   $('content').addEventListener('click', e => {
     // DIN copy button: copy, show a ✓ for 1.2 seconds, then put the icon back.
     const copy = e.target.closest('button[data-copy]');

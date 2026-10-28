@@ -184,6 +184,9 @@ td.c-activity { white-space: nowrap; }
 
 .empty { padding: 32px; text-align: center; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
 
+/* "Sort by" dropdown: phones only (the column headings do the job on wider screens) */
+.mobile-sort { display: none; }
+
 /* Pager */
 .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin: 10px 0; }
 .pager button:disabled { opacity: .4; cursor: default; }
@@ -251,6 +254,8 @@ dialog .close { position: absolute; top: 12px; right: 12px; }
   td.c-drug::before { content: none; }
   td.c-company { max-width: none; }
   tr[data-company] td.num { text-align: left; }
+  .mobile-sort { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; color: var(--muted); font-size: 13.5px; }
+  .mobile-sort select { flex: 1; min-width: 0; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--text); }
   td:empty { display: none; }
   .d-body dl { grid-template-columns: 1fr; gap: 0; }
   .d-body dd { margin-bottom: 8px; }
