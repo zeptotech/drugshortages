@@ -21,6 +21,7 @@
 
 const PAGE_SIZE = 100;        // rows per page in the tables
 const NEW_DAYS = 7;           // NEW / UPDATED tags
+const OVERDUE_GRACE_DAYS = 2; // official definition: date passed by more than two calendar days
 const CHANGE_DAYS_SHOWN = 7;  // days of updates shown in "What's new" (including today)
 const STALE_HOURS = 36;       // warn when the daily update seems to have stopped
 
@@ -153,10 +154,10 @@ const FIELD_LABELS = {
 // data.changeIndex / changeDays: the daily change logs used by "What's new".
 const data = { shortages: [], discontinuations: [], byId: new Map(), meta: {}, changeIndex: null, changeDays: new Map() };
 // Everything here is mirrored in the address bar, so a link reopens exactly the same view.
-//   view/tab: which section and tab.  q: search text.  tier3/atc: the filters.
+//   view/tab: which section and tab.  q: search text.  tier3/overdue/atc: the filters.
 //   sort/dir: a column the visitor clicked to sort ('' = use DEFAULT_SORT).  page: table page.
 //   day/kind: the filter chips on "What's new".
-const state = { view: 'shortages', tab: '', q: '', tier3: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '' };
+const state = { view: 'shortages', tab: '', q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '' };
 // Shortcut: $('count') finds the element in index.html with id="count".
 const $ = id => document.getElementById(id);
 // Compares text the way people expect: ignores upper/lower case and puts "Item 2" before "Item 10".
@@ -226,6 +227,7 @@ function formatNumber(n) {
 function tags(r) {
   return [
     r.tier3 && '<span class="tag tier3" title="Tier 3: highest potential impact">Tier 3</span>',
+    r._overdue && '<span class="tag overdue" title="Expected date passed more than 2 days ago with no actual date">Overdue</span>',
     r.late && '<span class="tag late" title="Reported more than 5 days after the start date">Late</span>',
   ].filter(Boolean).join('');
 }
@@ -289,8 +291,22 @@ async function getJSON(path, optional = false) {
 // are ours (not from the official data).
 function prepare(r) {
   const newCutoff = daysAgo(NEW_DAYS);
+  const overdueCutoff = daysAgo(OVERDUE_GRACE_DAYS);
   const created = (r.created || '').slice(0, 10);
   const updated = (r.updated || '').slice(0, 10);
+
+  // Overdue, as on the official site: the company's expected date passed more than 2 days
+  // ago and the report still hasn't been updated with what actually happened.
+  //   Anticipated shortage: the expected (or actual) start date has passed, so it should
+  //     have become an actual shortage by now.
+  //   Actual shortage: the estimated end date has passed and there is no actual end date.
+  //   To be discontinued: the discontinuation date has passed and there is no actual one.
+  // Dates are "YYYY-MM-DD" text, so `<` compares them correctly (earlier = smaller).
+  let overdue = false;
+  if (r.status === 'anticipated_shortage') overdue = [r.anticipatedStart, r.actualStart].some(d => d && d < overdueCutoff);
+  else if (r.status === 'active_confirmed') overdue = !!r.estEnd && !r.actualEnd && r.estEnd < overdueCutoff;
+  else if (r.status === 'to_be_discontinued') overdue = !!r.discDate && !r.actualDiscDate && r.discDate < overdueCutoff;
+  r._overdue = overdue;
 
   r._new = created >= newCutoff;
   r._updatedRecently = !r._new && updated >= newCutoff;
@@ -341,6 +357,7 @@ function readURL() {
   state.tab = p.get('tab') || '';
   state.q = p.get('q') || '';
   state.tier3 = p.get('tier3') === '1';
+  state.overdue = p.get('overdue') === '1';
   state.atc = p.get('atc') || '';
   state.sort = p.get('sort') || '';
   state.dir = p.get('dir') === 'asc' ? 'asc' : p.get('dir') === 'desc' ? 'desc' : '';
@@ -364,6 +381,7 @@ function writeURL(push = false) {
   if (tabs && state.tab !== tabs[0].id) p.set('tab', state.tab);
   if (state.q) p.set('q', state.q);
   if (state.tier3) p.set('tier3', '1');
+  if (state.overdue) p.set('overdue', '1');
   if (state.atc) p.set('atc', state.atc);
   if (state.sort) { p.set('sort', state.sort); p.set('dir', state.dir); }
   if (state.page > 1) p.set('page', state.page);
@@ -385,6 +403,7 @@ function filtered(records) {
   return records.filter(r =>
     (!tokens.length || matchesTokens(r._hay, tokens)) &&
     (!state.tier3 || r.tier3) &&
+    (!state.overdue || r._overdue) &&
     (!state.atc || (r.atc || '').startsWith(state.atc)));
 }
 
@@ -506,7 +525,7 @@ function renderTable() {
   if (!rows.length) {
     const recentTab = VIEWS[state.view].tabs.find(t => t.id === state.tab).recent;
     $('content').innerHTML = `<div class="empty">${
-      state.q || state.tier3 || state.atc
+      state.q || state.tier3 || state.overdue || state.atc
         ? 'No reports match these filters.'
         : recentTab ? 'No status changes recorded yet. They appear here as the daily update detects them.' : 'No reports.'
     }</div>`;
@@ -759,6 +778,7 @@ function syncControls() {
   $('q').value = state.q;
   $('q-clear').hidden = !state.q;
   $('f-tier3').checked = state.tier3;
+  $('f-overdue').checked = state.overdue;
   $('f-atc').value = state.atc;
 }
 
@@ -830,7 +850,7 @@ function bindEvents() {
   // Clicking the site title resets everything and goes back to the first tab.
   $('home').addEventListener('click', e => {
     e.preventDefault();   // stop the link from reloading the page; we redraw instead
-    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, atc: '', sort: '', dir: '', day: '', kind: '' }, { push: true });
+    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', day: '', kind: '' }, { push: true });
     syncControls();
     window.scrollTo({ top: 0 });
   });
@@ -853,6 +873,7 @@ function bindEvents() {
   });
   $('q-clear').addEventListener('click', () => { clearSearch(); $('q').focus(); });
   $('f-tier3').addEventListener('change', e => update({ tier3: e.target.checked }));
+  $('f-overdue').addEventListener('change', e => update({ overdue: e.target.checked }));
   $('f-atc').addEventListener('change', e => update({ atc: e.target.value }));
 
   // Section links: switch section, start on its first tab and default sort.

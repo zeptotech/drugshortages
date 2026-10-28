@@ -52,6 +52,7 @@
     <!-- Filters, and the "1–100 of 512" count on the right. -->
     <div id="toolbar" class="toolbar">
       <label><input type="checkbox" id="f-tier3"> Tier 3 only</label>
+      <label><input type="checkbox" id="f-overdue"> Overdue only</label>
       <!-- The other options are added by populateAtc in app.js. -->
       <select id="f-atc" aria-label="Drug class (ATC)">
         <option value="">All drug classes (ATC)</option>
@@ -72,6 +73,7 @@
     refreshed twice a day. Not affiliated with Health Canada. Always confirm with the official report.
     <br>
     <span class="tag tier3">Tier 3</span> highest-impact shortage ·
+    <span class="tag overdue">Overdue</span> expected date passed &gt;2 days with no actual date ·
     <span class="tag late">Late</span> reported &gt;5 days after start ·
     <span class="tag new">New</span> / <span class="tag upd">Updated</span> in the last 7 days
   </footer>
