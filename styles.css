@@ -147,7 +147,7 @@ th[aria-sort="descending"] button::after { content: " ▼"; }
 tbody tr { cursor: pointer; }
 tbody tr:nth-child(odd) { background: var(--row-alt); }
 tbody tr:hover { background: var(--row-hover); }
-tbody tr:focus-visible, .day li:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--row-hover); }
+tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--row-hover); }
 tbody tr:last-child td { border-bottom: 0; }
 td.nowrap, td.date { white-space: nowrap; }
 td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -189,15 +189,14 @@ td.c-activity { white-space: nowrap; }
 
 /* What's new */
 .day { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 16px 0; }
-.day h2 { font-size: 16px; margin: 0; padding: 10px 14px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.day h2 { font-size: 18px; margin: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--accent-soft); border-radius: 8px 8px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
 .day h2 .muted { font-weight: 400; font-size: 13px; }
-.day h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); margin: 0; padding: 10px 14px 4px; }
-.day ul { list-style: none; margin: 0; padding: 0 0 6px; }
-.day li { padding: 6px 14px; cursor: pointer; }
-.day li:hover { background: var(--row-hover); }
-.day .chg { color: var(--muted); font-size: 13px; }
-.day .chg b { color: var(--text); font-weight: 600; }
-.kind { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-right: 6px; }
+.day .table-wrap { border: 0; border-radius: 0 0 8px 8px; }
+.day tbody tr { cursor: pointer; }
+.day td.chg { font-size: 13px; color: var(--muted); }
+.day td.chg b { color: var(--text); font-weight: 600; }
+.tag.closed { background: var(--s-resolved-bg); color: var(--s-resolved); }
+.day td:first-child .tag { margin-left: 0; }
 
 /* What's new filter bars */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 12px 0 0; }

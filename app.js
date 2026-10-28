@@ -547,10 +547,11 @@ function formatValue(field, value) {
 }
 
 // The groups on "What's new", in display order (also the "Show:" chips).
+//   label: the chip text.  tag: the shorter word in the table's "Change" column.  cls: its colour.
 const CHANGE_KINDS = [
-  { id: 'new', label: 'New' },
-  { id: 'updated', label: 'Updated' },
-  { id: 'closed', label: 'Resolved / discontinued' },
+  { id: 'new', label: 'New', tag: 'New', cls: 'new' },
+  { id: 'updated', label: 'Updated', tag: 'Updated', cls: 'upd' },
+  { id: 'closed', label: 'Resolved / discontinued', tag: 'Closed', cls: 'closed' },
 ];
 
 // Is this report still active (a current shortage or an upcoming discontinuation)?
@@ -580,13 +581,25 @@ function changeDetails() {
   return byId;
 }
 
-// One report's line in "What's new": type, brand, details, current status and any changes.
-function whatsNewLine(r, details) {
-  const typeLabel = r.type === 'shortage' ? 'Shortage' : 'Discontinuation';
-  const meta = [r.strength, r.din && `DIN ${r.din}`, r.company].filter(Boolean).join(' · ');
-  const extra = details.map(d => `<div>${d.html}</div>`).join('');
-  return `<li data-id="${r.id}" tabindex="0" aria-haspopup="dialog"><span class="kind">${typeLabel}</span><span class="brand">${esc(r.brand)}</span>${tags(r)}
-    <span class="sub"> ${esc(meta)}</span><div class="chg">${statusBadge(r.status)}${extra}</div></li>`;
+// The column headings of each day's table on "What's new", left to right.
+const CHANGE_HEADINGS = ['Change', 'Type', 'Drug', 'DIN', 'Strength', 'Status', 'What changed'];
+
+// One report's row in a "What's new" table. `kind` is one of CHANGE_KINDS; `details` are the
+// field changes from the change log (may be empty). The cells use the same helpers as the
+// Shortages tables (drugCell, dinCell), so a row looks the same in both places.
+// data-label on each cell is the caption shown on phones, where rows become cards.
+function whatsNewRow(r, kind, details) {
+  const cells = [
+    ['nowrap', `<span class="tag ${kind.cls}">${kind.tag}</span>`],
+    ['nowrap', r.type === 'shortage' ? 'Shortage' : 'Discontinuation'],
+    ['c-drug', drugCell(r)],
+    ['nowrap', dinCell(r)],
+    ['nowrap', esc(r.strength || '')],
+    ['nowrap', statusBadge(r.status)],
+    ['chg', details.map(d => `<div>${d.html}</div>`).join('')],
+  ];
+  return `<tr data-id="${r.id}" tabindex="0" aria-haspopup="dialog">${cells.map(([cls, html], i) =>
+    `<td class="${cls}" data-label="${CHANGE_HEADINGS[i]}">${html}</td>`).join('')}</tr>`;
 }
 
 // What's new lists reports by their own updated date (like the official homepage), so it works
@@ -599,12 +612,16 @@ function changeKind(r, day) {
   return isCurrent(r) ? 'updated' : 'closed';
 }
 
-// "2026-10-19" -> "Mon, Oct 19" (or "Mon, Oct 19, 2026" with withYear). The T12:00:00 (noon)
-// keeps the date from slipping to the day before in time zones west of UTC.
-function shortDay(day, withYear = false) {
+// "2026-10-19" -> "Mon, Oct 19". The T12:00:00 (noon) keeps the date from slipping to the
+// day before in time zones west of UTC.
+function shortDay(day) {
+  return new Date(`${day}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+// The heading above each day's table: "2026-10-19" -> "Monday, October 19, 2026".
+function longDay(day) {
   return new Date(`${day}T12:00:00`).toLocaleDateString('en-CA',
-    // `...(cond ? {...} : {})` adds the year option only when withYear is true.
-    { weekday: 'short', month: 'short', day: 'numeric', ...(withYear ? { year: 'numeric' } : {}) });
+    { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
 // One filter chip button. `attr` is 'data-day' or 'data-kind'; the click handler reads it.
@@ -643,22 +660,22 @@ async function renderChanges() {
   const bars = `<div class="chips" role="group" aria-label="Day">${dayBar.join('')}</div>
     <div class="chips" role="group" aria-label="Kind of change"><span class="muted">Show:</span>${kindBar.join('')}</div>`;
 
-  // Build one <section> per day, each with a heading and a list per kind (New, Updated, ...),
-  // sorted by brand name.
+  // Build one <section> per day: a heading with the full date, then a table of that day's
+  // reports. Rows are grouped New, then Updated, then Closed, and sorted by brand within each.
   const shown = entries.filter(e => inDay(e) && inKind(e));
+  const head = `<thead><tr>${CHANGE_HEADINGS.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead>`;
   const html = days.filter(d => !state.day || d === state.day).map(day => {
     const dayEntries = shown.filter(e => e.day === day);
     if (!dayEntries.length) return '';
-    const parts = CHANGE_KINDS.map(k => {
-      const list = dayEntries.filter(e => e.kind === k.id).map(e => e.r)
-        .sort((a, b) => collator.compare(a.brand || '', b.brand || ''));
+    const rows = CHANGE_KINDS.flatMap(k => dayEntries.filter(e => e.kind === k.id).map(e => e.r)
+      .sort((a, b) => collator.compare(a.brand || '', b.brand || ''))
       // Only show change details logged on or after this day, so older edits aren't repeated.
-      return list.length
-        ? `<h3>${k.label} (${list.length})</h3><ul>${list.map(r =>
-            whatsNewLine(r, (details.get(r.id) || []).filter(d => d.date >= day))).join('')}</ul>`
-        : '';
-    }).join('');
-    return `<section class="day"><h2>${esc(shortDay(day, true))}<span class="muted">${formatNumber(dayEntries.length)} reports</span></h2>${parts}</section>`;
+      .map(r => whatsNewRow(r, k, (details.get(r.id) || []).filter(d => d.date >= day))));
+    // The small counts next to the date, e.g. "3 new · 12 updated · 2 closed".
+    const counts = CHANGE_KINDS.map(k => [k, dayEntries.filter(e => e.kind === k.id).length])
+      .filter(([, n]) => n).map(([k, n]) => `${formatNumber(n)} ${k.tag.toLowerCase()}`).join(' · ');
+    return `<section class="day"><h2>${esc(longDay(day))}<span class="muted">${counts}</span></h2>
+      <div class="table-wrap"><table>${head}<tbody>${rows.join('')}</tbody></table></div></section>`;
   }).join('');
 
   // Message for when nothing matches.
