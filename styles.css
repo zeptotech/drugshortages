@@ -154,7 +154,7 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: now
 td.date { font-variant-numeric: tabular-nums; }
 .brand { font-weight: 600; }
 .sub { color: var(--muted); font-size: 12.5px; }
-.sub.company { font-style: italic; }
+td.c-company { min-width: 140px; max-width: 220px; }
 
 .din { font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
 .copy {
@@ -240,6 +240,7 @@ dialog .close { position: absolute; top: 12px; right: 12px; }
   td, td + td { border: 0; padding: 3px 12px; }
   td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
   td.c-drug::before { content: none; }
+  td.c-company { max-width: none; }
   td:empty { display: none; }
   .d-body dl { grid-template-columns: 1fr; gap: 0; }
   .d-body dd { margin-bottom: 8px; }

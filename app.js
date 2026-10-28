@@ -87,9 +87,11 @@ const VIEWS = {
 //   label: column heading.  cls: CSS class for the cells (e.g. 'date' for narrow date columns).
 const COLUMNS = {
   drug: { label: 'Drug', cls: 'c-drug', key: r => r.brand || '', html: drugCell },
+  // No tab shows a DIN column any more (the DIN is under the drug name), but it is kept
+  // here so older shared links that sort by DIN still work.
   din: { label: 'DIN', cls: 'nowrap', key: r => r.din || '', html: dinCell },
   strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '' },
-  company: { label: 'Company', key: r => r.company || '' },
+  company: { label: 'Company', cls: 'c-company', key: r => r.company || '' },
   // Falls back to the expected start when the company never entered an actual start date.
   // `a ? b : c` means "if a then b, otherwise c"; here it is chained to handle three cases.
   actualStart: {
@@ -115,11 +117,11 @@ const COLUMNS = {
 
 // Which columns each tab shows, left to right (names refer to COLUMNS above).
 const TAB_COLUMNS = {
-  actual: ['drug', 'din', 'strength', 'actualStart', 'days', 'estEnd', 'activity', 'updated'],
-  anticipated: ['drug', 'din', 'strength', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
-  resolved: ['drug', 'din', 'strength', 'outcome', 'changedOn', 'updated'],
-  upcoming: ['drug', 'din', 'strength', 'discDate', 'activity', 'updated'],
-  discontinued: ['drug', 'din', 'strength', 'outcome', 'discDate', 'changedOn'],
+  actual: ['drug', 'company', 'strength', 'actualStart', 'days', 'estEnd', 'activity', 'updated'],
+  anticipated: ['drug', 'company', 'strength', 'anticipatedStart', 'estEnd', 'activity', 'updated'],
+  resolved: ['drug', 'company', 'strength', 'outcome', 'changedOn', 'updated'],
+  upcoming: ['drug', 'company', 'strength', 'discDate', 'activity', 'updated'],
+  discontinued: ['drug', 'company', 'strength', 'outcome', 'discDate', 'changedOn'],
 };
 
 // How each tab is sorted before anyone clicks a column heading: [column, direction].
@@ -239,15 +241,16 @@ function activityTag(r) {
   return key ? `<span class="tag ${key === 'New' ? 'new' : 'upd'}">${key}</span>` : '';
 }
 
-// The "Drug" cell: brand name and tags, then ingredients · form · route, then the company.
+// The "Drug" cell: brand name and tags, then ingredients · form · route, then the DIN.
+// (The company has its own column, so it isn't repeated here.)
 function drugCell(r) {
   const sub = [r.ingredients, r.form, r.route].filter(Boolean).join(' · ');
   return `<div class="brand">${esc(r.brand)}${tags(r)}</div>`
     + (sub ? `<div class="sub">${esc(sub)}</div>` : '')
-    + (r.company ? `<div class="sub company">${esc(r.company)}</div>` : '');
+    + (r.din ? `<div class="sub">DIN ${dinCell(r)}</div>` : '');
 }
 
-// The "DIN" cell: the number plus a copy button. The button stores the DIN in `data-copy`,
+// The DIN: the number plus a copy button. The button stores the DIN in `data-copy`,
 // which the click handler in bindEvents() reads.
 function dinCell(r) {
   if (!r.din) return '';
@@ -582,18 +585,18 @@ function changeDetails() {
 }
 
 // The column headings of each day's table on "What's new", left to right.
-const CHANGE_HEADINGS = ['Change', 'Type', 'Drug', 'DIN', 'Strength', 'Status', 'What changed'];
+const CHANGE_HEADINGS = ['Change', 'Type', 'Drug', 'Company', 'Strength', 'Status', 'What changed'];
 
 // One report's row in a "What's new" table. `kind` is one of CHANGE_KINDS; `details` are the
 // field changes from the change log (may be empty). The cells use the same helpers as the
-// Shortages tables (drugCell, dinCell), so a row looks the same in both places.
+// Shortages tables (drugCell), so a row looks the same in both places.
 // data-label on each cell is the caption shown on phones, where rows become cards.
 function whatsNewRow(r, kind, details) {
   const cells = [
     ['nowrap', `<span class="tag ${kind.cls}">${kind.tag}</span>`],
     ['nowrap', r.type === 'shortage' ? 'Shortage' : 'Discontinuation'],
     ['c-drug', drugCell(r)],
-    ['nowrap', dinCell(r)],
+    ['c-company', esc(r.company || '')],
     ['nowrap', esc(r.strength || '')],
     ['nowrap', statusBadge(r.status)],
     ['chg', details.map(d => `<div>${d.html}</div>`).join('')],
