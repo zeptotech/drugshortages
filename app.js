@@ -784,9 +784,12 @@ function renderCompanies() {
     <td class="num" data-label="Late">${num(c.late)}</td></tr>`).join('');
 
   // The disclaimer box, then a line with the company count.
-  const intro = `<div class="notice">These counts only include open reports, so they won't match the
-    company summary on <a href="https://healthproductshortages.ca" target="_blank" rel="noopener">Health Product Shortages Canada</a>.
-    Check the official site for exact numbers.</div>
+  const intro = `<div class="notice">Not the official company summary.
+    These numbers are worked out by this site from open reports only, so they differ from the
+    summary on <a href="https://healthproductshortages.ca" target="_blank" rel="noopener">Health Product Shortages Canada</a>:
+    reports closed more than 30 days ago aren't included, Late counts open reports only
+    (the official count covers every report ever filed), Overdue may be off by a few,
+    and some companies are named or grouped differently. Use the official site for exact figures.</div>
     <p class="muted intro">${formatNumber(rows.length)} ${tokens.length ? `of ${formatNumber(all.length)} ` : ''}companies with open reports.
     <span class="tag tier3">Tier 3</span>, <span class="tag overdue">Overdue</span> and <span class="tag late">Late</span> are explained at the bottom of the page.
     Click a company to see its reports.</p>`;
