@@ -93,7 +93,7 @@ const COLUMNS = {
   // No tab shows a DIN column any more (the DIN is under the drug name), but it is kept
   // here so older shared links that sort by DIN still work.
   din: { label: 'DIN', cls: 'nowrap', key: r => r.din || '', html: dinCell },
-  strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '' },
+  strength: { label: 'Strength', cls: 'nowrap', key: r => r.strength || '', html: strengthCell },
   company: { label: 'Company', cls: 'c-company', key: r => r.company || '' },
   // Falls back to the expected start when the company never entered an actual start date.
   // `a ? b : c` means "if a then b, otherwise c"; here it is chained to handle three cases.
@@ -159,7 +159,8 @@ const data = { shortages: [], discontinuations: [], byId: new Map(), meta: {}, c
 //   view/tab: which section and tab.  q: search text.  tier3/overdue/atc: the filters.
 //   sort/dir: a column the visitor clicked to sort ('' = use DEFAULT_SORT).  page: table page.
 //   day/kind: the filter chips on "What's new".
-const state = { view: 'shortages', tab: '', q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '' };
+//   from: 'companies' after clicking a company, to show the "Back to Companies" link.
+const state = { view: 'shortages', tab: '', q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', page: 1, day: '', kind: '', from: '' };
 // Shortcut: $('count') finds the element in index.html with id="count".
 const $ = id => document.getElementById(id);
 // Compares text the way people expect: ignores upper/lower case and puts "Item 2" before "Item 10".
@@ -252,6 +253,13 @@ function drugCell(r) {
   return `<div class="brand">${esc(r.brand)}${tags(r)}</div>`
     + (sub ? `<div class="sub">${esc(sub)}</div>` : '')
     + (r.din ? `<div class="sub">DIN ${dinCell(r)}</div>` : '');
+}
+
+// The "Strength" cell. Combination products list one strength per ingredient, separated by
+// line breaks (e.g. a multivitamin with 17 values); <br> keeps each on its own line so the
+// column stays narrow. split(/\r?\n/) breaks the text at each line break.
+function strengthCell(r) {
+  return (r.strength || '').split(/\r?\n/).map(esc).join('<br>');
 }
 
 // The DIN: the number plus a copy button. The button stores the DIN in `data-copy`,
@@ -371,6 +379,7 @@ function readURL() {
   // /^\d{4}-\d{2}-\d{2}$/ is a "regular expression" (text pattern) meaning "exactly YYYY-MM-DD".
   state.day = /^\d{4}-\d{2}-\d{2}$/.test(p.get('day') || '') ? p.get('day') : '';
   state.kind = CHANGE_KINDS.some(k => k.id === p.get('kind')) ? p.get('kind') : '';
+  state.from = p.get('from') === 'companies' ? 'companies' : '';
   // If the tab doesn't exist in this section, use the section's first tab.
   const tabs = VIEWS[state.view].tabs;
   if (tabs && !tabs.some(t => t.id === state.tab)) state.tab = tabs[0].id;
@@ -393,6 +402,7 @@ function writeURL(push = false) {
   if (state.page > 1) p.set('page', state.page);
   if (state.view === 'changes' && state.day) p.set('day', state.day);
   if (state.view === 'changes' && state.kind) p.set('kind', state.kind);
+  if (state.from && VIEWS[state.view].current) p.set('from', state.from);
   const qs = p.toString();
   // history.pushState / replaceState change the address bar without reloading the page.
   history[push ? 'pushState' : 'replaceState'](null, '', qs ? `?${qs}` : location.pathname);
@@ -458,6 +468,8 @@ function visibleRows() {
 function render() {
   renderUpdated();
   renderViews();
+  // The "Back to Companies" link, only on Shortages / Discontinuations after clicking a company.
+  $('back').hidden = !(state.from === 'companies' && VIEWS[state.view].current);
   // "Companies" and "What's new" have no tabs, filters or pages, so those are hidden there.
   const noTabs = state.view === 'companies' || state.view === 'changes';
   $('tabs').hidden = noTabs;
@@ -624,7 +636,7 @@ function whatsNewRow(r, kind, details) {
     ['nowrap', r.type === 'shortage' ? 'Shortage' : 'Discontinuation'],
     ['c-drug', drugCell(r)],
     ['c-company', esc(r.company || '')],
-    ['nowrap', esc(r.strength || '')],
+    ['nowrap', strengthCell(r)],
     ['nowrap', statusBadge(r.status)],
     ['chg', details.map(d => `<div>${d.html}</div>`).join('')],
   ];
@@ -806,7 +818,20 @@ function openCompany(name) {
   if (!c) return;
   const view = c.actual || c.anticipated ? 'shortages' : 'discontinuations';
   const tab = view === 'discontinuations' ? 'upcoming' : c.actual ? 'actual' : 'anticipated';
-  update({ view, tab, q: name, sort: '', dir: '' }, { push: true });
+  companyReturn = { q: state.q, sort: state.sort, dir: state.dir };
+  update({ view, tab, q: name, sort: '', dir: '', from: 'companies' }, { push: true });
+  syncControls();
+  window.scrollTo({ top: 0 });
+}
+
+// The Companies table's search and sort from just before a company was clicked, so the
+// "Back to Companies" link can put them back. (Empty if the page was reloaded since.)
+let companyReturn = {};
+
+// The "Back to Companies" link: return to the table as it was.
+function backToCompanies() {
+  update({ view: 'companies', tab: '', q: companyReturn.q || '', sort: companyReturn.sort || '',
+    dir: companyReturn.dir || '', from: '' }, { push: true });
   syncControls();
   window.scrollTo({ top: 0 });
 }
@@ -955,7 +980,7 @@ function bindEvents() {
   // Clicking the site title resets everything and goes back to the first tab.
   $('home').addEventListener('click', e => {
     e.preventDefault();   // stop the link from reloading the page; we redraw instead
-    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', day: '', kind: '' }, { push: true });
+    update({ view: 'shortages', tab: VIEWS.shortages.tabs[0].id, q: '', tier3: false, overdue: false, atc: '', sort: '', dir: '', day: '', kind: '', from: '' }, { push: true });
     syncControls();
     window.scrollTo({ top: 0 });
   });
@@ -987,7 +1012,14 @@ function bindEvents() {
     if (!a) return;
     e.preventDefault();
     const view = a.dataset.view;   // dataset.view reads the data-view="..." attribute
-    update({ view, tab: VIEWS[view].tabs?.[0].id || '', sort: '', dir: '', day: '', kind: '' }, { push: true });
+    // Keep the "Back to Companies" link when moving between Shortages and Discontinuations.
+    const from = VIEWS[view].current ? state.from : '';
+    update({ view, tab: VIEWS[view].tabs?.[0].id || '', sort: '', dir: '', day: '', kind: '', from }, { push: true });
+  });
+
+  $('back').addEventListener('click', e => {
+    e.preventDefault();
+    backToCompanies();
   });
 
   $('tabs').addEventListener('click', e => {
