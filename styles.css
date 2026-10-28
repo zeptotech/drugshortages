@@ -188,6 +188,11 @@ td.c-activity { white-space: nowrap; }
 .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin: 10px 0; }
 .pager button:disabled { opacity: .4; cursor: default; }
 
+/* Companies */
+.notice { margin: 16px 0 0; padding: 10px 14px; font-size: 13.5px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.intro { margin: 12px 0 10px; font-size: 13.5px; }
+[data-company] { cursor: pointer; }
+
 /* What's new */
 .day { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; margin: 16px 0; }
 .day h2 { font-size: 18px; margin: 0; padding: 12px 14px; border-bottom: 1px solid var(--line); background: var(--accent-soft); border-radius: 8px 8px 0 0; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; }
@@ -242,6 +247,7 @@ dialog .close { position: absolute; top: 12px; right: 12px; }
   td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
   td.c-drug::before { content: none; }
   td.c-company { max-width: none; }
+  tr[data-company] td.num { text-align: left; }
   td:empty { display: none; }
   .d-body dl { grid-template-columns: 1fr; gap: 0; }
   .d-body dd { margin-bottom: 8px; }

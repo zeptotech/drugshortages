@@ -23,6 +23,10 @@ each entry. Use at your own discretion.
   top filter by day and by kind of change. Where the
   daily change log knows exactly what changed (e.g. a new estimated end date),
   that is shown too.
+- **Companies**: one row per company with its open reports (actual, anticipated,
+  Tier 3, to be discontinued), overdue count and %, and late count. Sortable; click a
+  company to see its reports. Only open reports are counted, since closed ones
+  are kept for 30 days only.
 - **Search** by brand, ingredient, DIN, company or ATC code. Tab counts update
   as you type, so you can see where the matches are.
 - **Filters**: Tier 3 only, Overdue only, drug class (ATC group).

@@ -78,7 +78,9 @@ const VIEWS = {
       { id: 'discontinued', label: 'Discontinued', tone: 'disc', recent: true },
     ],
   },
-  // "What's new" has no tabs; it is drawn by renderChanges() instead of the table code.
+  // "Companies" and "What's new" have no tabs; they are drawn by renderCompanies() and
+  // renderChanges() instead of the table code.
+  companies: { label: 'Companies' },
   changes: { label: "What's new" },
 };
 
@@ -372,7 +374,7 @@ function readURL() {
   // If the tab doesn't exist in this section, use the section's first tab.
   const tabs = VIEWS[state.view].tabs;
   if (tabs && !tabs.some(t => t.id === state.tab)) state.tab = tabs[0].id;
-  if (state.sort && !COLUMNS[state.sort]) state.sort = '';
+  if (state.sort && !COLUMNS[state.sort] && !COMPANY_COLUMNS[state.sort]) state.sort = '';
 }
 
 // `state` -> address bar. Default values are left out to keep links short.
@@ -420,6 +422,7 @@ function inTab(view, tab, r) {
 // The sort in use: the column the visitor clicked, or else the tab's default.
 function currentSort() {
   if (state.sort) return [state.sort, state.dir || 'asc'];
+  if (state.view === 'companies') return ['actual', 'desc'];   // most actual shortages first
   return DEFAULT_SORT[state.tab];
 }
 
@@ -455,12 +458,13 @@ function visibleRows() {
 function render() {
   renderUpdated();
   renderViews();
-  // "What's new" has no tabs, filters or pages, so those are hidden there.
-  const isChanges = state.view === 'changes';
-  $('tabs').hidden = isChanges;
-  $('toolbar').hidden = isChanges;
-  $('pager').hidden = isChanges;
-  if (isChanges) return renderChanges();
+  // "Companies" and "What's new" have no tabs, filters or pages, so those are hidden there.
+  const noTabs = state.view === 'companies' || state.view === 'changes';
+  $('tabs').hidden = noTabs;
+  $('toolbar').hidden = noTabs;
+  $('pager').hidden = noTabs;
+  if (state.view === 'companies') return renderCompanies();
+  if (state.view === 'changes') return renderChanges();
   renderTabs();
   renderTable();
 }
@@ -487,7 +491,7 @@ function renderViews() {
   // Object.entries gives [name, value] pairs, e.g. ['shortages', { label: ..., tabs: ... }].
   $('views').innerHTML = Object.entries(VIEWS).map(([id, v]) => {
     let n = '';
-    if (id !== 'changes') {
+    if (v.current) {   // only Shortages and Discontinuations have counts
       const rows = searching ? filtered(data[id]) : data[id].filter(r => v.current.includes(r.status));
       n = `<span class="n">${formatNumber(rows.length)}${searching ? ' match' + (rows.length === 1 ? '' : 'es') : ''}</span>`;
     }
@@ -711,6 +715,100 @@ async function renderChanges() {
 }
 
 // ---------------------------------------------------------------------------
+// Companies
+// ---------------------------------------------------------------------------
+// One row per company, counting its OPEN reports only (actual, anticipated and to be
+// discontinued), like the matching columns of the official site's company summary.
+// Closed reports aren't counted, since the site only keeps them for 30 days.
+
+// The table's columns. `key` gives the value used for sorting (numbers for the counts).
+//   label: column heading.  num: true for number columns (right-aligned, sorted biggest first).
+const COMPANY_COLUMNS = {
+  company: { label: 'Company', key: c => c.name },
+  actual: { label: 'Actual shortage', num: true, key: c => c.actual },
+  anticipated: { label: 'Anticipated shortage', num: true, key: c => c.anticipated },
+  tier3: { label: 'Tier 3', num: true, key: c => c.tier3 },
+  upcoming: { label: 'To be discontinued', num: true, key: c => c.upcoming },
+  overdue: { label: 'Overdue', num: true, key: c => c.overdue },
+  pctOverdue: { label: '% overdue', num: true, key: c => c.pctOverdue },
+  late: { label: 'Late', num: true, key: c => c.late },
+};
+
+// Adds up every open report by company: [{ name, actual, anticipated, tier3, upcoming, ... }].
+function companyRows() {
+  const byName = new Map();
+  for (const r of [...data.shortages, ...data.discontinuations]) {
+    if (!isCurrent(r)) continue;
+    const name = r.company || '(No company listed)';
+    if (!byName.has(name)) byName.set(name, { name, actual: 0, anticipated: 0, tier3: 0, upcoming: 0, overdue: 0, late: 0 });
+    const c = byName.get(name);
+    if (r.status === 'active_confirmed') c.actual++;
+    else if (r.status === 'anticipated_shortage') c.anticipated++;
+    else c.upcoming++;   // the only other open status is to_be_discontinued
+    if (r.tier3) c.tier3++;   // Tier 3 = highest-impact shortage (only shortages have it)
+    if (r._overdue) c.overdue++;
+    if (r.late) c.late++;
+  }
+  // % overdue = overdue reports out of all the company's open reports (as on the official site).
+  return [...byName.values()].map(c => ({ ...c, pctOverdue: Math.round(100 * c.overdue / (c.actual + c.anticipated + c.upcoming)) }));
+}
+
+// The "Companies" view: the company table, filtered by the search box and sortable by column.
+function renderCompanies() {
+  const tokens = searchTokens();
+  const all = companyRows();
+  const rows = all.filter(c => !tokens.length || matchesTokens(c.name.toLowerCase(), tokens));
+  const [sortCol, sortDir] = COMPANY_COLUMNS[currentSort()[0]] ? currentSort() : ['actual', 'desc'];
+  const key = COMPANY_COLUMNS[sortCol].key;
+  const m = sortDir === 'asc' ? 1 : -1;
+  // Sort by the chosen column; ties are broken by company name so the order never jumps around.
+  rows.sort((a, b) => {
+    const x = key(a), y = key(b);
+    const diff = typeof x === 'number' ? x - y : collator.compare(x, y);
+    return m * diff || collator.compare(a.name, b.name);
+  });
+
+  // Header row: each heading is a sort button, as in the other tables.
+  const head = Object.entries(COMPANY_COLUMNS).map(([id, col]) => {
+    const aria = id === sortCol ? ` aria-sort="${sortDir === 'asc' ? 'ascending' : 'descending'}"` : '';
+    return `<th scope="col"${aria}><button type="button" data-sort="${id}">${esc(col.label)}</button></th>`;
+  }).join('');
+  // A count cell: zero is greyed out so the non-zero numbers stand out.
+  const num = (n, suffix = '') => n ? `${formatNumber(n)}${suffix}` : `<span class="muted">0${suffix}</span>`;
+  // data-company lets a click find which company was chosen (see bindEvents()).
+  const body = rows.map(c => `<tr data-company="${esc(c.name)}" tabindex="0">
+    <td class="brand" data-label="Company">${esc(c.name)}</td>
+    ${['actual', 'anticipated', 'tier3', 'upcoming', 'overdue'].map(id =>
+      `<td class="num" data-label="${COMPANY_COLUMNS[id].label}">${num(c[id])}</td>`).join('')}
+    <td class="num" data-label="% overdue">${num(c.pctOverdue, '%')}</td>
+    <td class="num" data-label="Late">${num(c.late)}</td></tr>`).join('');
+
+  // The disclaimer box, then a line with the company count.
+  const intro = `<div class="notice">These counts only include open reports, so they won't match the
+    company summary on <a href="https://healthproductshortages.ca" target="_blank" rel="noopener">Health Product Shortages Canada</a>.
+    Check the official site for exact numbers.</div>
+    <p class="muted intro">${formatNumber(rows.length)} ${tokens.length ? `of ${formatNumber(all.length)} ` : ''}companies with open reports.
+    <span class="tag tier3">Tier 3</span>, <span class="tag overdue">Overdue</span> and <span class="tag late">Late</span> are explained at the bottom of the page.
+    Click a company to see its reports.</p>`;
+  $('content').innerHTML = intro + (rows.length
+    ? `<div class="table-wrap"><table>${'<thead><tr>' + head + '</tr></thead>'}<tbody>${body}</tbody></table></div>`
+    : `<div class="empty">No companies match “${esc(state.q)}”.</div>`);
+}
+
+// Clicking a company opens its reports: the Shortages section if it has any open shortages
+// (on the Actual tab if it has actual ones), otherwise its upcoming discontinuations.
+// The company name goes in the search box, which narrows the list to that company.
+function openCompany(name) {
+  const c = companyRows().find(c => c.name === name);
+  if (!c) return;
+  const view = c.actual || c.anticipated ? 'shortages' : 'discontinuations';
+  const tab = view === 'discontinuations' ? 'upcoming' : c.actual ? 'actual' : 'anticipated';
+  update({ view, tab, q: name, sort: '', dir: '' }, { push: true });
+  syncControls();
+  window.scrollTo({ top: 0 });
+}
+
+// ---------------------------------------------------------------------------
 // Detail dialog
 // ---------------------------------------------------------------------------
 // The popup with every field of a report, opened by clicking a row.
@@ -926,10 +1024,15 @@ function bindEvents() {
     const sort = e.target.closest('button[data-sort]');
     if (sort) {
       const [col, dir] = currentSort();
-      const next = sort.dataset.sort === col ? (dir === 'asc' ? 'desc' : 'asc') : 'asc';
+      // A new column starts A→Z, except number columns on Companies, which start biggest first.
+      const first = COMPANY_COLUMNS[sort.dataset.sort]?.num && state.view === 'companies' ? 'desc' : 'asc';
+      const next = sort.dataset.sort === col ? (dir === 'asc' ? 'desc' : 'asc') : first;
       update({ sort: sort.dataset.sort, dir: next });
       return;
     }
+    // A row on the Companies table opens that company's reports.
+    const company = e.target.closest('[data-company]');
+    if (company) return openCompany(company.dataset.company);
     // Anything else inside a row opens that report's details.
     const row = e.target.closest('[data-id]');
     if (row) openDetail(+row.dataset.id);
@@ -937,6 +1040,10 @@ function bindEvents() {
 
   // Keyboard: Tab moves between rows, Enter or Space opens the focused row.
   $('content').addEventListener('keydown', e => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-company]')) {
+      e.preventDefault();
+      openCompany(e.target.dataset.company);
+    }
     if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('[data-id]')) {
       e.preventDefault();
       openDetail(+e.target.dataset.id);
