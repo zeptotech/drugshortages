@@ -99,11 +99,12 @@ These follow the official site's summary report:
 
 - **Late**: the report was created more than 5 days after the anticipated or
   actual start date. This comes from the API.
-- **Overdue**: the anticipated or estimated date passed more than 2 calendar
-  days ago and no actual date has been entered. The site works this out in the
-  browser each day.
+- **Overdue**: an anticipated or estimated date in the report passed more than
+  2 calendar days ago and no corresponding actual date has been entered. The
+  site works this out in the browser each day.
   - Anticipated shortage: the expected or actual start date has passed.
-  - Actual shortage: the estimated end date has passed and there is no actual end date.
+  - Actual shortage: the expected start date has passed and there is no actual
+    start date, or the estimated end date has passed and there is no actual end date.
   - To be discontinued: the expected discontinuation date has passed and there
     is no actual discontinuation date.
 

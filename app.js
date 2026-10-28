@@ -295,17 +295,21 @@ function prepare(r) {
   const created = (r.created || '').slice(0, 10);
   const updated = (r.updated || '').slice(0, 10);
 
-  // Overdue, as on the official site: the company's expected date passed more than 2 days
-  // ago and the report still hasn't been updated with what actually happened.
+  // Overdue, as defined by the official site: "an anticipated or estimated date within the
+  // report has elapsed by more than two calendar days and no corresponding actual date has
+  // been entered". Each expected date is checked against its own actual date:
   //   Anticipated shortage: the expected (or actual) start date has passed, so it should
   //     have become an actual shortage by now.
-  //   Actual shortage: the estimated end date has passed and there is no actual end date.
+  //   Actual shortage: the expected start date has passed with no actual start date, OR
+  //     the estimated end date has passed with no actual end date.
   //   To be discontinued: the discontinuation date has passed and there is no actual one.
   // Dates are "YYYY-MM-DD" text, so `<` compares them correctly (earlier = smaller).
+  // `passed(d)` is a small helper: true when date d exists and is before the cutoff.
+  const passed = d => !!d && d < overdueCutoff;
   let overdue = false;
-  if (r.status === 'anticipated_shortage') overdue = [r.anticipatedStart, r.actualStart].some(d => d && d < overdueCutoff);
-  else if (r.status === 'active_confirmed') overdue = !!r.estEnd && !r.actualEnd && r.estEnd < overdueCutoff;
-  else if (r.status === 'to_be_discontinued') overdue = !!r.discDate && !r.actualDiscDate && r.discDate < overdueCutoff;
+  if (r.status === 'anticipated_shortage') overdue = passed(r.anticipatedStart) || passed(r.actualStart);
+  else if (r.status === 'active_confirmed') overdue = (passed(r.anticipatedStart) && !r.actualStart) || (passed(r.estEnd) && !r.actualEnd);
+  else if (r.status === 'to_be_discontinued') overdue = passed(r.discDate) && !r.actualDiscDate;
   r._overdue = overdue;
 
   r._new = created >= newCutoff;
