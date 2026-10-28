@@ -73,8 +73,10 @@ The API allows 1,000 requests per hour, and a run uses about 30–45.
 
 The job keeps only the English fields the site needs, compares them with the
 previous snapshot, and records what changed. It aborts without touching the data
-if the login fails, the API errors, or a status count suddenly drops below half
-of the previous run's (use `--force` to override a real drop).
+if the login fails, the API errors, or a status count suddenly drops by more than
+5% from the previous run's (use `--force` to override a real drop). When that check
+stops a run, the log lists the current status of a sample of the missing reports,
+which shows whether the drop is real or the API left them out.
 
 ### Data files
 

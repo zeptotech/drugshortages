@@ -64,7 +64,9 @@ DETAIL_PATH = {"shortage": "shortages", "discontinuance": "discontinuances"}
 
 # A status pull that drops below this share of yesterday's count aborts the run
 # (protects against a partial or broken API response wiping the site).
-MIN_COUNT_RATIO = 0.5
+# 0.95 = stop if more than 5% of a list vanishes at once. Normal runs change by under 4%;
+# after the Oct 27, 2026 maintenance the API returned 7-60% fewer reports.
+MIN_COUNT_RATIO = 0.95
 
 # Fields compared to describe what changed in an updated report.
 TRACKED_FIELDS = [
@@ -330,11 +332,23 @@ def load_reports(path):
     return {r["id"]: r for r in json.loads(path.read_text())["reports"]}
 
 
-# Safety check: if a status suddenly has less than half as many reports as yesterday,
+# Safety check: if a status suddenly has much fewer reports than yesterday (see MIN_COUNT_RATIO),
 # the API probably gave an incomplete answer, so stop rather than publish it.
-def check_count(status, new_count, old_reports, force):
-    old_count = sum(1 for r in old_reports.values() if r["status"] == status)
+# Before stopping, look up a few of the missing reports one by one and log their status:
+# if they still have the same status, the search is leaving them out (an API problem);
+# if their status really changed, the drop is real and --force is safe.
+def check_count(token, kind, status, raw, old_reports, force):
+    old_ids = [rid for rid, r in old_reports.items() if r["status"] == status]
+    old_count, new_count = len(old_ids), len(raw)
     if not force and old_count >= 50 and new_count < old_count * MIN_COUNT_RATIO:
+        new_ids = {rec["id"] for rec in raw}
+        missing = [rid for rid in old_ids if rid not in new_ids]
+        log(f"  {len(missing)} {status} report(s) missing. Checking a sample of {min(len(missing), 10)}:")
+        for rid in missing[:10]:
+            rec = fetch_detail(token, kind, rid)
+            time.sleep(REQUEST_DELAY)
+            now = rec.get("status") if rec else "not found"
+            log(f"    {DETAIL_PATH[kind]}/{rid}: was {status}, now {now}")
         raise ApiError(
             f"{status}: only {new_count} reports vs {old_count} yesterday. "
             "Aborting to avoid publishing a partial list (rerun with --force if this is real)."
@@ -357,7 +371,7 @@ def build(token, prev, today, force, last_checked=None):
         for status in statuses:
             log(f"Fetching {status}...")
             raw = fetch_status(token, status)
-            check_count(status, len(raw), old, force)
+            check_count(token, kind, status, raw, old, force)
             for rec in raw:
                 note_unknown_keys(rec, seen_keys)
                 current[rec["id"]] = slim(rec)
