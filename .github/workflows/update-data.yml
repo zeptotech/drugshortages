@@ -13,6 +13,13 @@ on:
     - cron: "0 5 * * *"    # 05:00 UTC = 1 AM EDT in summer, midnight EST in winter
     - cron: "0 17 * * *"   # 17:00 UTC = 1 PM EDT in summer, noon EST in winter
   workflow_dispatch:        # "Run workflow" button in the Actions tab
+    inputs:
+      # A checkbox shown when you click "Run workflow". Leave it off normally. Tick it only
+      # when the log shows a big drop in reports is real; it skips the safety check once.
+      force:
+        description: "Skip the safety check on sudden drops in report counts (--force)"
+        type: boolean
+        default: false
   push:
     branches: [main]        # redeploy when site code changes
 
@@ -45,7 +52,8 @@ jobs:
         env:
           HPS_EMAIL: ${{ secrets.HPS_EMAIL }}
           HPS_PASSWORD: ${{ secrets.HPS_PASSWORD }}
-        run: python3 scripts/fetch_and_diff.py
+        # Adds --force only when the checkbox above was ticked (scheduled runs never force).
+        run: python3 scripts/fetch_and_diff.py ${{ inputs.force && '--force' || '' }}
 
       # Commit and push data/ only if something changed (git diff --cached --quiet
       # succeeds when there is nothing new, and the step stops there).
