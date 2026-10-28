@@ -23,7 +23,7 @@ each entry. Use at your own discretion.
   top filter by day and by kind of change. Where the
   daily change log knows exactly what changed (e.g. a new estimated end date),
   that is shown too.
-- **Companies**: one row per company with its open reports (actual, anticipated,
+- **Company summary**: one row per company with its open reports (actual, anticipated,
   Tier 3, to be discontinued), overdue count and %, and late count. Sortable; click a
   company to see its reports. Only open reports are counted, since closed ones
   are kept for 30 days only.

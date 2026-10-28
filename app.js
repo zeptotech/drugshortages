@@ -80,7 +80,7 @@ const VIEWS = {
   },
   // "Companies" and "What's new" have no tabs; they are drawn by renderCompanies() and
   // renderChanges() instead of the table code.
-  companies: { label: 'Companies' },
+  companies: { label: 'Company summary' },
   changes: { label: "What's new" },
 };
 
