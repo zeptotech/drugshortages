@@ -1,0 +1,11 @@
+{"date":"2026-10-30",
+"new":[],
+"updated":[
+{"id":287883,"type":"shortage","status":"active_confirmed","brand":"ZELBORAF","din":"02380242","strength":"240MG","company":"HOFFMANN-LA ROCHE LIMITED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":291552,"type":"shortage","status":"resolved","brand":"TARO-VALSARTAN","din":"02363119","strength":"160MG","company":"SUN PHARMA CANADA INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":215889,"type":"shortage","status":"resolved","brand":"JAMP-METOPROLOL-L","din":"02356821","strength":"50MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":215883,"type":"shortage","status":"resolved","brand":"JAMP-METOPROLOL-L","din":"02356848","strength":"100MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":215880,"type":"shortage","status":"resolved","brand":"JAMP-METOPROLOL-L","din":"02356848","strength":"100MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
