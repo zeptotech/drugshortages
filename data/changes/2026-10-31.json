@@ -1,0 +1,16 @@
+{"date":"2026-10-31",
+"new":[
+{"id":297371,"type":"shortage","status":"anticipated_shortage","brand":"MAXITROL","din":"00358177","strength":"3.5MG\n0.1%\n6000UNIT","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false},
+{"id":297373,"type":"shortage","status":"anticipated_shortage","brand":"CIPRODEX","din":"02252716","strength":"0.1%\n0.3%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false},
+{"id":297378,"type":"shortage","status":"anticipated_shortage","brand":"VIGAMOX","din":"02252260","strength":"0.5%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false},
+{"id":297381,"type":"shortage","status":"anticipated_shortage","brand":"TRIESENCE","din":"02368676","strength":"40MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false}
+],
+"updated":[
+{"id":288567,"type":"shortage","status":"active_confirmed","brand":"JAMP AMOXI CLAV SUSPENSION","din":"02539446","strength":"57MG\n400MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"actualEnd","from":null,"to":"2028-10-29"},{"field":"strength","from":"57MG\r\n400MG","to":"57MG\n400MG"}]},
+{"id":294292,"type":"shortage","status":"active_confirmed","brand":"TEGRETOL SUSPENSION","din":"02194333","strength":"100MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]}
+],
+"statusChanged":[
+{"id":294014,"type":"shortage","status":"resolved","brand":"JAMP TELMISARTAN-HCT","din":"02389940","strength":"12.5MG\n80MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":294011,"type":"shortage","status":"resolved","brand":"JAMP TELMISARTAN-HCT","din":"02389940","strength":"12.5MG\n80MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":277251,"type":"discontinuance","status":"discontinued","brand":"HUMIRA","din":"02258595","strength":"40MG","company":"ABBVIE CORPORATION","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
