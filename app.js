@@ -756,9 +756,14 @@ async function renderChanges() {
 
 // The table's columns. `key` gives the value used for sorting (numbers for the counts).
 //   label: column heading.  num: true for number columns (right-aligned, sorted biggest first).
+//   title: optional hover text explaining the heading.
 const COMPANY_COLUMNS = {
   company: { label: 'Company', key: c => c.name },
   actual: { label: 'Actual shortage', num: true, key: c => c.actual },
+  medianDays: {
+    label: 'Median days in shortage*', num: true, key: c => c.medianDays,
+    title: 'See the note under the table',
+  },
   anticipated: { label: 'Anticipated shortage', num: true, key: c => c.anticipated },
   tier3: { label: 'Tier 3', num: true, key: c => c.tier3 },
   upcoming: { label: 'To be discontinued', num: true, key: c => c.upcoming },
@@ -773,9 +778,14 @@ function companyRows() {
   for (const r of [...data.shortages, ...data.discontinuations]) {
     if (!isCurrent(r)) continue;
     const name = r.company || '(No company listed)';
-    if (!byName.has(name)) byName.set(name, { name, actual: 0, anticipated: 0, tier3: 0, upcoming: 0, overdue: 0, late: 0 });
+    if (!byName.has(name)) byName.set(name, { name, actual: 0, anticipated: 0, tier3: 0, upcoming: 0, overdue: 0, late: 0, days: [] });
     const c = byName.get(name);
-    if (r.status === 'active_confirmed') c.actual++;
+    if (r.status === 'active_confirmed') {
+      c.actual++;
+      // Remember how many days this shortage has been open, for the median below.
+      const n = daysSince(r.actualStart || r.anticipatedStart);
+      if (n !== null) c.days.push(n);
+    }
     else if (r.status === 'anticipated_shortage') c.anticipated++;
     else c.upcoming++;   // the only other open status is to_be_discontinued
     if (r.tier3) c.tier3++;   // Tier 3 = highest-impact shortage (only shortages have it)
@@ -783,7 +793,21 @@ function companyRows() {
     if (r.late) c.late++;
   }
   // % overdue = overdue reports out of all the company's open reports (as on the official site).
-  return [...byName.values()].map(c => ({ ...c, pctOverdue: Math.round(100 * c.overdue / (c.actual + c.anticipated + c.upcoming)) }));
+  return [...byName.values()].map(c => ({
+    ...c,
+    pctOverdue: Math.round(100 * c.overdue / (c.actual + c.anticipated + c.upcoming)),
+    medianDays: median(c.days),
+  }));
+}
+
+// The middle value of a list of numbers (null if the list is empty). With an even count
+// there are two middle values, so we take halfway between them. The median is used instead
+// of the average because a few shortages open for 10+ years would drag an average way up.
+function median(list) {
+  if (!list.length) return null;
+  const sorted = [...list].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
 }
 
 // The "Companies" view: the company table, filtered by the search box and sortable by column.
@@ -795,8 +819,10 @@ function renderCompanies() {
   const key = COMPANY_COLUMNS[sortCol].key;
   const m = sortDir === 'asc' ? 1 : -1;
   // Sort by the chosen column; ties are broken by company name so the order never jumps around.
+  // Empty values (null, e.g. no median for a company without actual shortages) always go last.
   rows.sort((a, b) => {
     const x = key(a), y = key(b);
+    if (x === null || y === null) return (x === null) - (y === null) || collator.compare(a.name, b.name);
     const diff = typeof x === 'number' ? x - y : collator.compare(x, y);
     return m * diff || collator.compare(a.name, b.name);
   });
@@ -804,14 +830,17 @@ function renderCompanies() {
   // Header row: each heading is a sort button, as in the other tables.
   const head = Object.entries(COMPANY_COLUMNS).map(([id, col]) => {
     const aria = id === sortCol ? ` aria-sort="${sortDir === 'asc' ? 'ascending' : 'descending'}"` : '';
-    return `<th scope="col"${aria}><button type="button" data-sort="${id}">${esc(col.label)}</button></th>`;
+    const title = col.title ? ` title="${esc(col.title)}"` : '';
+    return `<th scope="col"${aria}><button type="button" data-sort="${id}"${title}>${esc(col.label)}</button></th>`;
   }).join('');
   // A count cell: zero is greyed out so the non-zero numbers stand out.
   const num = (n, suffix = '') => n ? `${formatNumber(n)}${suffix}` : `<span class="muted">0${suffix}</span>`;
   // data-company lets a click find which company was chosen (see bindEvents()).
   const body = rows.map(c => `<tr data-company="${esc(c.name)}" tabindex="0">
     <td class="brand" data-label="Company">${esc(c.name)}</td>
-    ${['actual', 'anticipated', 'tier3', 'upcoming', 'overdue'].map(id =>
+    <td class="num" data-label="Actual shortage">${num(c.actual)}</td>
+    <td class="num" data-label="Median days in shortage*">${c.medianDays === null ? '<span class="muted">—</span>' : formatNumber(c.medianDays)}</td>
+    ${['anticipated', 'tier3', 'upcoming', 'overdue'].map(id =>
       `<td class="num" data-label="${COMPANY_COLUMNS[id].label}">${num(c[id])}</td>`).join('')}
     <td class="num" data-label="% overdue">${num(c.pctOverdue, '%')}</td>
     <td class="num" data-label="Late">${num(c.late)}</td></tr>`).join('');
@@ -826,9 +855,14 @@ function renderCompanies() {
     <p class="muted intro">${formatNumber(rows.length)} ${tokens.length ? `of ${formatNumber(all.length)} ` : ''}companies with open reports.
     <span class="tag tier3">Tier 3</span>, <span class="tag overdue">Overdue</span> and <span class="tag late">Late</span> are explained at the bottom of the page.
     Click a company to see its reports.</p>`;
+  // The note under the table, explaining the * on "Median days in shortage".
+  const footnote = `<p class="muted footnote">* Median days in shortage: for each company, the middle value
+    of how long its actual shortages have been going on so far (half are newer, half are older).
+    Only shortages still open today are counted, so this shows how old the current shortages are,
+    not how long the company's shortages usually last. Shortages that ended are left out.</p>`;
   const sortChoices = Object.entries(COMPANY_COLUMNS).map(([id, col]) => [id, col.label, col.num ? 'num' : 'text']);
   $('content').innerHTML = intro + (rows.length
-    ? sortSelect(sortChoices, [sortCol, sortDir]) + `<div class="table-wrap"><table>${'<thead><tr>' + head + '</tr></thead>'}<tbody>${body}</tbody></table></div>`
+    ? sortSelect(sortChoices, [sortCol, sortDir]) + `<div class="table-wrap"><table>${'<thead><tr>' + head + '</tr></thead>'}<tbody>${body}</tbody></table></div>` + footnote
     : `<div class="empty">No companies match “${esc(state.q)}”.</div>`);
 }
 

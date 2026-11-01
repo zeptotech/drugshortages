@@ -194,6 +194,7 @@ td.c-activity { white-space: nowrap; }
 /* Companies */
 .notice { margin: 16px 0 0; padding: 10px 14px; font-size: 13.5px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
 .intro { margin: 12px 0 10px; font-size: 13.5px; }
+.footnote { margin: 12px 0 0; font-size: 13px; }
 [data-company] { cursor: pointer; }
 .back { display: inline-block; margin-top: 14px; font-weight: 600; text-decoration: none; }
 .back:hover { text-decoration: underline; }
