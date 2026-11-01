@@ -337,6 +337,8 @@ def load_reports(path):
 # Before stopping, look up a few of the missing reports one by one and log their status:
 # if they still have the same status, the search is leaving them out (an API problem);
 # if their status really changed, the drop is real and --force is safe.
+# When there are 10 or fewer missing reports, all of them get checked, and if every one
+# changed status the script carries on by itself (no --force needed).
 def check_count(token, kind, status, raw, old_reports, force):
     old_ids = [rid for rid, r in old_reports.items() if r["status"] == status]
     old_count, new_count = len(old_ids), len(raw)
@@ -344,11 +346,19 @@ def check_count(token, kind, status, raw, old_reports, force):
         new_ids = {rec["id"] for rec in raw}
         missing = [rid for rid in old_ids if rid not in new_ids]
         log(f"  {len(missing)} {status} report(s) missing. Checking a sample of {min(len(missing), 10)}:")
+        all_moved = True  # becomes False if any missing report still has the old status
         for rid in missing[:10]:
             rec = fetch_detail(token, kind, rid)
             time.sleep(REQUEST_DELAY)
             now = rec.get("status") if rec else "not found"
             log(f"    {DETAIL_PATH[kind]}/{rid}: was {status}, now {now}")
+            if now == status:
+                all_moved = False
+        # If we checked every missing report (not just a sample) and each one
+        # really moved to a new status (or was removed), the drop is real: carry on.
+        if all_moved and len(missing) <= 10:
+            log(f"  All missing {status} reports changed status, so the drop is real. Continuing.")
+            return
         raise ApiError(
             f"{status}: only {new_count} reports vs {old_count} yesterday. "
             "Aborting to avoid publishing a partial list (rerun with --force if this is real)."
