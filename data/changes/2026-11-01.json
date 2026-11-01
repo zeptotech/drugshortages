@@ -1,0 +1,12 @@
+{"date":"2026-11-01",
+"new":[],
+"updated":[
+{"id":271125,"type":"shortage","status":"active_confirmed","brand":"NRA-CITALOPRAM","din":"02477653","strength":"40MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":295098,"type":"shortage","status":"active_confirmed","brand":"PMS-LOSARTAN-HCTZ","din":"02392224","strength":"12.5MG\r\n50MG","company":"PHARMASCIENCE INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":296417,"type":"shortage","status":"active_confirmed","brand":"ACCEL-ONDANSETRON ODT","din":"02535319","strength":"4MG","company":"ACCEL PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":296420,"type":"shortage","status":"active_confirmed","brand":"ACCEL-ONDANSETRON ODT","din":"02535327","strength":"8MG","company":"ACCEL PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":296480,"type":"shortage","status":"active_confirmed","brand":"SANDOZ-DICLOFENAC","din":"02261928","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":284104,"type":"discontinuance","status":"discontinued","brand":"MERSYNDOL WITH CODEINE","din":"02047667","strength":"325MG\n5MG\n8MG","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
