@@ -1,6 +1,50 @@
 {"date":"2026-11-02",
-"new":[],
-"updated":[
-{"id":293905,"type":"shortage","status":"active_confirmed","brand":"TWYNSTA","din":"02371022","strength":"40MG\r\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+"new":[
+{"id":297398,"type":"shortage","status":"active_confirmed","brand":"SANDOZ PANTOPRAZOLE","din":"02301075","strength":"20MG","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":297401,"type":"shortage","status":"active_confirmed","brand":"PIPERACILLIN AND TAZOBACTAM FOR INJECTION","din":"02299658","strength":"0.5G\n4G","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":297418,"type":"shortage","status":"active_confirmed","brand":"SANDOZ VALACYCLOVIR","din":"02347091","strength":"500MG","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":297443,"type":"shortage","status":"active_confirmed","brand":"PARIET, ENTERIC-COATED TABLET 10MG","din":"02243796","strength":"10MG","company":"JANSSEN INC","tier3":false},
+{"id":297446,"type":"shortage","status":"active_confirmed","brand":"PARIET, ENTERIC-COATED TABLET 20MG","din":"02243797","strength":"20MG","company":"JANSSEN INC","tier3":false},
+{"id":297456,"type":"shortage","status":"active_confirmed","brand":"DANTRIUM CAPSULES","din":"01997602","strength":"25MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false},
+{"id":297464,"type":"shortage","status":"active_confirmed","brand":"PROPOFOL INJECTION","din":"02437643","strength":"10MG","company":"FRESENIUS KABI CANADA LTD","tier3":false},
+{"id":297503,"type":"shortage","status":"active_confirmed","brand":"JAMP KETOROLAC","din":"02510855","strength":"10MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297423,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 25","din":"02245676","strength":"25MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":297436,"type":"shortage","status":"anticipated_shortage","brand":"TOBRADEX","din":"00778915","strength":"0.3%\n0.1%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false},
+{"id":297453,"type":"shortage","status":"anticipated_shortage","brand":"TWYNSTA","din":"02371049","strength":"80MG\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false},
+{"id":297411,"type":"discontinuance","status":"to_be_discontinued","brand":"SANDOZ DICLOFENAC RAPIDE","din":"02261774","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false}
 ],
-"statusChanged":[]}
+"updated":[
+{"id":293905,"type":"shortage","status":"active_confirmed","brand":"TWYNSTA","din":"02371022","strength":"40MG\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false,"changes":[{"field":"actualStart","from":null,"to":"2026-10-29"},{"field":"strength","from":"40MG\r\n5MG","to":"40MG\n5MG"}]},
+{"id":248781,"type":"shortage","status":"active_confirmed","brand":"NRA-OLMESARTAN HCTZ","din":"02508273","strength":"20MG\n12.5MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"estEnd","from":null,"to":"2027-03-31"},{"field":"strength","from":"20MG\r\n12.5MG","to":"20MG\n12.5MG"}]},
+{"id":248784,"type":"shortage","status":"active_confirmed","brand":"NRA-OLMESARTAN HCTZ","din":"02508281","strength":"40MG\n12.5MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"estEnd","from":null,"to":"2027-03-31"},{"field":"strength","from":"40MG\r\n12.5MG","to":"40MG\n12.5MG"}]},
+{"id":248787,"type":"shortage","status":"active_confirmed","brand":"NRA-OLMESARTAN HCTZ","din":"02508303","strength":"40MG\n25MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"estEnd","from":null,"to":"2027-03-31"},{"field":"strength","from":"40MG\r\n25MG","to":"40MG\n25MG"}]},
+{"id":279487,"type":"shortage","status":"active_confirmed","brand":"JAMP LEUCOVORIN","din":"02548208","strength":"5MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-09-25","to":"2027-01-31"}]},
+{"id":279490,"type":"shortage","status":"active_confirmed","brand":"JAMP LEUCOVORIN","din":"02548208","strength":"5MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-09-25","to":"2027-01-31"}]},
+{"id":280179,"type":"shortage","status":"active_confirmed","brand":"JAMP CANAGLIFLOZIN","din":"02543486","strength":"100MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-04"}]},
+{"id":280182,"type":"shortage","status":"active_confirmed","brand":"JAMP CANAGLIFLOZIN","din":"02543486","strength":"100MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-04"}]},
+{"id":280187,"type":"shortage","status":"active_confirmed","brand":"JAMP CANAGLIFLOZIN","din":"02543494","strength":"300MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-04"}]},
+{"id":280190,"type":"shortage","status":"active_confirmed","brand":"JAMP CANAGLIFLOZIN","din":"02543494","strength":"300MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-04"}]},
+{"id":280193,"type":"shortage","status":"active_confirmed","brand":"JAMP CANAGLIFLOZIN","din":"02543494","strength":"300MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-04"}]},
+{"id":280491,"type":"shortage","status":"active_confirmed","brand":"JAMP ONDANSETRON","din":"02490617","strength":"4MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-11","to":"2027-02-27"}]},
+{"id":280949,"type":"shortage","status":"active_confirmed","brand":"JAMP-SIMVASTATIN","din":"02375613","strength":"20MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-09-25","to":"2027-01-29"}]},
+{"id":280952,"type":"shortage","status":"active_confirmed","brand":"JAMP DICLOFENAC","din":"02534525","strength":"0.1%","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-04","to":"2027-01-08"}]},
+{"id":280955,"type":"shortage","status":"active_confirmed","brand":"JAMP DILTIAZEM CD","din":"02528037","strength":"120MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-30","to":"2026-11-06"}]},
+{"id":281027,"type":"shortage","status":"active_confirmed","brand":"JAMP BRIMONIDINE/TIMOLOL","din":"02531704","strength":"0.2%\n0.5%","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-06","to":"2026-12-04"},{"field":"strength","from":"0.2%\r\n0.5%","to":"0.2%\n0.5%"}]},
+{"id":281044,"type":"shortage","status":"active_confirmed","brand":"JAMP RASAGILINE","din":"02491974","strength":"0.5MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-02","to":"2026-11-27"}]},
+{"id":283496,"type":"shortage","status":"active_confirmed","brand":"JAMP DILTIAZEM CD","din":"02528061","strength":"300MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-16","to":"2026-11-13"}]},
+{"id":283700,"type":"shortage","status":"active_confirmed","brand":"JAMP-SIMVASTATIN","din":"02375613","strength":"20MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-09-25","to":"2026-11-20"}]},
+{"id":283705,"type":"shortage","status":"active_confirmed","brand":"JAMP RASAGILINE","din":"02491982","strength":"1MG","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-02","to":"2026-11-27"}]},
+{"id":286626,"type":"shortage","status":"active_confirmed","brand":"SANDOZ ABIRATERONE","din":"02521644","strength":"500MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-18"}]},
+{"id":289613,"type":"shortage","status":"active_confirmed","brand":"METADOL","din":"02247694","strength":"1MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-31","to":"2026-11-06"}]},
+{"id":290937,"type":"shortage","status":"active_confirmed","brand":"GEMCITABINE INJECTION","din":"02402831","strength":"38MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"actualStart","from":null,"to":"2026-11-02"},{"field":"anticipatedStart","from":"2026-10-23","to":null}]},
+{"id":295674,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"estEnd","from":"2026-10-30","to":"2026-11-06"}]},
+{"id":271125,"type":"shortage","status":"anticipated_shortage","brand":"NRA-CITALOPRAM","din":"02477653","strength":"40MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"status","from":"active_confirmed","to":"anticipated_shortage"},{"field":"estEnd","from":"2026-11-30","to":"2027-01-30"},{"field":"anticipatedStart","from":"2026-11-01","to":"2026-12-10"}]}
+],
+"statusChanged":[
+{"id":296480,"type":"shortage","status":"resolved","brand":"SANDOZ-DICLOFENAC","din":"02261928","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":288567,"type":"shortage","status":"resolved","brand":"JAMP AMOXI CLAV SUSPENSION","din":"02539446","strength":"57MG\n400MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":295669,"type":"shortage","status":"resolved","brand":"ESTRADOT 25","din":"02245676","strength":"25MCG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"from":"active_confirmed","to":"resolved"},
+{"id":292865,"type":"shortage","status":"resolved","brand":"SANDOZ DICLOFENAC RAPIDE","din":"02261774","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":293527,"type":"shortage","status":"resolved","brand":"TWYNSTA","din":"02371049","strength":"80MG\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":264482,"type":"shortage","status":"resolved","brand":"JAMP-MYCOPHENOLATE","din":"02380382","strength":"500MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
