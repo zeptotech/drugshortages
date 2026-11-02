@@ -1,0 +1,6 @@
+{"date":"2026-11-02",
+"new":[],
+"updated":[
+{"id":293905,"type":"shortage","status":"active_confirmed","brand":"TWYNSTA","din":"02371022","strength":"40MG\r\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
