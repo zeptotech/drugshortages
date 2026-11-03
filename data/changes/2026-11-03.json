@@ -1,6 +1,31 @@
 {"date":"2026-11-03",
-"new":[],
-"updated":[],
+"new":[
+{"id":297510,"type":"shortage","status":"active_confirmed","brand":"JAMP TOPIRAMATE TABLETS","din":"02544377","strength":"50MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297513,"type":"shortage","status":"active_confirmed","brand":"JAMP CLOXACILLIN","din":"02510758","strength":"500MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297516,"type":"shortage","status":"active_confirmed","brand":"JAMP VALPROIC ACID ORAL SOLUTION","din":"02532441","strength":"250MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297521,"type":"shortage","status":"active_confirmed","brand":"JAMP-VITAMIN D","din":"02449099","strength":"10000UNIT","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297525,"type":"shortage","status":"active_confirmed","brand":"JAMP EDOXABAN","din":"02557282","strength":"30MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297531,"type":"shortage","status":"active_confirmed","brand":"JAMP DARIFENACIN","din":"02491877","strength":"15MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297534,"type":"shortage","status":"active_confirmed","brand":"VENLAFAXINE XR","din":"02516535","strength":"37.5MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297538,"type":"shortage","status":"active_confirmed","brand":"JAMP-ONDANSETRON","din":"02313693","strength":"8MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":297553,"type":"shortage","status":"active_confirmed","brand":"APIDRA","din":"02279479","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false},
+{"id":297556,"type":"shortage","status":"active_confirmed","brand":"TOUJEO DOUBLESTAR","din":"02493373","strength":"300UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false},
+{"id":297547,"type":"shortage","status":"anticipated_shortage","brand":"ADMELOG","din":"02469901","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false},
+{"id":297550,"type":"shortage","status":"anticipated_shortage","brand":"ADMELOG","din":"02469898","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false},
+{"id":297507,"type":"discontinuance","status":"to_be_discontinued","brand":"CERVARIX","din":"02342227","strength":"20MCG\n20MCG","company":"GLAXOSMITHKLINE INC","tier3":false},
+{"id":297519,"type":"discontinuance","status":"to_be_discontinued","brand":"VOLIBRIS","din":"02307065","strength":"5MG","company":"GLAXOSMITHKLINE INC","tier3":false},
+{"id":297528,"type":"discontinuance","status":"to_be_discontinued","brand":"VOLIBRIS","din":"02307073","strength":"10MG","company":"GLAXOSMITHKLINE INC","tier3":false},
+{"id":297561,"type":"discontinuance","status":"to_be_discontinued","brand":"PREMARIN","din":"02414678","strength":"0.3MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":297564,"type":"discontinuance","status":"to_be_discontinued","brand":"PREMARIN","din":"02414694","strength":"1.25MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":297567,"type":"discontinuance","status":"to_be_discontinued","brand":"PREMARIN","din":"02414686","strength":"0.625MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":297570,"type":"discontinuance","status":"to_be_discontinued","brand":"PREMARIN VAGINAL CREAM","din":"02043440","strength":"0.625MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":297574,"type":"discontinuance","status":"to_be_discontinued","brand":"ZOMETA CONCENTRATE","din":"02248296","strength":"4MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false}
+],
+"updated":[
+{"id":289002,"type":"shortage","status":"anticipated_shortage","brand":"KINEVAC","din":"02228602","strength":"5MCG","company":"BRACCO IMAGING CANADA","tier3":false,"changes":[{"field":"anticipatedStart","from":"2026-11-30","to":"2026-11-06"}]}
+],
 "statusChanged":[
-{"id":297411,"type":"discontinuance","status":"discontinued","brand":"SANDOZ DICLOFENAC RAPIDE","din":"02261774","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+{"id":297411,"type":"discontinuance","status":"discontinued","brand":"SANDOZ DICLOFENAC RAPIDE","din":"02261774","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":287847,"type":"shortage","status":"resolved","brand":"PREMARIN VAGINAL CREAM","din":"02043440","strength":"0.625MG","company":"PFIZER CANADA ULC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":268122,"type":"shortage","status":"resolved","brand":"MULTIHANCE","din":"02248302","strength":"529MG","company":"BRACCO IMAGING CANADA","tier3":false,"from":"active_confirmed","to":"resolved"}
 ]}
