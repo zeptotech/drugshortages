@@ -1,0 +1,26 @@
+{"date":"2026-11-04",
+"new":[
+{"id":297580,"type":"shortage","status":"active_confirmed","brand":"PMS-METHOTREXATE INJECTION","din":"02539667","strength":"25MG","company":"PHARMASCIENCE INC","tier3":false},
+{"id":297598,"type":"shortage","status":"active_confirmed","brand":"ACUVAIL","din":"02369362","strength":"0.45%","company":"ABBVIE CORPORATION","tier3":false},
+{"id":297606,"type":"shortage","status":"active_confirmed","brand":"MAR-DILTIAZEM CD","din":"02484080","strength":"240MG","company":"MARCAN PHARMACEUTICALS INC","tier3":false},
+{"id":297609,"type":"shortage","status":"active_confirmed","brand":"VANCOMYCIN HYDROCHLORIDE FOR INJECTION, USP","din":"02406543","strength":"1G","company":"MARCAN PHARMACEUTICALS INC","tier3":false},
+{"id":297614,"type":"shortage","status":"active_confirmed","brand":"ABRILADA","din":"02511061","strength":"20MG","company":"PFIZER CANADA ULC","tier3":false}
+],
+"updated":[
+{"id":285733,"type":"shortage","status":"active_confirmed","brand":"ILEVRO","din":"02411393","strength":"0.3%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-10-15","to":"2026-11-15"}]},
+{"id":293982,"type":"shortage","status":"active_confirmed","brand":"MIOSTAT OPHTHALMIC LIQ 0.01%","din":"00042544","strength":".01%","company":"ALCON CANADA INC","tier3":true,"changes":[{"field":"estEnd","from":"2026-12-01","to":"2026-11-30"},{"field":"actualStart","from":null,"to":"2026-09-30"},{"field":"comments","from":"Alcon Canada anticipates a short-term back order of MIOSTAT™ (carbachol intraocular solution, USP) 0.01%. current available inventory is being managed under allocation to support continuity of patient care. The manufacturing site is working to minimize the duration of the disruption. Alcon Canada estimates resupply early Jan 2027.","to":"Alcon Canada anticipates a short-term back order of MIOSTAT™ (carbachol intraocular solution, USP) 0.01%. current available inventory is being managed under allocation to support continuity of patient care. The manufacturing site is working to minimize the duration of the disruption. Alcon Canada estimates resupply early Jan 2027. \n\nAlcon is expecting inventory by End of Nov 2026 and will address any product Back orders"}]},
+{"id":294292,"type":"shortage","status":"active_confirmed","brand":"TEGRETOL SUSPENSION","din":"02194333","strength":"100MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-11-24"}]},
+{"id":295208,"type":"shortage","status":"active_confirmed","brand":"PREGABALIN","din":"02405598","strength":"300MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-06","to":"2026-11-20"}]},
+{"id":296179,"type":"shortage","status":"active_confirmed","brand":"IMITREX","din":"02230418","strength":"5MG","company":"GLAXOSMITHKLINE INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-07","to":"2026-11-20"}]},
+{"id":289464,"type":"discontinuance","status":"to_be_discontinued","brand":"SALOFALK","din":"02112809","strength":"4G","company":"ABBVIE CORPORATION","tier3":false,"changes":[{"field":"actualDiscDate","from":null,"to":"2026-11-04"}]}
+],
+"statusChanged":[
+{"id":292729,"type":"shortage","status":"resolved","brand":"PMS-PRAVASTATIN","din":"02247655","strength":"10MG","company":"PHARMASCIENCE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":292064,"type":"shortage","status":"resolved","brand":"PMS-TOPIRAMATE","din":"02312085","strength":"50MG","company":"PHARMASCIENCE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":292061,"type":"shortage","status":"resolved","brand":"PMS-NITROFURANTOIN BID","din":"02455676","strength":"100MG","company":"PHARMASCIENCE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":292935,"type":"shortage","status":"resolved","brand":"RESTASIS MULTIDOSE","din":"02476835","strength":"0.05%","company":"ABBVIE CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":248525,"type":"shortage","status":"resolved","brand":"RYTHMODAN","din":"02224801","strength":"100MG","company":"CHEPLAPHARM ARZNEIMITTEL GMBH","tier3":true,"from":"active_confirmed","to":"resolved"},
+{"id":297570,"type":"discontinuance","status":"discontinued","brand":"PREMARIN VAGINAL CREAM","din":"02043440","strength":"0.625MG","company":"PFIZER CANADA ULC","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":297603,"type":"discontinuance","status":"discontinued","brand":"RYTHMODAN","din":"02224801","strength":"100MG","company":"CHEPLAPHARM ARZNEIMITTEL GMBH","tier3":false,"from":null,"to":"discontinued"},
+{"id":297595,"type":"discontinuance","status":"discontinued","brand":"SANDOZ-DICLOFENAC","din":"02261928","strength":"50MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":null,"to":"discontinued"}
+]}
