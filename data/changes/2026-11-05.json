@@ -1,0 +1,11 @@
+{"date":"2026-11-05",
+"new":[],
+"updated":[
+{"id":294875,"type":"shortage","status":"active_confirmed","brand":"CASPOFUNGIN FOR INJECTION","din":"02486989","strength":"50MG","company":"FRESENIUS KABI CANADA LTD","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":295727,"type":"shortage","status":"active_confirmed","brand":"MYLAN-NIFEDIPINE EXTENDED RELEASE","din":"02321149","strength":"60MG","company":"MYLAN PHARMACEUTICALS ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297371,"type":"shortage","status":"active_confirmed","brand":"MAXITROL","din":"00358177","strength":"3.5MG\n0.1%\n6000UNIT","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297436,"type":"shortage","status":"active_confirmed","brand":"TOBRADEX","din":"00778915","strength":"0.3%\n0.1%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":289464,"type":"discontinuance","status":"discontinued","brand":"SALOFALK","din":"02112809","strength":"4G","company":"ABBVIE CORPORATION","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
