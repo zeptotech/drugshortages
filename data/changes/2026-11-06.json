@@ -1,0 +1,7 @@
+{"date":"2026-11-06",
+"new":[],
+"updated":[
+{"id":289002,"type":"shortage","status":"active_confirmed","brand":"KINEVAC","din":"02228602","strength":"5MCG","company":"BRACCO IMAGING CANADA","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":294253,"type":"shortage","status":"active_confirmed","brand":"PENICILLIN G SODIUM FOR INJECTION, USP","din":"02220296","strength":"10000000UNIT","company":"FRESENIUS KABI CANADA LTD","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
