@@ -1,0 +1,7 @@
+{"date":"2026-11-08",
+"new":[],
+"updated":[
+{"id":294747,"type":"shortage","status":"active_confirmed","brand":"CADUET","din":"02273306","strength":"10MG\n40MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":295764,"type":"shortage","status":"active_confirmed","brand":"VIAGRA","din":"02239768","strength":"100MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
