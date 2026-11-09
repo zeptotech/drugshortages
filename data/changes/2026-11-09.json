@@ -1,0 +1,14 @@
+{"date":"2026-11-09",
+"new":[
+{"id":297922,"type":"shortage","status":"active_confirmed","brand":"BURINEX","din":"00728284","strength":"1MG","company":"KARO PHARMA AB","tier3":false},
+{"id":297927,"type":"shortage","status":"active_confirmed","brand":"COSOPT PRESERVATIVE-FREE","din":"02258692","strength":"5MG\n20MG","company":"ELVIUM LIFE SCIENCES","tier3":false}
+],
+"updated":[
+{"id":295430,"type":"shortage","status":"active_confirmed","brand":"ERELZI","din":"02462877","strength":"25MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297008,"type":"shortage","status":"active_confirmed","brand":"NEXVIAZYME","din":"02522365","strength":"100MG","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":295674,"type":"shortage","status":"resolved","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"from":"active_confirmed","to":"resolved"},
+{"id":297401,"type":"shortage","status":"resolved","brand":"PIPERACILLIN AND TAZOBACTAM FOR INJECTION","din":"02299658","strength":"0.5G\n4G","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":295615,"type":"shortage","status":"resolved","brand":"COSOPT PRESERVATIVE-FREE","din":"02258692","strength":"20MG\n5MG","company":"ELVIUM LIFE SCIENCES","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
