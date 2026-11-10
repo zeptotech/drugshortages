@@ -1,0 +1,12 @@
+{"date":"2026-11-10",
+"new":[
+{"id":298076,"type":"shortage","status":"anticipated_shortage","brand":"OCTASA","din":"02465752","strength":"800MG","company":"TILLOTTS PHARMA AG","tier3":false}
+],
+"updated":[
+{"id":297547,"type":"shortage","status":"active_confirmed","brand":"ADMELOG","din":"02469901","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297890,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02237671","strength":"10MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297893,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02150689","strength":"25MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":297936,"type":"discontinuance","status":"discontinued","brand":"SANDOZ VALACYCLOVIR","din":"02347091","strength":"500MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
