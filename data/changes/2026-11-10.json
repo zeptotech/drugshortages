@@ -1,12 +1,22 @@
 {"date":"2026-11-10",
 "new":[
-{"id":298076,"type":"shortage","status":"anticipated_shortage","brand":"OCTASA","din":"02465752","strength":"800MG","company":"TILLOTTS PHARMA AG","tier3":false}
+{"id":298076,"type":"shortage","status":"anticipated_shortage","brand":"OCTASA","din":"02465752","strength":"800MG","company":"TILLOTTS PHARMA AG","tier3":false},
+{"id":298092,"type":"shortage","status":"active_confirmed","brand":"FOSAVANCE","din":"02314940","strength":"70MG\n5600UNIT","company":"ORGANON CANADA INC.","tier3":false},
+{"id":298095,"type":"shortage","status":"anticipated_shortage","brand":"FOSAVANCE","din":"02276429","strength":"70MG\n2800UNIT","company":"ORGANON CANADA INC.","tier3":false},
+{"id":298104,"type":"shortage","status":"anticipated_shortage","brand":"ISOVUE 200 INJECTION","din":"02229013","strength":"41%","company":"BRACCO IMAGING CANADA","tier3":false},
+{"id":298087,"type":"discontinuance","status":"to_be_discontinued","brand":"JAMP EFAVIRENZ/EMTRICITABINE/TENOFOVIR DISOPROXIL FUMARATE","din":"02519461","strength":"300MG\n600MG\n200MG","company":"JAMP PHARMA CORPORATION","tier3":false}
 ],
 "updated":[
 {"id":297547,"type":"shortage","status":"active_confirmed","brand":"ADMELOG","din":"02469901","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
 {"id":297890,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02237671","strength":"10MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
-{"id":297893,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02150689","strength":"25MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+{"id":297893,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02150689","strength":"25MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":296216,"type":"shortage","status":"anticipated_shortage","brand":"TEMODAL","din":"02312794","strength":"140MG","company":"MERCK CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2027-01-15","to":"2026-12-04"}]}
 ],
 "statusChanged":[
-{"id":297936,"type":"discontinuance","status":"discontinued","brand":"SANDOZ VALACYCLOVIR","din":"02347091","strength":"500MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+{"id":297936,"type":"discontinuance","status":"discontinued","brand":"SANDOZ VALACYCLOVIR","din":"02347091","strength":"500MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":281024,"type":"shortage","status":"resolved","brand":"JAMP EFAVIRENZ/EMTRICITABINE/TENOFOVIR DISOPROXIL FUMARATE","din":"02519461","strength":"600MG\n300MG\n200MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":119338,"type":"shortage","status":"resolved","brand":"SANDOZ FENTANYL PATCH","din":"02327112","strength":"12MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":null,"to":"resolved"},
+{"id":72485,"type":"shortage","status":"resolved","brand":"SANDOZ DORZOLAMIDE/TIMOLOL","din":"02344351","strength":"5MG\n20MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":null,"to":"resolved"},
+{"id":127666,"type":"shortage","status":"resolved","brand":"FUROSEMIDE INJECTION SDZ","din":"02382539","strength":"10MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":null,"to":"resolved"},
+{"id":42342,"type":"discontinuance","status":"discontinued","brand":"ZINBRYTA","din":"02459620","strength":"150MG","company":"BIOGEN CANADA INC","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
 ]}
