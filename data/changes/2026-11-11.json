@@ -1,0 +1,11 @@
+{"date":"2026-11-11",
+"new":[
+{"id":298112,"type":"shortage","status":"active_confirmed","brand":"APIDRA","din":"02294346","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false},
+{"id":298117,"type":"shortage","status":"active_confirmed","brand":"APIDRA","din":"02279460","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false}
+],
+"updated":[
+{"id":297547,"type":"shortage","status":"active_confirmed","brand":"ADMELOG","din":"02469901","strength":"100UNIT","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-04","to":"2027-05-31"},{"field":"actualStart","from":null,"to":"2026-11-10"},{"field":"comments","from":"INTERMITTENT SUPPLY. The availability date represents estimated availability at the main Sanofi warehouse. Availability dates at a customer’s usual distributor warehouse may vary. Pharmacies are invited to communicate with their preferred distributor to obtain the product availability date.","to":"Allocation has been implemented to support continuity of care. The availability date represents estimated availability at the main Sanofi warehouse. Availability dates at a customer’s usual distributor warehouse may vary. Pharmacies are invited to communicate with their preferred distributor to obtain the product availability date."}]}
+],
+"statusChanged":[
+{"id":298087,"type":"discontinuance","status":"discontinued","brand":"JAMP EFAVIRENZ/EMTRICITABINE/TENOFOVIR DISOPROXIL FUMARATE","din":"02519461","strength":"300MG\n600MG\n200MG","company":"JAMP PHARMA CORPORATION","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
