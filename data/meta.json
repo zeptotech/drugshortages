@@ -1,5 +1,5 @@
-{"lastChecked":"2026-11-12T08:25:36-05:00",
-"counts":{"active_confirmed":1663,"resolved":411,"anticipated_shortage":79,"discontinued":85,"to_be_discontinued":199,"reversed":4},
+{"lastChecked":"2026-11-12T17:32:14-05:00",
+"counts":{"active_confirmed":1665,"resolved":427,"anticipated_shortage":79,"to_be_discontinued":200,"discontinued":85,"reversed":4},
 "recentDays":{"shortage":30,"discontinuance":30},
 "source":"Health Product Shortages Canada (healthproductshortages.ca)",
 "seeded":"2026-10-18",
