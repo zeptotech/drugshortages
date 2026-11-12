@@ -1,0 +1,11 @@
+{"date":"2026-11-12",
+"new":[
+{"id":298190,"type":"shortage","status":"active_confirmed","brand":"COVERSYL PLUS HD","din":"02321653","strength":"8MG\n2.5MG","company":"SERVIER CANADA INC","tier3":false}
+],
+"updated":[
+{"id":298058,"type":"shortage","status":"active_confirmed","brand":"SYNTHROID","din":"02172089","strength":"75MCG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":295776,"type":"shortage","status":"resolved","brand":"HEPARIN SODIUM INJECTION, USP","din":"02264307","strength":"10000UNIT","company":"FRESENIUS KABI CANADA LTD","tier3":false,"from":"anticipated_shortage","to":"resolved"},
+{"id":295994,"type":"shortage","status":"resolved","brand":"MILRINONE LACTATE INJECTION, USP","din":"02244622","strength":"1MG","company":"FRESENIUS KABI CANADA LTD","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
