@@ -1,6 +1,30 @@
 {"date":"2026-11-13",
-"new":[],
-"updated":[
-{"id":297645,"type":"shortage","status":"active_confirmed","brand":"NRA-GABAPENTIN","din":"02550024","strength":"300MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+"new":[
+{"id":298102,"type":"shortage","status":"active_confirmed","brand":"ZENHALE","din":"02361760","strength":"200MCG\n5MCG","company":"ORGANON CANADA INC.","tier3":false},
+{"id":298385,"type":"shortage","status":"active_confirmed","brand":"CLIMARA 75","din":"02247500","strength":"75MCG","company":"BAYER INC","tier3":false},
+{"id":298388,"type":"shortage","status":"active_confirmed","brand":"XARELTO","din":"02510170","strength":"103.4MG","company":"BAYER INC","tier3":false},
+{"id":298393,"type":"shortage","status":"active_confirmed","brand":"APO-OXYCODONE/ACET","din":"02324628","strength":"325MG\n5MG","company":"APOTEX INC","tier3":false},
+{"id":298396,"type":"shortage","status":"active_confirmed","brand":"APO-OXYCODONE/ACET","din":"02324628","strength":"325MG\n5MG","company":"APOTEX INC","tier3":false},
+{"id":298403,"type":"shortage","status":"active_confirmed","brand":"TARO-BENZOYL PEROXIDE / CLINDAMYCIN KIT","din":"02464519","strength":"5%\n1%","company":"TARO PHARMACEUTICALS INC","tier3":false}
 ],
-"statusChanged":[]}
+"updated":[
+{"id":297645,"type":"shortage","status":"active_confirmed","brand":"NRA-GABAPENTIN","din":"02550024","strength":"300MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":271670,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532166","strength":"100MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":285382,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532158","strength":"50MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":285385,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532158","strength":"50MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":285469,"type":"shortage","status":"active_confirmed","brand":"TARO-CIPROFLOXACIN/DEXAMETHASONE","din":"02481901","strength":"0.3%\n0.1%","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-29","to":"2026-11-27"}]},
+{"id":292317,"type":"shortage","status":"active_confirmed","brand":"TARO-LENALIDOMIDE","din":"02507862","strength":"2.5MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":292320,"type":"shortage","status":"active_confirmed","brand":"TARO-LENALIDOMIDE","din":"02507900","strength":"20MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":292686,"type":"shortage","status":"active_confirmed","brand":"TARO-FAMPRIDINE","din":"02482398","strength":"10MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-12-18"}]},
+{"id":293398,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532166","strength":"100MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-13","to":"2026-11-20"}]},
+{"id":295430,"type":"shortage","status":"active_confirmed","brand":"ERELZI","din":"02462877","strength":"25MG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"tier3","from":false,"to":true}]},
+{"id":297008,"type":"shortage","status":"active_confirmed","brand":"NEXVIAZYME","din":"02522365","strength":"100MG","company":"SANOFI-AVENTIS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-16","to":"2027-01-05"}]},
+{"id":298092,"type":"shortage","status":"active_confirmed","brand":"FOSAVANCE","din":"02314940","strength":"70MG\n5600UNIT","company":"ORGANON CANADA INC.","tier3":false,"changes":[{"field":"estEnd","from":"2027-05-21","to":"2027-02-05"}]},
+{"id":296487,"type":"shortage","status":"anticipated_shortage","brand":"CABAZITAXEL FOR INJECTION","din":"02553783","strength":"45MG","company":"FORMATIVE PHARMA INC.","tier3":false,"changes":[{"field":"anticipatedStart","from":"2026-12-15","to":"2027-01-08"}]}
+],
+"statusChanged":[
+{"id":295031,"type":"shortage","status":"resolved","brand":"APO-DUTASTERIDE","din":"02404206","strength":"0.5MG","company":"APOTEX INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":285481,"type":"shortage","status":"resolved","brand":"TARO-RAMIPRIL HCTZ","din":"02449471","strength":"25MG\n10MG","company":"SUN PHARMA CANADA INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":272039,"type":"shortage","status":"resolved","brand":"PMS-METHYLPHENIDATE CR","din":"02536951","strength":"15MG","company":"PHARMASCIENCE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":266592,"type":"discontinuance","status":"discontinued","brand":"BILTRICIDE","din":"02230897","strength":"600MG","company":"BAYER INC","tier3":false,"from":null,"to":"discontinued"}
+]}
