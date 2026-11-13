@@ -1,0 +1,6 @@
+{"date":"2026-11-13",
+"new":[],
+"updated":[
+{"id":297645,"type":"shortage","status":"active_confirmed","brand":"NRA-GABAPENTIN","din":"02550024","strength":"300MG","company":"NORA PHARMA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
