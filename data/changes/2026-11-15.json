@@ -1,0 +1,7 @@
+{"date":"2026-11-15",
+"new":[],
+"updated":[
+{"id":292048,"type":"shortage","status":"active_confirmed","brand":"DIPHENIST","din":"02219336","strength":"50MG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":298076,"type":"shortage","status":"active_confirmed","brand":"OCTASA","din":"02465752","strength":"800MG","company":"TILLOTTS PHARMA AG","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
