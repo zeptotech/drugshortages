@@ -1,0 +1,14 @@
+{"date":"2026-11-17",
+"new":[
+{"id":298614,"type":"shortage","status":"active_confirmed","brand":"SANDOZ CANDESARTAN","din":"02326957","strength":"4MG","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":298617,"type":"shortage","status":"active_confirmed","brand":"SANDOZ ENTACAPONE","din":"02380005","strength":"200MG","company":"SANDOZ CANADA INCORPORATED","tier3":false}
+],
+"updated":[
+{"id":295430,"type":"shortage","status":"anticipated_shortage","brand":"ERELZI","din":"02462877","strength":"25MG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"status","from":"active_confirmed","to":"anticipated_shortage"},{"field":"anticipatedStart","from":"2026-11-09","to":"2026-11-23"}]},
+{"id":295764,"type":"shortage","status":"active_confirmed","brand":"VIAGRA","din":"02239768","strength":"100MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":296097,"type":"shortage","status":"active_confirmed","brand":"MYLAN-AMLODIPINE/ATORVASTATIN","din":"02362775","strength":"5MG\n40MG","company":"MYLAN PHARMACEUTICALS ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":298055,"type":"shortage","status":"active_confirmed","brand":"SYNTHROID","din":"02172070","strength":"50MCG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":296398,"type":"shortage","status":"resolved","brand":"DEXAMETHASONE SOD PHOSPH INJ 10MG/ML USP","din":"00874582","strength":"10MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
