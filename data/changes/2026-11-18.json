@@ -1,0 +1,33 @@
+{"date":"2026-11-18",
+"new":[
+{"id":298804,"type":"shortage","status":"active_confirmed","brand":"PARIET, ENTERIC-COATED TABLET 20MG","din":"02243797","strength":"20MG","company":"JANSSEN INC","tier3":false},
+{"id":298827,"type":"shortage","status":"active_confirmed","brand":"NAT-BENDAMUSTINE","din":"02496887","strength":"25MG","company":"NATCO PHARMA (CANADA) INC","tier3":false},
+{"id":298830,"type":"shortage","status":"active_confirmed","brand":"NAT-BENDAMUSTINE","din":"02496895","strength":"100MG","company":"NATCO PHARMA (CANADA) INC","tier3":false},
+{"id":298839,"type":"shortage","status":"active_confirmed","brand":"PMS-AMIODARONE","din":"02242472","strength":"200MG","company":"PHARMASCIENCE INC","tier3":false},
+{"id":298856,"type":"shortage","status":"active_confirmed","brand":"COVERSYL","din":"02123282","strength":"4MG","company":"SERVIER CANADA INC","tier3":false},
+{"id":298815,"type":"shortage","status":"anticipated_shortage","brand":"HEPARIN SODIUM INJECTION USP","din":"02382326","strength":"10000UNIT","company":"PFIZER CANADA ULC","tier3":false},
+{"id":298820,"type":"shortage","status":"anticipated_shortage","brand":"DEPO-MEDROL","din":"01934333","strength":"40MG","company":"PFIZER CANADA ULC","tier3":false},
+{"id":298836,"type":"shortage","status":"anticipated_shortage","brand":"OMNIPAQUE 240","din":"02172739","strength":"518MG","company":"GE HEALTHCARE CANADA INC","tier3":false},
+{"id":298848,"type":"shortage","status":"anticipated_shortage","brand":"DIACOMIT","din":"02398966","strength":"500MG","company":"BIOCODEX SAS","tier3":false},
+{"id":298850,"type":"shortage","status":"anticipated_shortage","brand":"ARICEPT","din":"02232044","strength":"10MG","company":"PFIZER CANADA ULC","tier3":false}
+],
+"updated":[
+{"id":293465,"type":"shortage","status":"active_confirmed","brand":"SILENOR","din":"02398257","strength":"3MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-15","to":"2026-12-18"}]},
+{"id":295101,"type":"shortage","status":"active_confirmed","brand":"PMS-MOXIFLOXACIN","din":"02432218","strength":"0.5%","company":"PHARMASCIENCE INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-07","to":"2026-12-23"},{"field":"comments","from":null,"to":"Product on Allocation"}]},
+{"id":295196,"type":"shortage","status":"active_confirmed","brand":"DILTIAZEM CD","din":"02400456","strength":"240MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":296179,"type":"shortage","status":"active_confirmed","brand":"IMITREX","din":"02230418","strength":"5MG","company":"GLAXOSMITHKLINE INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-11-24"}]},
+{"id":296246,"type":"shortage","status":"active_confirmed","brand":"SUMATRIPTAN","din":"02286548","strength":"100MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"actualStart","from":null,"to":"2026-11-18"}]},
+{"id":297029,"type":"shortage","status":"active_confirmed","brand":"GLN-OLMESARTAN HCTZ","din":"02475707","strength":"20MG\n12.5MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-26"}]},
+{"id":297032,"type":"shortage","status":"active_confirmed","brand":"GLN-OLMESARTAN","din":"02469820","strength":"40MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-12"}]},
+{"id":297044,"type":"shortage","status":"active_confirmed","brand":"DEFEROXAMINE MESYLATE FOR INJECTION","din":"02247022","strength":"2G","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-23","to":"2026-12-21"}]},
+{"id":297456,"type":"shortage","status":"active_confirmed","brand":"DANTRIUM CAPSULES","din":"01997602","strength":"25MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-11"}]},
+{"id":297890,"type":"shortage","status":"active_confirmed","brand":"NEORAL","din":"02237671","strength":"10MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-11-30"}]},
+{"id":298143,"type":"shortage","status":"active_confirmed","brand":"PANTOPRAZOLE","din":"02370808","strength":"40MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"actualStart","from":null,"to":"2026-11-18"}]},
+{"id":295193,"type":"shortage","status":"anticipated_shortage","brand":"CITALOPRAM","din":"02353660","strength":"20MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"anticipatedStart","from":"2026-11-20","to":"2026-12-04"}]}
+],
+"statusChanged":[
+{"id":294637,"type":"shortage","status":"resolved","brand":"PMS-FLUCONAZOLE","din":"02245643","strength":"50MG","company":"PHARMASCIENCE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":257387,"type":"discontinuance","status":"discontinued","brand":"SANDOZ AMPHETAMINE XR","din":"02457318","strength":"15MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":257384,"type":"discontinuance","status":"discontinued","brand":"SANDOZ AMPHETAMINE XR","din":"02457342","strength":"30MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"},
+{"id":82956,"type":"discontinuance","status":"discontinued","brand":"FOLIC ACID INJECTION USP","din":"00816086","strength":"5MG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
