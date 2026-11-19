@@ -1,8 +1,20 @@
 {"date":"2026-11-19",
-"new":[],
+"new":[
+{"id":298874,"type":"shortage","status":"active_confirmed","brand":"ICATIBANT INJECTION","din":"02547562","strength":"10MG","company":"JAMP PHARMA CORPORATION","tier3":false},
+{"id":298879,"type":"shortage","status":"active_confirmed","brand":"WAKIX","din":"02516241","strength":"5MG","company":"KNIGHT THERAPEUTICS INC.","tier3":false},
+{"id":298882,"type":"discontinuance","status":"to_be_discontinued","brand":"DIAMICRON MR","din":"02242987","strength":"30MG","company":"SERVIER CANADA INC","tier3":false},
+{"id":298885,"type":"discontinuance","status":"to_be_discontinued","brand":"DIAMICRON MR","din":"02356422","strength":"60MG","company":"SERVIER CANADA INC","tier3":false}
+],
 "updated":[
-{"id":295880,"type":"shortage","status":"active_confirmed","brand":"INSPRA","din":"02323052","strength":"25MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+{"id":295880,"type":"shortage","status":"active_confirmed","brand":"INSPRA","din":"02323052","strength":"25MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":272781,"type":"shortage","status":"active_confirmed","brand":"DEXAMETHASONE-OMEGA","din":"02204266","strength":"4MG","company":"OMEGA LABORATORIES LIMITED","tier3":true,"changes":[{"field":"estEnd","from":"2026-12-31","to":"2027-04-30"}]},
+{"id":272933,"type":"shortage","status":"active_confirmed","brand":"MIOCHOL-E","din":"02133326","strength":"20MG","company":"BAUSCH & LOMB INC","tier3":true,"changes":[{"field":"estEnd","from":"2026-12-20","to":"2027-01-18"},{"field":"actualEnd","from":"2027-02-05","to":null}]},
+{"id":289686,"type":"shortage","status":"active_confirmed","brand":"BENZTROPINE OMEGA","din":"02238903","strength":"1MG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-31","to":"2027-01-31"},{"field":"comments","from":"Product on allocation","to":null}]},
+{"id":298161,"type":"shortage","status":"active_confirmed","brand":"GLYCOPYRROLATE INJECTION","din":"02382857","strength":"0.2MG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2027-01-13","to":"2027-01-31"}]},
+{"id":298836,"type":"shortage","status":"active_confirmed","brand":"OMNIPAQUE 240","din":"02172739","strength":"518MG","company":"GE HEALTHCARE CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"actualStart","from":null,"to":"2026-11-19"}]}
 ],
 "statusChanged":[
-{"id":294660,"type":"shortage","status":"removed","brand":"MYLAN-VARDENAFIL","din":"02464209","strength":"5MG","company":"MYLAN PHARMACEUTICALS ULC","tier3":false,"from":"active_confirmed","to":"removed"}
+{"id":294660,"type":"shortage","status":"removed","brand":"MYLAN-VARDENAFIL","din":"02464209","strength":"5MG","company":"MYLAN PHARMACEUTICALS ULC","tier3":false,"from":"active_confirmed","to":"removed"},
+{"id":297893,"type":"shortage","status":"resolved","brand":"NEORAL","din":"02150689","strength":"25MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":298164,"type":"shortage","status":"resolved","brand":"GRANISETRON HYDROCHLORIDE INJECTION","din":"02322765","strength":"1MG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"from":"active_confirmed","to":"resolved"}
 ]}
