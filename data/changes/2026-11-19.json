@@ -1,0 +1,8 @@
+{"date":"2026-11-19",
+"new":[],
+"updated":[
+{"id":295880,"type":"shortage","status":"active_confirmed","brand":"INSPRA","din":"02323052","strength":"25MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":294660,"type":"shortage","status":"removed","brand":"MYLAN-VARDENAFIL","din":"02464209","strength":"5MG","company":"MYLAN PHARMACEUTICALS ULC","tier3":false,"from":"active_confirmed","to":"removed"}
+]}
