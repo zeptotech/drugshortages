@@ -1,9 +1,22 @@
 {"date":"2026-11-20",
 "new":[
-{"id":298891,"type":"discontinuance","status":"to_be_discontinued","brand":"OXALIPLATIN INJECTION, USP","din":"02458403","strength":"5MG","company":"DR REDDY'S LABORATORIES LTD","tier3":false}
+{"id":298891,"type":"discontinuance","status":"to_be_discontinued","brand":"OXALIPLATIN INJECTION, USP","din":"02458403","strength":"5MG","company":"DR REDDY'S LABORATORIES LTD","tier3":false},
+{"id":298897,"type":"shortage","status":"active_confirmed","brand":"KETAMINE INJECTION, BP","din":"02535645","strength":"50MG","company":"STERIMAX INC","tier3":false},
+{"id":298902,"type":"shortage","status":"active_confirmed","brand":"MAR-DILTIAZEM CD","din":"02484072","strength":"180MG","company":"MARCAN PHARMACEUTICALS INC","tier3":false},
+{"id":298907,"type":"shortage","status":"active_confirmed","brand":"DEXTROSE INJECTION","din":"02517132","strength":"50%","company":"OMEGA LABORATORIES LIMITED","tier3":false},
+{"id":298870,"type":"discontinuance","status":"to_be_discontinued","brand":"SUNOSI","din":"02515822","strength":"150MG","company":"AXSOME MALTA LTD.","tier3":false},
+{"id":298915,"type":"discontinuance","status":"to_be_discontinued","brand":"SUNOSI","din":"02515814","strength":"75MG","company":"AXSOME MALTA LTD.","tier3":false}
 ],
 "updated":[
 {"id":297373,"type":"shortage","status":"active_confirmed","brand":"CIPRODEX","din":"02252716","strength":"0.1%\n0.3%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
-{"id":298848,"type":"shortage","status":"active_confirmed","brand":"DIACOMIT","din":"02398966","strength":"500MG","company":"BIOCODEX SAS","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-12-22","to":"2026-12-23"},{"field":"actualStart","from":null,"to":"2026-11-20"}]}
+{"id":298848,"type":"shortage","status":"active_confirmed","brand":"DIACOMIT","din":"02398966","strength":"500MG","company":"BIOCODEX SAS","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-12-22","to":"2026-12-23"},{"field":"actualStart","from":null,"to":"2026-11-20"}]},
+{"id":287418,"type":"shortage","status":"active_confirmed","brand":"LONITEN 2.5MG","din":"00514497","strength":"2.5MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2027-02-17"},{"field":"comments","from":"Partial availability received in August / Full recovery anticipated in November","to":null}]},
+{"id":294345,"type":"shortage","status":"active_confirmed","brand":"TRAVATAN Z","din":"02318008","strength":"0.004%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-30","to":null},{"field":"actualStart","from":null,"to":"2026-10-15"},{"field":"comments","from":null,"to":"This product is planned for discontinuation. No resupply is expected."}]},
+{"id":295241,"type":"shortage","status":"active_confirmed","brand":"LONITEN 10MG","din":"00514500","strength":"10MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"estEnd","from":"2027-01-29","to":"2027-02-26"}]},
+{"id":296216,"type":"shortage","status":"active_confirmed","brand":"TEMODAL","din":"02312794","strength":"140MG","company":"MERCK CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"actualStart","from":null,"to":"2026-11-20"}]},
+{"id":296487,"type":"shortage","status":"anticipated_shortage","brand":"CABAZITAXEL FOR INJECTION","din":"02553783","strength":"45MG","company":"FORMATIVE PHARMA INC.","tier3":false,"changes":[{"field":"anticipatedStart","from":"2027-01-08","to":"2026-12-31"}]},
+{"id":294787,"type":"discontinuance","status":"to_be_discontinued","brand":"PIQRAY","din":"02497077","strength":"200MG","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"discDate","from":"2026-10-31","to":"2026-11-30"}]}
 ],
-"statusChanged":[]}
+"statusChanged":[
+{"id":298102,"type":"shortage","status":"resolved","brand":"ZENHALE","din":"02361760","strength":"200MCG\n5MCG","company":"ORGANON CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
