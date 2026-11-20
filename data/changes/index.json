@@ -1,4 +1,5 @@
 [
+{"date":"2026-11-20","new":1,"updated":2,"statusChanged":0},
 {"date":"2026-11-19","new":4,"updated":6,"statusChanged":3},
 {"date":"2026-11-18","new":10,"updated":12,"statusChanged":4},
 {"date":"2026-11-17","new":26,"updated":35,"statusChanged":14},
@@ -27,6 +28,5 @@
 {"date":"2026-10-24","new":0,"updated":1,"statusChanged":0},
 {"date":"2026-10-23","new":8,"updated":32,"statusChanged":15},
 {"date":"2026-10-22","new":4,"updated":13,"statusChanged":3},
-{"date":"2026-10-21","new":2,"updated":6,"statusChanged":9},
-{"date":"2026-10-20","new":5,"updated":38,"statusChanged":2}
+{"date":"2026-10-21","new":2,"updated":6,"statusChanged":9}
 ]

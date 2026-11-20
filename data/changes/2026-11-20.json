@@ -1,0 +1,9 @@
+{"date":"2026-11-20",
+"new":[
+{"id":298891,"type":"discontinuance","status":"to_be_discontinued","brand":"OXALIPLATIN INJECTION, USP","din":"02458403","strength":"5MG","company":"DR REDDY'S LABORATORIES LTD","tier3":false}
+],
+"updated":[
+{"id":297373,"type":"shortage","status":"active_confirmed","brand":"CIPRODEX","din":"02252716","strength":"0.1%\n0.3%","company":"NOVARTIS PHARMACEUTICALS CANADA INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":298848,"type":"shortage","status":"active_confirmed","brand":"DIACOMIT","din":"02398966","strength":"500MG","company":"BIOCODEX SAS","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"estEnd","from":"2026-12-22","to":"2026-12-23"},{"field":"actualStart","from":null,"to":"2026-11-20"}]}
+],
+"statusChanged":[]}
