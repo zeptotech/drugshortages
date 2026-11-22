@@ -1,0 +1,6 @@
+{"date":"2026-11-22",
+"new":[],
+"updated":[
+{"id":282788,"type":"shortage","status":"active_confirmed","brand":"NAT-SUNITINIB","din":"02552892","strength":"12.5MG","company":"NATCO PHARMA (CANADA) INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-22","to":"2026-11-29"}]}
+],
+"statusChanged":[]}
