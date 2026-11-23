@@ -1,0 +1,7 @@
+{"date":"2026-11-23",
+"new":[],
+"updated":[
+{"id":287558,"type":"shortage","status":"active_confirmed","brand":"ZOLOFT","din":"01962817","strength":"50MG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":295430,"type":"shortage","status":"active_confirmed","brand":"ERELZI","din":"02462877","strength":"25MG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
