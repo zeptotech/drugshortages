@@ -1,0 +1,9 @@
+{"date":"2026-11-24",
+"new":[],
+"updated":[
+{"id":264940,"type":"shortage","status":"active_confirmed","brand":"JAMP-MOXIFLOXACIN","din":"02472120","strength":"0.5%","company":"JAMP PHARMA CORPORATION","tier3":false,"changes":[{"field":"estEnd","from":"2026-03-31","to":"2027-01-31"}]},
+{"id":295381,"type":"shortage","status":"active_confirmed","brand":"XALACOM","din":"02246619","strength":"5MG\n50MCG","company":"BGP PHARMA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[
+{"id":216732,"type":"shortage","status":"resolved","brand":"APO-PREGABALIN","din":"02394235","strength":"25MG","company":"APOTEX INC","tier3":false,"from":"active_confirmed","to":"resolved"}
+]}
