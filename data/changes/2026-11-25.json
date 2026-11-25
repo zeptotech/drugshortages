@@ -1,0 +1,19 @@
+{"date":"2026-11-25",
+"new":[],
+"updated":[
+{"id":274981,"type":"shortage","status":"active_confirmed","brand":"NAT-OSELTAMIVIR","din":"02499894","strength":"6MG","company":"NATCO PHARMA (CANADA) INC","tier3":false,"changes":[{"field":"comments","from":"Due to increase in demand there might be a shortage for NAT-Oseltamivir Suspension. NAT-OSELTAMIVIR (oseltamivir phosphate) Capsules 75 mg remain available for compounding a suspension if NAT-Oseltamivir Oral Suspension is not available. Refer to the product monograph for compounding instructions.","to":"Due to increase in demand there is an ongoing shortage for NAT-Oseltamivir Suspension. NAT-OSELTAMIVIR (oseltamivir phosphate) Capsules 75 mg remain available for compounding a suspension if NAT-Oseltamivir Oral Suspension is not available. Refer to the product monograph for compounding instructions."}]},
+{"id":279595,"type":"shortage","status":"active_confirmed","brand":"FAMOTIDINE OMEGA -(WITHOUT PRESERVATIVE)","din":"02247735","strength":"10MG","company":"OMEGA LABORATORIES LIMITED","tier3":true,"changes":[{"field":"estEnd","from":"2026-11-30","to":"2027-02-28"}]},
+{"id":285859,"type":"shortage","status":"active_confirmed","brand":"ATORVASTATIN","din":"02348748","strength":"80MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2027-04-09"}]},
+{"id":289074,"type":"shortage","status":"active_confirmed","brand":"TADALAFIL","din":"02457016","strength":"5MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2027-02-26"}]},
+{"id":289077,"type":"shortage","status":"active_confirmed","brand":"TOPIRAMATE","din":"02356864","strength":"100MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2027-04-09"}]},
+{"id":289080,"type":"shortage","status":"active_confirmed","brand":"TOPIRAMATE","din":"02356856","strength":"25MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2027-04-09"}]},
+{"id":289702,"type":"shortage","status":"active_confirmed","brand":"OCTREOTIDE ACETATE OMEGA","din":"02248640","strength":"100MCG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2027-01-31","to":"2027-02-28"}]},
+{"id":289705,"type":"shortage","status":"active_confirmed","brand":"OCTREOTIDE ACETATE OMEGA","din":"02248641","strength":"500MCG","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2027-01-31","to":"2027-02-28"}]},
+{"id":289708,"type":"shortage","status":"active_confirmed","brand":"POTASSIUM CHLORIDE FOR INJECTION CONCENTRATE","din":"00402206","strength":"20mEq","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-30","to":"2026-12-31"}]},
+{"id":289713,"type":"shortage","status":"active_confirmed","brand":"POTASSIUM CHLORIDE FOR INJECTION CONCENTRATE","din":"02480034","strength":"200mEq","company":"OMEGA LABORATORIES LIMITED","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-30","to":"2026-12-31"}]},
+{"id":291969,"type":"shortage","status":"active_confirmed","brand":"ATORVASTATIN","din":"02348748","strength":"80MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2027-04-09"}]},
+{"id":298575,"type":"shortage","status":"active_confirmed","brand":"ATORVASTATIN","din":"02348721","strength":"40MG","company":"SANIS HEALTH INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"},{"field":"actualStart","from":null,"to":"2026-11-25"}]}
+],
+"statusChanged":[
+{"id":294556,"type":"discontinuance","status":"discontinued","brand":"ASMANEX TWISTHALER","din":"02438690","strength":"100MCG","company":"ORGANON CANADA INC.","tier3":false,"from":"to_be_discontinued","to":"discontinued"}
+]}
