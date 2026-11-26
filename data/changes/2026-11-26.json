@@ -1,0 +1,13 @@
+{"date":"2026-11-26",
+"new":[
+{"id":299251,"type":"discontinuance","status":"to_be_discontinued","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false}
+],
+"updated":[
+{"id":295677,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 75","din":"02244001","strength":"75MCG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"reason","from":"Disruption of the manufacture of the drug.","to":"Demand increase for the drug."}]},
+{"id":299241,"type":"shortage","status":"active_confirmed","brand":"SUCCINYLCHOLINE CHLORIDE INJECTION USP","din":"02422336","strength":"20MG","company":"HIKMA CANADA LIMITED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":297423,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 25","din":"02245676","strength":"25MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"reason","from":"Delay in shipping of the drug.","to":"Demand increase for the drug."}]},
+{"id":297939,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"reason","from":"Delay in shipping of the drug.","to":"Demand increase for the drug."}]}
+],
+"statusChanged":[
+{"id":299091,"type":"shortage","status":"resolved","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"anticipated_shortage","to":"resolved"}
+]}
