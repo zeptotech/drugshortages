@@ -1,0 +1,9 @@
+{"date":"2026-11-27",
+"new":[],
+"updated":[
+{"id":294908,"type":"shortage","status":"active_confirmed","brand":"GEMCITABINE INJECTION","din":"02402831","strength":"38MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":295838,"type":"shortage","status":"active_confirmed","brand":"TECTA","din":"02267233","strength":"40MG","company":"TAKEDA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-12-18","to":"2027-01-31"},{"field":"comments","from":"Limited allocation","to":"Stock may be available by allocation."}]},
+{"id":298820,"type":"shortage","status":"active_confirmed","brand":"DEPO-MEDROL","din":"01934333","strength":"40MG","company":"PFIZER CANADA ULC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
+{"id":299301,"type":"shortage","status":"active_confirmed","brand":"FLOVENT HFA","din":"02244292","strength":"125MCG","company":"GLAXOSMITHKLINE INC","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]}
+],
+"statusChanged":[]}
