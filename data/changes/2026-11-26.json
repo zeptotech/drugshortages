@@ -1,13 +1,38 @@
 {"date":"2026-11-26",
 "new":[
-{"id":299251,"type":"discontinuance","status":"to_be_discontinued","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false}
+{"id":299251,"type":"discontinuance","status":"to_be_discontinued","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false},
+{"id":299304,"type":"shortage","status":"active_confirmed","brand":"ZIAGEN","din":"02240358","strength":"20MG","company":"VIIV HEALTHCARE ULC","tier3":false},
+{"id":299286,"type":"shortage","status":"anticipated_shortage","brand":"MILEY 21","din":"02556553","strength":"0.03MG\n0.15MG","company":"AMBICARE PHARMACEUTICALS INC.","tier3":false},
+{"id":299289,"type":"shortage","status":"anticipated_shortage","brand":"MILEY 28","din":"02556561","strength":"0.15MG\n0.03MG","company":"AMBICARE PHARMACEUTICALS INC.","tier3":false},
+{"id":299298,"type":"shortage","status":"anticipated_shortage","brand":"OMNISCAN","din":"02172771","strength":"287MG","company":"GE HEALTHCARE CANADA INC","tier3":false},
+{"id":299301,"type":"shortage","status":"anticipated_shortage","brand":"FLOVENT HFA","din":"02244292","strength":"125MCG","company":"GLAXOSMITHKLINE INC","tier3":false},
+{"id":299309,"type":"shortage","status":"anticipated_shortage","brand":"SUTENT","din":"02280795","strength":"12.5MG","company":"PFIZER CANADA ULC","tier3":false}
 ],
 "updated":[
 {"id":295677,"type":"shortage","status":"active_confirmed","brand":"ESTRADOT 75","din":"02244001","strength":"75MCG","company":"SANDOZ CANADA INCORPORATED","tier3":true,"changes":[{"field":"reason","from":"Disruption of the manufacture of the drug.","to":"Demand increase for the drug."}]},
 {"id":299241,"type":"shortage","status":"active_confirmed","brand":"SUCCINYLCHOLINE CHLORIDE INJECTION USP","din":"02422336","strength":"20MG","company":"HIKMA CANADA LIMITED","tier3":false,"changes":[{"field":"status","from":"anticipated_shortage","to":"active_confirmed"}]},
 {"id":297423,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 25","din":"02245676","strength":"25MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"reason","from":"Delay in shipping of the drug.","to":"Demand increase for the drug."}]},
-{"id":297939,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"reason","from":"Delay in shipping of the drug.","to":"Demand increase for the drug."}]}
+{"id":297939,"type":"shortage","status":"anticipated_shortage","brand":"ESTRADOT 37.5","din":"02243999","strength":"37.5MCG","company":"SANDOZ CANADA INCORPORATED","tier3":false,"changes":[{"field":"reason","from":"Delay in shipping of the drug.","to":"Demand increase for the drug."}]},
+{"id":271670,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532166","strength":"100MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":278796,"type":"shortage","status":"active_confirmed","brand":"TARO-PREGABALIN","din":"02392801","strength":"25MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":285382,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532158","strength":"50MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":285385,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532158","strength":"50MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":285424,"type":"shortage","status":"active_confirmed","brand":"TARO-CIPROFLOX","din":"02303728","strength":"250MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2027-01-22"}]},
+{"id":285427,"type":"shortage","status":"active_confirmed","brand":"TARO-CIPROFLOX","din":"02303744","strength":"750MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2027-01-22"}]},
+{"id":285430,"type":"shortage","status":"active_confirmed","brand":"TARO-PREGABALIN","din":"02392828","strength":"50MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":285454,"type":"shortage","status":"active_confirmed","brand":"TARO-VENLAFAXINE XR","din":"02380080","strength":"75MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2027-01-22"}]},
+{"id":285469,"type":"shortage","status":"active_confirmed","brand":"TARO-CIPROFLOXACIN/DEXAMETHASONE","din":"02481901","strength":"0.3%\n0.1%","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-27","to":"2026-12-18"}]},
+{"id":292700,"type":"shortage","status":"active_confirmed","brand":"TARO-TESTOSTERONE GEL","din":"02463792","strength":"1%","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2027-01-29"}]},
+{"id":293398,"type":"shortage","status":"active_confirmed","brand":"TARO-DESVENLAFAXINE","din":"02532166","strength":"100MG","company":"TARO PHARMACEUTICALS INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":297092,"type":"shortage","status":"active_confirmed","brand":"TARO-PREGABALIN","din":"02392801","strength":"25MG","company":"SUN PHARMA CANADA INC","tier3":false,"changes":[{"field":"estEnd","from":"2026-11-20","to":"2026-12-04"}]},
+{"id":296487,"type":"shortage","status":"anticipated_shortage","brand":"CABAZITAXEL FOR INJECTION","din":"02553783","strength":"45MG","company":"FORMATIVE PHARMA INC.","tier3":false,"changes":[{"field":"anticipatedStart","from":"2026-12-31","to":"2026-12-23"}]},
+{"id":297453,"type":"shortage","status":"anticipated_shortage","brand":"TWYNSTA","din":"02371049","strength":"80MG\n5MG","company":"BOEHRINGER INGELHEIM (CANADA) LTD LTEE","tier3":false,"changes":[{"field":"anticipatedStart","from":"2026-11-27","to":"2026-12-01"}]}
 ],
 "statusChanged":[
-{"id":299091,"type":"shortage","status":"resolved","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"anticipated_shortage","to":"resolved"}
+{"id":299091,"type":"shortage","status":"resolved","brand":"SANDOZ MOXIFLOXACIN","din":"02411520","strength":"0.5%","company":"SANDOZ CANADA INCORPORATED","tier3":false,"from":"anticipated_shortage","to":"resolved"},
+{"id":298999,"type":"shortage","status":"resolved","brand":"GLN-URSODIOL","din":"02426919","strength":"500MG","company":"GLENMARK PHARMACEUTICALS CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":296179,"type":"shortage","status":"resolved","brand":"IMITREX","din":"02230418","strength":"5MG","company":"GLAXOSMITHKLINE INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":295517,"type":"shortage","status":"resolved","brand":"HYDROMORPHONE HYDROCHLORIDE INJECTION","din":"02460602","strength":"2MG","company":"STERIMAX INC","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":296184,"type":"shortage","status":"resolved","brand":"DIASTAT","din":"02238162","strength":"5MG","company":"BAUSCH HEALTH, CANADA INC.","tier3":false,"from":"active_confirmed","to":"resolved"},
+{"id":289299,"type":"shortage","status":"resolved","brand":"CLOTRIMADERM VAGINAL 6","din":"00812366","strength":"1%","company":"TARO PHARMACEUTICALS INC","tier3":false,"from":"active_confirmed","to":"resolved"}
 ]}
